@@ -206,7 +206,10 @@ def unRomanize():
   pass
 #step 2 (Latin): change the individual letters
 
-def romanize(word):
+def romanize():
+
+  print("I didnt write code for this yet")
+  
     pass
 
 
