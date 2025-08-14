@@ -52,11 +52,11 @@ def unRomanize():
   #change the individual letters
 
   word = word.replace("rrh", "ρρ")
+  word = word.replace("rh", "ῥ")
   
   word = word.replace("th", "θ")
   word = word.replace("kh", "χ")
   word = word.replace("ph", "φ")
-  word = word.replace("rh", "ῥ")
 
   word = word.replace("ha", "ἁ")
   word = word.replace("he", "ἑ")
