@@ -16,6 +16,43 @@ def unRomanize():
   #print("enter your Romanized Greek word")
   #word = input()
 
+  #debug
+  
+  word = word.replace("ch", "kh")
+
+  word = word.replace("ah", "a")
+  word = word.replace("eh", "e")
+  word = word.replace("ih", "i")
+  word = word.replace("oh", "o")
+  word = word.replace("uh", "u")
+
+  word = word.replace("sh", "s")
+  word = word.replace("dh", "d")
+  word = word.replace("gh", "kh") #might change
+  word = word.replace("lh", "l")
+  word = word.replace("zh", "z")
+  word = word.replace("xh", "x")
+  word = word.replace("bh", "b")
+  word = word.replace("nh", "n")
+  word = word.replace("mh", "m")
+
+  if word[0] == "r"
+    if word [1] == "h"
+      word = "@" + word[2:]
+
+  word = word.replace("rrh", "@")
+
+  word = word.replace("rh", "r")
+
+  if word[0] == "@"
+    word = "rh" + word[1:]
+
+  word = word.replace("@", "rrh")
+
+  #change the individual letters
+
+  word = word.replace("rrh", "ρρ")
+  
   word = word.replace("th", "θ")
   word = word.replace("kh", "χ")
   word = word.replace("ph", "φ")
