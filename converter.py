@@ -36,15 +36,15 @@ def unRomanize():
   word = word.replace("nh", "n")
   word = word.replace("mh", "m")
 
-  if word[0] == "r"
-    if word [1] == "h"
+  if word[0] == "r":
+    if word [1] == "h":
       word = "@" + word[2:]
 
   word = word.replace("rrh", "@")
 
   word = word.replace("rh", "r")
 
-  if word[0] == "@"
+  if word[0] == "@":
     word = "rh" + word[1:]
 
   word = word.replace("@", "rrh")
