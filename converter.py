@@ -4,7 +4,7 @@ st.title("Greenkinator")
 #step 1: Greek to Latin or Latin to Greek?
 
 st.header("Welcome, do you wish to Romanize or un-Romanize a Greek word?")
-romanizeAnswer = st.selectbox("Choose below:", ["Romanize", "un-Romanize"]
+romanizeAnswer = st.selectbox("Choose below:", ["Romanize", "un-Romanize"])
 # print("respond as such: 'Romanize'")
 
 #romanizeAnswer = input()
@@ -12,9 +12,9 @@ romanizeAnswer = st.selectbox("Choose below:", ["Romanize", "un-Romanize"]
 #step 2 (Greek): change the individual letters
 
 def unRomanize():
-
-  print("enter your Romanized Greek word")
-  word = input()
+  word = st.text_input("enter your Romanized Greek word:")
+  #print("enter your Romanized Greek word")
+  #word = input()
 
   word = word.replace("th", "θ")
   word = word.replace("kh", "χ")
