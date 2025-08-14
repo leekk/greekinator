@@ -1,5 +1,5 @@
 import streamlit as st
-st.title("Greenkinator")
+st.title("Ancient Greek Transcriptor")
 
 #step 1: Greek to Latin or Latin to Greek?
 
