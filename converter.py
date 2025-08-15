@@ -190,7 +190,11 @@ def unRomanize():
   word = word.replace("ῡ̔ι", "ῡἱ")
 
   word = word.replace("ἁυ", "αὑ")
+
+  st.write(word + "after crutial line")
   word = word.replace("ἑυ", "εὑ")
+  st.write(word + "after crutial line")
+ 
   word = word.replace("ὁυ", "οὑ")
   word = word.replace("ᾱ̔υ", "ᾱὑ")
   word = word.replace("ἡυ", "ηὑ")
