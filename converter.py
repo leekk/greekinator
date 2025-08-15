@@ -360,6 +360,8 @@ def romanize():
   word = word.replace("āhi", "hāi")
   word = word.replace("ēhi", "hēi")
   word = word.replace("ōhi", "hōi")
+
+  st.write(word)
  
   pass
 
