@@ -1,4 +1,17 @@
 import streamlit as st
+
+# UI
+bg_img = '''
+<style>
+.stApp {
+  background-image: url("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab");
+  background-size: cover;
+}
+</style>
+'''
+st.markdown(bg_img, unsafe_allow_html=True)
+
+
 # CONSTANTS
 allVows = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "ῡ", "αι", "αυ", "ει", 
              "ευ", "οι", "ου", "υι", "ᾳ", "ᾱυ", "ῃ", "ηυ", "ῳ", "ωυ", "ῡι", "ϊ", 
@@ -308,45 +321,36 @@ def accentuate():
     vow_count = len(vow_list)
 
     if vow_count == 1: # MONOSYLLABIC
-      return graveAccent(word, 1)
+      st.write(graveAccent(word, 1))
 
     elif vow_count == 2: # DISYLLABIC
       if last_vow in allShortVows: 
           if vow_list[-2] in allShortVows: 
-            return acuteAccent(word, 2)
+            st.write(acuteAccent(word, 2))
           else: # if long
-            return circumflexAccent(word, 2)
+            st.write(circumflexAccent(word, 2))
       
       else: # if long
-        return acuteAccent(word, 2)
+        st.write(acuteAccent(word, 2))
 
     elif vow_count >= 3:
       if last_vow in allShortVows:
-        return acuteAccent(word, 3)
+        st.write(acuteAccent(word, 3))
       else: # if long
-        return acuteAccent(word, 2)
+        st.write(acuteAccent(word, 2))
 
-    st.write(word)
-
-
-
-if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
-    romanize()
-  
-if romanizeAnswer == "Greek (unaccented) -> Greek (accented)":
-    accentuate()
-  
-if romanizeAnswer == "Latin (unaccented) -> Greek (unaccented)":
-    unRomanize()
+    
 
 
-# UI
-bg_img = '''
-<style>
-.stApp {
-  background-image: url("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab");
-  background-size: cover;
-}
-</style>
-'''
-st.markdown(bg_img, unsafe_allow_html=True)
+try: 
+  if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
+      romanize()
+    
+  if romanizeAnswer == "Greek (unaccented) -> Greek (accented)":
+      accentuate()
+    
+  if romanizeAnswer == "Latin (unaccented) -> Greek (unaccented)":
+      unRomanize()
+except IndexError:
+  st.error("error")
+
