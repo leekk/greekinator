@@ -168,6 +168,7 @@ def unRomanize():
   word = word.replace("ï", "ϊ")
   word = word.replace("ü", "ϋ")
 
+  st.write(word)
   #fix the rough breathing marks and iota subscript
 
   word = word.replace("ωι", "ῳ")
