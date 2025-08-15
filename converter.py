@@ -35,8 +35,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-    custom_css = """
+custom_css = """
     <style>
     /* Example: Targeting a form's background */
     .st-emotion-cache-r421ms div form { /* This is an example selector, it may vary */
