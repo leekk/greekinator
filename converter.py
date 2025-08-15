@@ -1,13 +1,45 @@
 import streamlit as st
-st.title("Ancient Greek Transcriptor")
+# CONSTANTS
+allVows = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "ῡ", "αι", "αυ", "ει", 
+             "ευ", "οι", "ου", "υι", "ᾳ", "ᾱυ", "ῃ", "ηυ", "ῳ", "ωυ", "ῡι", "ϊ", 
+             "ϋ", "ἀ", "ἐ", "ἰ", "ὀ", "ὐ", "ᾱ̓", "ἠ", "ῑ̓", "ὠ", "ῡ̓", "αἰ", "αὐ", 
+             "εἰ", "εὐ", "οἰ", "οὐ", "υἰ", "ᾀ", "ᾱὐ", "ᾐ", "ηὐ", "ᾠ", "ωὐ", "ῡἰ", 
+             "ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "ᾱ̔", "ἡ", "ῑ̔", "ὡ", "ῡ̔", "αἱ", "αὑ", "εἱ", 
+             "εὑ", "οἱ", "οὑ", "υἱ", "ᾁ", "ᾱὑ", "ᾑ", "ηὑ", "ᾡ", "ωὑ", "ῡἱ"]
+
+allAcuteVows = ["ά", "έ", "ί", "ό", "ύ", "ᾱ́", "ή", "ῑ́", "ώ", "ῡ́", "αί", "αύ", 
+                  "εί", "εύ", "οί", "ού", "υί", "ᾴ", "ᾱύ", "ῄ", "ηύ", "ῴ", "ωύ",
+                  "ῡί", "ΐ", "ΰ", "ἄ", "ἔ", "ἴ", "ὄ", "ὔ", "ᾱ̓́", "ἤ", "ῑ̓́", "ὤ",
+                  "ῡ̓́", "αἴ", "αὔ", "εἴ", "εὔ", "οἴ", "οὔ", "υἴ", "ᾄ", "ᾱὔ", "ᾔ",
+                  "ηὔ", "ᾤ", "ωὔ", "ῡἴ", "ἅ", "ἕ", "ἵ", "ὅ", "ὕ", "ᾱ̔́", "ἥ", "ῑ̔́", 
+                  "ὥ", "ῡ̔́", "αἵ", "αὕ", "εἵ", "εὕ", "οἵ", "οὕ", "υἵ", "ᾅ", "ᾱὕ",
+                  "ᾕ", "ηὕ", "ᾥ", "ωὕ", "ῡἵ"]
+allGraveVows = ["ὰ", "ὲ", "ὶ", "ὸ", "ὺ", "ᾱ̀", "ὴ", "ῑ̀", "ὼ", "ῡ̀", "αὶ", "αὺ", 
+                  "εὶ", "εὺ", "οὶ", "οὺ", "υὶ", "ᾲ", "ᾱὺ", "ῂ", "ηὺ", "ῲ", "ωὺ", 
+                  "ῡὶ", "ῒ", "ῢ", "ἂ", "ἒ", "ἲ", "ὂ", "ὒ", "ᾱ̓̀", "ἢ", "ῑ̓̀", "ὢ", 
+                  "ῡ̓̀", "αἲ", "αὒ", "εἲ", "εὒ", "οἲ", "οὒ", "υἲ", "ᾂ", "ᾱὒ", "ᾒ", 
+                  "ηὒ", "ᾢ", "ωὒ", "ῡἲ", "ἃ", "ἓ", "ἳ", "ὃ", "ὓ", "ᾱ̔̀", "ἣ", "ῑ̔̀",
+                  "ὣ", "ῡ̔̀", "αἳ", "αὓ", "εἳ", "εὓ", "οἳ", "οὓ", "υἳ", "ᾃ", "ᾱὓ", 
+                  "ᾓ", "ηὓ", "ᾣ", "ωὓ", "ῡἳ"]
+
+allCircumflexVows = ["", "", "", "", "", "ᾶ", "ῆ", "ῗ", "ῶ", "ῧ", "αῖ", "αῦ", 
+                       "εῖ", "εῦ", "οῖ", "οῦ", "υῖ", "ᾷ", "ᾱῦ", "ῇ", "ηῦ", "ῷ", 
+                       "ωῦ", "ῡῖ", "", "", "", "", "", "", "", "ἆ", "ἦ", "ἶ", "ὦ",
+                       "ὖ", "αἶ", "αὖ", "εἶ", "εὖ", "οἶ", "οὖ", "υἶ", "ᾆ", "ᾱὖ",
+                       "ᾖ", "ηὖ", "ᾦ", "ωὖ", "ῡἶ", "", "", "", "", "", "ἇ", "ἧ",
+                       "ἷ", "ὧ", "ὗ", "αἷ", "αὗ", "εἷ", "εὗ", "οἷ", "οὗ", "υἷ",
+                       "ᾇ", "ᾱὗ", "ᾗ", "ηὗ", "ᾧ", "ωὗ", "ῡἷ"]
+
+allShortVows = ["α", "ε", "ι", "ο", "υ", "αι", "οι", "ϊ", "ϋ", "ἀ", "ἐ", "ἰ", "ὀ",
+                "ὐ", "αἰ", "οἰ", "ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "αἱ", "οἱ"]
+
+st.title("Ancient Greek Code Tester")
 
 #step 1: Greek to Latin or Latin to Greek?
 
-st.header("Welcome, do you wish to Romanize or un-Romanize a Greek word?")
-romanizeAnswer = st.selectbox("Choose below:", ["Romanize", "un-Romanize"])
-# print("respond as such: 'Romanize'")
+st.header("Please chose an option as to how you would like to modify your Greek word?")
+romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (unaccented)", "Greek (unaccented) -> Latin (unaccented)", "Greek (unaccented) -> Greek (accented)"])
 
-#romanizeAnswer = input()
 
 #step 2 (Greek): change the individual letters
 
@@ -208,13 +240,113 @@ def unRomanize():
 
 def romanize():
 
-  print("I didnt write code for this yet")
+  st.write("I didnt write code for this yet")
   
   pass
 
+def getVowels(word):
+  vow_list = []
+  idx_list = []
+
+  i = 0
+  while i < len(word):
+    if word[i] in allVows:
+      vowel_1 = word[i]
+      if i < len(word) - 1:
+        vowel_2 = vowel_1 + word[i+1]
+        if vowel_2 in allVows:
+          vow_list.append(vowel_2)
+          idx_list.append(i)
+          i += 2
+          continue
+      vow_list.append(vowel_1)
+      idx_list.append(i)
+    i += 1
+
+  return vow_list, idx_list
+
+def acuteAccent(word, n): # n from last
+  vow_lt, idx_lt = getVowels(word)
+  
+  vow = vow_lt[-n]
+  idx =  idx_lt[-n]
+
+  mapping = dict(zip(allVows, allAcuteVows))
+  act_vow = mapping.get(vow, vow)
+
+  return word[:idx] + act_vow + word[idx + len(act_vow):]
+
+def graveAccent(word, n): # n from last
+  vow_lt, idx_lt = getVowels(word)
+  
+  vow = vow_lt[-n]
+  idx =  idx_lt[-n]
+
+  mapping = dict(zip(allVows, allGraveVows))
+  grv_vow = mapping.get(vow, vow)
+
+  return word[:idx] + grv_vow + word[idx + len(grv_vow):]
+
+def circumflexAccent(word, n): # n from last
+  vow_lt, idx_lt = getVowels(word)
+  
+  vow = vow_lt[-n]
+  idx =  idx_lt[-n]
+
+  mapping = dict(zip(allVows, allCircumflexVows))
+  crcm_vow = mapping.get(vow, vow)
+
+  return word[:idx] + crcm_vow + word[idx + len(crcm_vow):]
+
+graveAccent("λολο", 2)
+
+def accentuate():
+    word = st.text_input("enter your unaccented Greek word:")
+    vow_list, idx_list = getVowels(word)
+    last_vow = vow_list[-1]
+
+    vow_count = len(vow_list)
+
+    if vow_count == 1: # MONOSYLLABIC
+      return graveAccent(word, 1)
+
+    elif vow_count == 2: # DISYLLABIC
+      if last_vow in allShortVows: 
+          if vow_list[-2] in allShortVows: 
+            return acuteAccent(word, 2)
+          else: # if long
+            return circumflexAccent(word, 2)
+      
+      else: # if long
+        return acuteAccent(word, 2)
+
+    elif vow_count >= 3:
+      if last_vow in allShortVows:
+        return acuteAccent(word, 3)
+      else: # if long
+        return acuteAccent(word, 2)
+
+    st.write(word)
 
 
-if romanizeAnswer == "Romanize":
+
+if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
     romanize()
-else:
+  
+if romanizeAnswer == "Greek (unaccented) -> Greek (accented)":
+    accentuate()
+  
+if romanizeAnswer == "Latin (unaccented) -> Greek (unaccented)":
     unRomanize()
+
+
+# UI
+bg_img = '''
+<style>
+.stApp {
+  background-image: url("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab");
+  background-size: cover;
+}
+</style>
+'''
+st.markdown(bg_img, unsafe_allow_html=True)
