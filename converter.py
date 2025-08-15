@@ -37,8 +37,8 @@ st.markdown(
 
 custom_css = """
     <style>
-    div[data-testid="stForm"] {
-        background-color: #DFFF00;
+    form {
+        background-color: #DFFF00 !important;
     }
     </style>
 """
