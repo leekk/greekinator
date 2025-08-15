@@ -35,15 +35,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-custom_css = """
-    <style>
-    form {
-        background-color: #DFFF00 !important;
-    }
-    </style>
-"""
-st.markdown(custom_css, unsafe_allow_html=True)
-
 
 
 if "outputs" not in st.session_state:
