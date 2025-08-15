@@ -118,6 +118,7 @@ def unRomanize():
 
   word = word.replace("@", "rrh")
 
+  st.write(word)
   #change the individual letters
 
   word = word.replace("rrh", "ρρ")
@@ -137,6 +138,8 @@ def unRomanize():
   word = word.replace("hī", "ῑ̔")
   word = word.replace("hō", "ὡ")
   word = word.replace("hū", "ῡ̔")
+
+  st.write(word)
 
   word = word.replace("ks", "ξ")
   word = word.replace("ps", "ψ")
@@ -164,6 +167,8 @@ def unRomanize():
   word = word.replace("n", "ν")
   word = word.replace("m", "μ")
   word = word.replace("x", "ξ")
+
+  st.write(word)
 
   word = word.replace("ï", "ϊ")
   word = word.replace("ü", "ϋ")
