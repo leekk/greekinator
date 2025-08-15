@@ -1,18 +1,22 @@
 import streamlit as st
 
 # UI
-bg_img = '''
-<style>
-.stApp {
-  background-image: url("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab");
-  background-size: cover;
-}
-</style>
-'''
-st.markdown(bg_img, unsafe_allow_html=True)
+st.sidebar.image("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab")
 
-if "results" not in st.session_state:
-    st.session_state.results = []
+ st.markdown(
+        """
+        <style>
+        .stApp {
+            background-color: #F8DE7E
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+if "outputs" not in st.session_state:
+    st.session_state.outputs = []
 
 # CONSTANTS
 allVows = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "ῡ", "αι", "αυ", "ει", 
@@ -60,9 +64,7 @@ romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (un
 
 def unRomanize():
   word = st.text_input("enter your Romanized Greek word:")
-  
-  if word:
-    st.session_state.results.insert(0, word)
+ 
   
   #print("enter your Romanized Greek word")
   #word = input()
@@ -250,7 +252,12 @@ def unRomanize():
     else:
       word = "ῡ̓" + word[1:]
 
+ 
+    
   st.write(word)
+    
+  if word:
+    st.session_state.outputs.insert(0, word)
 
 #step 5 (Greek): final check for no internal rough breathing marks
 
@@ -358,5 +365,5 @@ try:
 except IndexError:
   pass
 
-for r in st.session_state.results:
-    st.write(r)
+for output in st.session_state.outputs:
+    st.write(output)
