@@ -2,7 +2,7 @@ import streamlit as st
 
 # UI
 st.sidebar.write("sidebar check")
-# st.sidebar.image("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab")
+# check whether it works wout the sidebar
 
 st.markdown(
  """
@@ -19,12 +19,29 @@ st.markdown(
     """
     <style>
     section[data-testid="stSidebar"] > div:first-child {
-        background: #FFD580 url("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab") center/cover no-repeat;
+        background-image: url("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab");
+        background-size: cover;
+        background-position: 20% center; /* SHIFT */
+        background-repeat: no-repeat;;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
+
+st.markdown("""
+<style>
+.bubble {
+    background-color: 	#EADDCA; /* SECONDARY COLOR */
+    padding: 10px 15px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    color: black; /* TEXT COLOR */
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown('<div class="bubble">This is a bubble</div>', unsafe_allow_html=True)
 
 
 if "outputs" not in st.session_state:
