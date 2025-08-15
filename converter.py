@@ -78,20 +78,14 @@ st.title("Ancient Greek Code Tester")
 
 #step 1: Greek to Latin or Latin to Greek?
 
-st.header("Please select how you would like to modify your Greek word?")
+st.header("Please select how you would like to modify your Greek word")
 romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (unaccented)", "Greek (unaccented) -> Latin (unaccented)", "Greek (unaccented) -> Greek (accented)"])
 
 
 #step 2 (Greek): change the individual letters
 
 def unRomanize():
-  word = st.text_input("enter your Romanized Greek word:")
- 
-  
-  #print("enter your Romanized Greek word")
-  #word = input()
-
-  #debug
+  word = st.text_input("Enter your transliterated Greek word:")
   
   word = word.replace("ch", "kh")
 
@@ -174,9 +168,7 @@ def unRomanize():
   word = word.replace("ï", "ϊ")
   word = word.replace("ü", "ϋ")
 
-  #st.write(word)
-
-#step 3 (Greek): fix the rough breathing marks and iota subscript
+  #fix the rough breathing marks and iota subscript
 
   word = word.replace("ωι", "ῳ")
   word = word.replace("ηι", "ῃ")
@@ -198,7 +190,7 @@ def unRomanize():
   word = word.replace("ἡυ", "ηὑ")
   word = word.replace("ὡυ", "ωὑ")
 
-#step 4 (Greek): fix the final and initial letters
+  #fix the final and initial letters
 
   if word[-1] == "σ":
     word = word[:-1] + "ς"
@@ -280,9 +272,7 @@ def unRomanize():
     
   if word:
     st.session_state.outputs.insert(0, word)
-
-#step 5 (Greek): final check for no internal rough breathing marks
-
+   
   pass
 #step 2 (Latin): change the individual letters
 
