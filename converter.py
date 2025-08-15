@@ -37,12 +37,11 @@ st.markdown(
 
 custom_css = """
     <style>
-    /* Example: Targeting a form's background */
-    .st-emotion-cache-r421ms div form { /* This is an example selector, it may vary */
-        background-color: ##DFFF00; /* Replace with your desired color */
+    div[data-testid="stForm"] {
+        background-color: #DFFF00;
     }
     </style>
-    """
+"""
 st.markdown(custom_css, unsafe_allow_html=True)
 
 
