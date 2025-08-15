@@ -1,6 +1,7 @@
 import streamlit as st
 
 # UI
+st.sidebar.write("sidebar check")
 # st.sidebar.image("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab")
 
 st.markdown(
@@ -15,18 +16,15 @@ st.markdown(
 )
 
 st.markdown(
-        f"""
-        <style>
-        section[data-testid="stSidebar"] > div:first-child {{
-            background-image: url("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True,
- )
+    """
+    <style>
+    section[data-testid="stSidebar"] > div:first-child {
+        background: #FFD580 url("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab") center/cover no-repeat;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 
 if "outputs" not in st.session_state:
