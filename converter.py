@@ -14,7 +14,7 @@ st.markdown(
  unsafe_allow_html=True
 )
 
- st.markdown(
+st.markdown(
         f"""
         <style>
         section[data-testid="stSidebar"] > div:first-child {{
@@ -26,7 +26,7 @@ st.markdown(
         </style>
         """,
         unsafe_allow_html=True,
-  )
+ )
 
 
 if "outputs" not in st.session_state:
