@@ -1,5 +1,11 @@
 import streamlit as st
 
+# alanur tasks:
+# secondary bg color
+# result history
+# get rid of sidebar text
+
+
 # UI
 st.sidebar.write("sidebar check")
 # check whether it works wout the sidebar
