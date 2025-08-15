@@ -29,19 +29,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown("""
-<style>
-.bubble {
-    background-color: 	#EADDCA; /* SECONDARY COLOR */
-    padding: 10px 15px;
-    border-radius: 15px;
-    margin-bottom: 10px;
-    color: black; /* TEXT COLOR */
-}
-</style>
-""", unsafe_allow_html=True)
 
-st.markdown('<div class="bubble">This is a bubble</div>', unsafe_allow_html=True)
 
 
 if "outputs" not in st.session_state:
