@@ -37,7 +37,7 @@ st.title("Ancient Greek Code Tester")
 
 #step 1: Greek to Latin or Latin to Greek?
 
-st.header("Please chose an option as to how you would like to modify your Greek word?")
+st.header("Please select how you would like to modify your Greek word?")
 romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (unaccented)", "Greek (unaccented) -> Latin (unaccented)", "Greek (unaccented) -> Greek (accented)"])
 
 
