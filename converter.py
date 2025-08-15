@@ -39,7 +39,7 @@ custom_css = """
     <style>
     /* Example: Targeting a form's background */
     .st-emotion-cache-r421ms div form { /* This is an example selector, it may vary */
-        background-color: #E1C16E; /* Replace with your desired color */
+        background-color: ##DFFF00; /* Replace with your desired color */
     }
     </style>
     """
