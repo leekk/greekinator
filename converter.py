@@ -3,16 +3,14 @@ import streamlit as st
 # UI
 st.sidebar.image("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab")
 
- st.markdown(
-        """
-        <style>
-        .stApp {
-            background-color: #F8DE7E
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+st.markdown(
+ """
+ <style>
+ .stApp {background-color: #F8DE7E}
+ </style>
+ """,
+ unsafe_allow_html=True
+ )
 
 
 if "outputs" not in st.session_state:
