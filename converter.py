@@ -11,6 +11,8 @@ bg_img = '''
 '''
 st.markdown(bg_img, unsafe_allow_html=True)
 
+if "results" not in st.session_state:
+    st.session_state.results = []
 
 # CONSTANTS
 allVows = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "ῡ", "αι", "αυ", "ει", 
@@ -58,6 +60,10 @@ romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (un
 
 def unRomanize():
   word = st.text_input("enter your Romanized Greek word:")
+  
+  if word:
+    st.session_state.results.insert(0, word)
+  
   #print("enter your Romanized Greek word")
   #word = input()
 
@@ -311,7 +317,6 @@ def circumflexAccent(word, n): # n from last
 
   return word[:idx] + crcm_vow + word[idx + len(crcm_vow):]
 
-graveAccent("λολο", 2)
 
 def accentuate():
     word = st.text_input("enter your unaccented Greek word:")
@@ -341,7 +346,6 @@ def accentuate():
 
     
 
-
 try: 
   if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
       romanize()
@@ -352,5 +356,7 @@ try:
   if romanizeAnswer == "Latin (unaccented) -> Greek (unaccented)":
       unRomanize()
 except IndexError:
-  st.error("error")
+  pass
 
+for r in st.session_state.results:
+    st.write(r)
