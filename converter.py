@@ -91,9 +91,10 @@ romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (un
 
 #step 2 (Greek): change the individual letters
 
-def unRomanize():
-  word = st.text_input("Enter your transliterated Greek word")
+def unRomanize(word):
   
+  # word = st.text_input("Enter your transliterated Greek word")
+ 
   word = word.replace("ch", "kh")
 
   word = word.replace("ah", "a")
@@ -280,16 +281,16 @@ def unRomanize():
   except IndexError:
     pass
         
-  st.write(word)
+  return word
     
   if word:
     st.session_state.outputs.insert(0, word)
    
   pass
 
-def romanize():
+def romanize(word):
 
-  word = st.text_input("Enter your Greek word")
+  # word = st.text_input("Enter your Greek word")
 
   word = word.replace("α","a")
   word = word.replace("ε","e")
@@ -372,7 +373,7 @@ def romanize():
   word = word.replace("ēhi", "hēi")
   word = word.replace("ōhi", "hōi")
 
-  st.write(word)
+  return word
  
   pass
 
@@ -431,54 +432,56 @@ def circumflexAccent(word, n): # n from last
   return word[:idx] + crcm_vow + word[idx + len(crcm_vow):]
 
 
-def accentuate():
-    word = st.text_input("enter your unaccented Greek word:")
+def accentuate(word):
+    # word = st.text_input("enter your unaccented Greek word:")
     vow_list, idx_list = getVowels(word)
     last_vow = vow_list[-1]
 
     vow_count = len(vow_list)
 
     if vow_count == 1: # MONOSYLLABIC
-      st.write(graveAccent(word, 1))
+      return graveAccent(word, 1)
 
     elif vow_count == 2: # DISYLLABIC
       if last_vow in allShortVows: 
           if vow_list[-2] in allShortVows: 
-            st.write(acuteAccent(word, 2))
+            return acuteAccent(word, 2)
           else: # if long
-            st.write(circumflexAccent(word, 2))
+            return circumflexAccent(word, 2)
       
       else: # if long
-        st.write(acuteAccent(word, 2))
+        return acuteAccent(word, 2)
 
     elif vow_count >= 3:
       if last_vow in allShortVows:
-        st.write(acuteAccent(word, 3))
+        return acuteAccent(word, 3)
       else: # if long
-        st.write(acuteAccent(word, 2))
+        return acuteAccent(word, 2)
 
-def unRomanizeAndAccentuate():
+def unRomanizeAndAccentuate(word):
     word = st.text_input("Enter your Romanized Greek word")
   
-    word = unRomanize()
-    word = accentuate()
+    unRomanize(word)
+    accentuate(word)
   
-    st.write(word)
+    return(word)
   
     pass
 
+word = st.text_input("Enter word:")
+
 try: 
   if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
-      romanize()
+      romanize(word)
     
   if romanizeAnswer == "Greek (unaccented) -> Greek (accented)":
-      accentuate()
+      accentuate(word)
     
   if romanizeAnswer == "Latin (unaccented) -> Greek (unaccented)":
-      unRomanize()
+      unRomanize(word)
    
   if romanizeAnswer == "Latin (unaccented) -> Greek (accented)":
-      unRomanizeAndAccentuate()
+      unRomanizeAndAccentuate(word)
    
 except IndexError:
   pass
