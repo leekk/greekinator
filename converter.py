@@ -468,6 +468,7 @@ try:
 except IndexError:
   pass
 
+st.write("")
+st.write("Past results:")
 for output in st.session_state.outputs:
-    st.write("Past results:")
     st.write(output)
