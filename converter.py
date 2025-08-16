@@ -469,6 +469,6 @@ except IndexError:
   pass
 
 for output in st.session_state.outputs:
-    st.write()
+    st.write("\n")
     st.write("Past results:")
     st.write(output)
