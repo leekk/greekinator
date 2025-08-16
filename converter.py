@@ -461,8 +461,8 @@ def accentuate(word):
 def unRomanizeAndAccentuate(word):
     #word = st.text_input("Enter your Romanized Greek word")
   
-    unRomanize(word)
-    accentuate(word)
+    word = unRomanize(word)
+    word = accentuate(word)
   
     return(word)
   
