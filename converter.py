@@ -78,6 +78,9 @@ allUnbreathedVows = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "�
              "ευ", "οι", "ου", "υι", "ᾳ", "ᾱυ", "ῃ", "ηυ", "ῳ", "ωυ", "ῡι", "ϊ", 
              "ϋ"]
 
+allRoughBreathedVows = ["ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "ᾱ̔", "ἡ", "ῑ̔", "ὡ", "ῡ̔", "αἱ", "αὑ", "εἱ", 
+             "εὑ", "οἱ", "οὑ", "υἱ", "ᾁ", "ᾱὑ", "ᾑ", "ηὑ", "ᾡ", "ωὑ", "ῡἱ"]
+
 st.title("Ancient Greek Code Tester")
 
 #step 1: Greek to Latin or Latin to Greek?
@@ -188,7 +191,6 @@ def unRomanize():
   word = word.replace("ῡ̔ι", "ῡἱ")
   word = word.replace("ἁυ", "αὑ")
   word = word.replace("ἑυ", "εὑ")
-  st.write(word)
   word = word.replace("ὁυ", "οὑ")
   word = word.replace("ᾱ̔υ", "ᾱὑ")
   word = word.replace("ἡυ", "ηὑ")
@@ -204,7 +206,8 @@ def unRomanize():
   if word[0] == "ρ":
     word = "ῤ" + word[1:]
 
-  if word[0] + word[1] in allUnbreathedVows:
+  if word[0] not in allRoughBreathedVows:
+   if word [1] not in allRoughBreathedVows:#first two letters arent breathed
    
     if word[0] == "α":
       if word[1] == "ι":
@@ -280,7 +283,6 @@ def unRomanize():
     st.session_state.outputs.insert(0, word)
    
   pass
-#step 2 (Latin): change the individual letters
 
 def romanize():
 
