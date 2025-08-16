@@ -204,7 +204,7 @@ def unRomanize():
   if word[0] == "ρ":
     word = "ῤ" + word[1:]
 
-  if word[0] + word[1] in unAlbreathedVows:
+  if word[0] + word[1] in allUnbreathedVows:
    
     if word[0] == "α":
       if word[1] == "ι":
