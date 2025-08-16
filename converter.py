@@ -89,7 +89,7 @@ st.image("https://cdn.discordapp.com/attachments/1245387818327347241/14059681527
 #step 1: Greek to Latin or Latin to Greek?
 
 st.subheader("Please select how you would like to modify your Greek word")
-romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (unaccented)", "Greek (unaccented) -> Latin (unaccented)", "Greek (unaccented) -> Greek (accented)", "Latin (unaccented) -> Greek (accented)"])
+romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (unaccented)", "Greek (unaccented) -> Latin (unaccented)", "Greek (unaccented) -> Greek (accented)", "Latin (unaccented) -> Greek (accented)", "Principal part roots guesser (experimental)"])
 
 
 #step 2 (Greek): change the individual letters
@@ -490,6 +490,12 @@ def unRomanizeAndAccentuate(word):
     return(word)
   
     pass
+    
+def rootsGuesser(word):
+    
+    st.write("Enter the first principal part root of your verb")
+    
+    
 
 word = st.text_input("Enter word:")
 
@@ -505,6 +511,9 @@ try:
    
   if romanizeAnswer == "Latin (unaccented) -> Greek (accented)":
       st.write(unRomanizeAndAccentuate(word))
+
+  if romanizeAnswer == "Principal part roots guesser (experimental)":
+      st.write(rootsGuesser(word))
    
 except IndexError:
   pass
