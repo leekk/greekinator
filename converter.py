@@ -276,7 +276,8 @@ def unRomanize():
         word = "ῡ̓" + word[1:]
 
  
-    
+    st.write(word + " 2.5")
+  else:
   st.write(word + " 3")
     
   if word:
