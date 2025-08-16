@@ -92,7 +92,7 @@ romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (un
 #step 2 (Greek): change the individual letters
 
 def unRomanize():
-  word = st.text_input("Enter your transliterated Greek word:")
+  word = st.text_input("Enter your transliterated Greek word")
   
   word = word.replace("ch", "kh")
 
@@ -195,7 +195,7 @@ def unRomanize():
   word = word.replace("ᾱ̔υ", "ᾱὑ")
   word = word.replace("ἡυ", "ηὑ")
   word = word.replace("ὡυ", "ωὑ")
-
+  st.write(word)
   #fix the final and initial letters
 
   if word[-1] == "σ":
