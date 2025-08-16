@@ -80,6 +80,14 @@ allUnbreathedVows = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "�
 
 allRoughBreathedVows = ["ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "ᾱ̔", "ἡ", "ῑ̔", "ὡ", "ῡ̔", "αἱ", "αὑ", "εἱ", 
              "εὑ", "οἱ", "οὑ", "υἱ", "ᾁ", "ᾱὑ", "ᾑ", "ηὑ", "ᾡ", "ωὑ", "ῡἱ"]
+            
+allNonContractVows(Latin) = ["i", "u", "ā", "ē", "ī", "ō", "ū", "ai", "au", "ei", 
+             "eu", "oi", "ou", "ui", "āi", "āu", "ēi", "ēu", "ōi", "ōu", "ūi", "ï", 
+             "ü"]
+            
+allVowsAndConsonants = ["a", "e", "i", "o", "u", "ā", "ē", "ī", "ō", "ū", "ai", "au", "ei", 
+             "eu", "oi", "ou", "ui", "āi", "āu", "ēi", "ēu", "ōi", "ōu", "ūi", "ï", 
+             "ü", "r", "rh", "rrh", "t", "th", "p", "ph", "s", "d", "g", "h", "k", "kh", "l", "z", "x", "b", "n", "m"]
 
 st.title("Ancient Greek Code Tester")
 
@@ -492,6 +500,14 @@ def unRomanizeAndAccentuate(word):
     pass
     
 def rootsGuesser(word):
+    
+    vow_list, idx_list = getVowels(word)
+    last_vow = vow_list[-1]
+
+    vow_count = len(vow_list)
+    
+    if last_vow in allNonContractVows:
+        rootStatus = vowelStem
     
     st.write("Enter the first principal part root of your verb")
     
