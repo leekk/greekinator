@@ -227,7 +227,7 @@ def unRomanize():
   
     if word[0] == "ι":
       word = "ἰ" + word[1:]
-  
+    st.write(word)
     if word[0] == "ο":
       if word[1] == "ι":
         word = "οἰ" + word[2:]
