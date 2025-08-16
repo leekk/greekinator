@@ -195,7 +195,6 @@ def unRomanize():
   word = word.replace("ᾱ̔υ", "ᾱὑ")
   word = word.replace("ἡυ", "ηὑ")
   word = word.replace("ὡυ", "ωὑ")
-  st.write(word + " 1")
   #fix the final and initial letters
 
   if word[-1] == "σ":
@@ -205,79 +204,77 @@ def unRomanize():
     word = "β" + word[1:]
   if word[0] == "ρ":
     word = "ῤ" + word[1:]
-
+  st.write(word + " 1")
   if word[0] not in allRoughBreathedVows:
-   if word [1] not in allRoughBreathedVows: #just to make sure that the first vowel doesnt get two breathing marks
    
-    if word[0] == "α":
-      if word[1] == "ι":
-        word = "αἰ" + word[2:]
-      elif word[1] == "υ":
-        word = "αὐ" + word[2:]
-      else:
-        word = "ἀ" + word[1:]
-  
-    if word[0] == "ε":
-      if word[1] == "ι":
-        word = "εἰ" + word[2:]
-      elif word[1] == "υ":
-        word = "εὐ" + word[2:]
-      else:
-        word = "ἐ" + word[1:]
-  
-    if word[0] == "ι":
-      word = "ἰ" + word[1:]
-    st.write(word + " 2")
-    if word[0] == "ο":
-      if word[1] == "ι":
-        word = "οἰ" + word[2:]
-      elif word[1] == "υ":
-        word = "οὐ" + word[2:]
-      else:
-        word = "ὀ" + word[1:]
-  
-    if word[0] == "υ":
-      if word[1] == "ι":
-        word = "υἰ" + word[2:]
-      else:
-        word = "ὐ" + word[1:]
-  
-    if word[0] == "ᾱ":
-      if word[1] == "ι":
-        word = "ᾀ" + word[2:]
-      elif word[1] == "υ":
-        word = "ᾱὐ" + word[2:]
-      else:
-        word = "ᾱ̓" + word[1:]
-  
-    if word[0] == "η":
-      if word[1] == "ι":
-        word = "ᾐ" + word[2:]
-      elif word[1] == "υ":
-        word = "ηὐ" + word[2:]
-      else:
-        word = "ἠ" + word[1:]
-  
-    if word[0] == "ῑ":
-      word = "ῑ̓" + word[1:]
-  
-    if word[0] == "ω":
-      if word[1] == "ι":
-        word = "ᾠ" + word[2:]
-      elif word[1] == "υ":
-        word = "ωὐ" + word[2:]
-      else:
-        word = "ὠ" + word[1:]
-  
-    if word[0] == "ῡ":
-      if word[1] == "ι":
-        word = "ῡἰ" + word[2:]
-      else:
-        word = "ῡ̓" + word[1:]
-
- 
-    st.write(word + " 2.5")
-  else:
+    if word [1] not in allRoughBreathedVows: #just to make sure that the first vowel doesnt get two breathing marks
+    
+     if word[0] == "α":
+       if word[1] == "ι":
+         word = "αἰ" + word[2:]
+       elif word[1] == "υ":
+         word = "αὐ" + word[2:]
+       else:
+         word = "ἀ" + word[1:]
+   
+     if word[0] == "ε":
+       if word[1] == "ι":
+         word = "εἰ" + word[2:]
+       elif word[1] == "υ":
+         word = "εὐ" + word[2:]
+       else:
+         word = "ἐ" + word[1:]
+   
+     if word[0] == "ι":
+       word = "ἰ" + word[1:]
+     st.write(word + " 2")
+     if word[0] == "ο":
+       if word[1] == "ι":
+         word = "οἰ" + word[2:]
+       elif word[1] == "υ":
+         word = "οὐ" + word[2:]
+       else:
+         word = "ὀ" + word[1:]
+   
+     if word[0] == "υ":
+       if word[1] == "ι":
+         word = "υἰ" + word[2:]
+       else:
+         word = "ὐ" + word[1:]
+   
+     if word[0] == "ᾱ":
+       if word[1] == "ι":
+         word = "ᾀ" + word[2:]
+       elif word[1] == "υ":
+         word = "ᾱὐ" + word[2:]
+       else:
+         word = "ᾱ̓" + word[1:]
+   
+     if word[0] == "η":
+       if word[1] == "ι":
+         word = "ᾐ" + word[2:]
+       elif word[1] == "υ":
+         word = "ηὐ" + word[2:]
+       else:
+         word = "ἠ" + word[1:]
+   
+     if word[0] == "ῑ":
+       word = "ῑ̓" + word[1:]
+   
+     if word[0] == "ω":
+       if word[1] == "ι":
+         word = "ᾠ" + word[2:]
+       elif word[1] == "υ":
+         word = "ωὐ" + word[2:]
+       else:
+         word = "ὠ" + word[1:]
+   
+     if word[0] == "ῡ":
+       if word[1] == "ι":
+         word = "ῡἰ" + word[2:]
+       else:
+         word = "ῡ̓" + word[1:]
+        
   st.write(word + " 3")
     
   if word:
