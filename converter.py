@@ -197,8 +197,8 @@ def unRomanize():
   word = word.replace("ὡυ", "ωὑ")
   #fix the final and initial letters
 	
-		try: 
-				if word[-1] == "σ":
+  try: 
+	if word[-1] == "σ":
       word = word[:-1] + "ς"
   
     if word[0] == "ϐ":
@@ -276,8 +276,8 @@ def unRomanize():
          else:
            word = "ῡ̓" + word[1:]
 
-		except IndexError:
-										pass
+  except IndexError:
+	pass
         
   st.write(word + " 3")
     
