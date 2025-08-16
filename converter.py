@@ -86,7 +86,7 @@ st.title("Ancient Greek Code Tester")
 #step 1: Greek to Latin or Latin to Greek?
 
 st.header("Please select how you would like to modify your Greek word")
-romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (unaccented)", "Greek (unaccented) -> Latin (unaccented)", "Greek (unaccented) -> Greek (accented)"])
+romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (unaccented)", "Greek (unaccented) -> Latin (unaccented)", "Greek (unaccented) -> Greek (accented)", "Latin (unaccented) -> Greek (accented)"])
 
 
 #step 2 (Greek): change the individual letters
@@ -457,7 +457,16 @@ def accentuate():
       else: # if long
         st.write(acuteAccent(word, 2))
 
-    
+def unRomanizeAndAccentuate()
+
+  word = st.text_input("Enter your Romanized Greek word")
+
+    def unRomanize(word)
+    def accentuate(word)
+
+    st.write(word)
+
+    pass
 
 try: 
   if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
@@ -468,6 +477,10 @@ try:
     
   if romanizeAnswer == "Latin (unaccented) -> Greek (unaccented)":
       unRomanize()
+   
+  if romanizeAnswer == "Latin (unaccented) -> Greek (accented":
+      unRomanizeAndAccentuate()
+   
 except IndexError:
   pass
 
