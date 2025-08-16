@@ -457,7 +457,7 @@ def accentuate():
       else: # if long
         st.write(acuteAccent(word, 2))
 
-def unRomanizeAndAccentuate()
+def unRomanizeAndAccentuate():
 
   word = st.text_input("Enter your Romanized Greek word")
 
