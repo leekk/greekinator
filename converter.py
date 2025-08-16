@@ -517,6 +517,8 @@ def getVowelsAndConsonants(word):
       thing_list.append(thing_1)
       idx_list.append(i)
     i += 1
+    
+    return thing_list, idx_list
 
 def rootsGuesser(word):
     
