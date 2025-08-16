@@ -510,7 +510,7 @@ def getVowelsAndConsonants(word):
       if i < len(word) - 1:
         thing_2 = thing_1 + word[i+1]
         if thing_2 in allVows:
-          vow_list.append(thing_2)
+          thing_list.append(thing_2)
           idx_list.append(i)
           i += 2
           continue
