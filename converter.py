@@ -207,7 +207,7 @@ def unRomanize():
     word = "ῤ" + word[1:]
 
   if word[0] not in allRoughBreathedVows:
-   if word [1] not in allRoughBreathedVows:#first two letters arent breathed
+   if word [1] not in allRoughBreathedVows: #just to make sure that the first vowel doesnt get two breathing marks
    
     if word[0] == "α":
       if word[1] == "ι":
@@ -469,4 +469,6 @@ except IndexError:
   pass
 
 for output in st.session_state.outputs:
+    st.write()
+    st.write("Past results:")
     st.write(output)
