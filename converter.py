@@ -477,7 +477,7 @@ try:
   if romanizeAnswer == "Latin (unaccented) -> Greek (unaccented)":
       unRomanize()
    
-  if romanizeAnswer == "Latin (unaccented) -> Greek (accented":
+  if romanizeAnswer == "Latin (unaccented) -> Greek (accented)":
       unRomanizeAndAccentuate()
    
 except IndexError:
