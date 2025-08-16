@@ -197,8 +197,7 @@ def unRomanize():
   word = word.replace("ὡυ", "ωὑ")
   #fix the final and initial letters
 
- 
-  st.write("first translation:", word)
+
 
   try: 
     if word[-1] == "σ":
@@ -230,7 +229,7 @@ def unRomanize():
      
        if word[0] == "ι":
          word = "ἰ" + word[1:]
-       st.write(word + " 2")
+       
        if word[0] == "ο":
          if word[1] == "ι":
            word = "οἰ" + word[2:]
@@ -281,7 +280,7 @@ def unRomanize():
   except IndexError:
     pass
         
-  st.write("final translation:", word)
+  st.write(word)
     
   if word:
     st.session_state.outputs.insert(0, word)
