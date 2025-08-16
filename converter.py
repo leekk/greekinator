@@ -498,19 +498,37 @@ def unRomanizeAndAccentuate(word):
     return(word)
   
     pass
-    
+
+def getVowelsAndConsonants(word):
+  thing_list = []
+  idx_list = []
+
+  i = 0
+  while i < len(word):
+    if word[i] in allVowsAndConsonants:
+      thing_1 = word[i]
+      if i < len(word) - 1:
+        thing_2 = thing_1 + word[i+1]
+        if thing_2 in allVows:
+          vow_list.append(thing_2)
+          idx_list.append(i)
+          i += 2
+          continue
+      thing_list.append(thing_1)
+      idx_list.append(i)
+    i += 1
+
 def rootsGuesser(word):
     
-    vow_list, idx_list = getVowels(word)
-    last_vow = vow_list[-1]
-
-    vow_count = len(vow_list)
+    thing_list, idx_list = getVowelsAndConsonants(word)
+    last_thing = thing_list[-1]
     
-    if last_vow in allNonContractVows:
-        rootStatus = vowelStem
+    if last_thing in allNonContractVows:
+        rootStatus = "vowelStem"
     
     st.write("Enter the first principal part root of your verb")
-    
+    st.write(last_thing)
+    st.write(rootStatus)
     
 
 word = st.text_input("Enter word:")
