@@ -461,12 +461,12 @@ def unRomanizeAndAccentuate():
 
   word = st.text_input("Enter your Romanized Greek word")
 
-    def unRomanize(word)
-    def accentuate(word)
+  def unRomanize(word)
+  def accentuate(word)
 
-    st.write(word)
+  st.write(word)
 
-    pass
+  pass
 
 try: 
   if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
