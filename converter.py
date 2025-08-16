@@ -83,7 +83,16 @@ allRoughBreathedVows = ["ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "ᾱ̔", "ἡ", "ῑ�
 
 st.title("Ancient Greek Code Tester")
 
-st.image("'https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab'", caption="caption", use_column_width=True)
+st.image("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab", caption="caption", use_column_width=True)
+
+st.markdown(
+    """
+    <div style="text-align: center;">
+        <img src="https://example.com/my_image.png" width="300">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 #step 1: Greek to Latin or Latin to Greek?
 
