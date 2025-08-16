@@ -74,6 +74,10 @@ allCircumflexVows = ["", "", "", "", "", "ᾶ", "ῆ", "ῗ", "ῶ", "ῧ", "α�
 allShortVows = ["α", "ε", "ι", "ο", "υ", "αι", "οι", "ϊ", "ϋ", "ἀ", "ἐ", "ἰ", "ὀ",
                 "ὐ", "αἰ", "οἰ", "ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "αἱ", "οἱ"]
 
+allUnbreathedVows = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "ῡ", "αι", "αυ", "ει", 
+             "ευ", "οι", "ου", "υι", "ᾳ", "ᾱυ", "ῃ", "ηυ", "ῳ", "ωυ", "ῡι", "ϊ", 
+             "ϋ"]
+
 st.title("Ancient Greek Code Tester")
 
 #step 1: Greek to Latin or Latin to Greek?
@@ -118,7 +122,6 @@ def unRomanize():
 
   word = word.replace("@", "rrh")
 
-  st.write(word)
   #change the individual letters
 
   word = word.replace("rrh", "ρρ")
@@ -138,8 +141,6 @@ def unRomanize():
   word = word.replace("hī", "ῑ̔")
   word = word.replace("hō", "ὡ")
   word = word.replace("hū", "ῡ̔")
-
-  st.write(word)
 
   word = word.replace("ks", "ξ")
   word = word.replace("ps", "ψ")
@@ -168,12 +169,9 @@ def unRomanize():
   word = word.replace("m", "μ")
   word = word.replace("x", "ξ")
 
-  st.write(word)
-
   word = word.replace("ï", "ϊ")
   word = word.replace("ü", "ϋ")
 
-  st.write(word)
   #fix the rough breathing marks and iota subscript
 
   word = word.replace("ωι", "ῳ")
@@ -188,13 +186,9 @@ def unRomanize():
   word = word.replace("ἡι", "ᾑ")
   word = word.replace("ὡι", "ᾡ")
   word = word.replace("ῡ̔ι", "ῡἱ")
-
   word = word.replace("ἁυ", "αὑ")
-
-  st.write(word + "after crutial line")
   word = word.replace("ἑυ", "εὑ")
-  st.write(word + "after crutial line")
- 
+  st.write(word)
   word = word.replace("ὁυ", "οὑ")
   word = word.replace("ᾱ̔υ", "ᾱὑ")
   word = word.replace("ἡυ", "ηὑ")
@@ -210,71 +204,73 @@ def unRomanize():
   if word[0] == "ρ":
     word = "ῤ" + word[1:]
 
-  if word[0] == "α":
-    if word[1] == "ι":
-      word = "αἰ" + word[2:]
-    elif word[1] == "υ":
-      word = "αὐ" + word[2:]
-    else:
-      word = "ἀ" + word[1:]
-
-  if word[0] == "ε":
-    if word[1] == "ι":
-      word = "εἰ" + word[2:]
-    elif word[1] == "υ":
-      word = "εὐ" + word[2:]
-    else:
-      word = "ἐ" + word[1:]
-
-  if word[0] == "ι":
-    word = "ἰ" + word[1:]
-
-  if word[0] == "ο":
-    if word[1] == "ι":
-      word = "οἰ" + word[2:]
-    elif word[1] == "υ":
-      word = "οὐ" + word[2:]
-    else:
-      word = "ὀ" + word[1:]
-
-  if word[0] == "υ":
-    if word[1] == "ι":
-      word = "υἰ" + word[2:]
-    else:
-      word = "ὐ" + word[1:]
-
-  if word[0] == "ᾱ":
-    if word[1] == "ι":
-      word = "ᾀ" + word[2:]
-    elif word[1] == "υ":
-      word = "ᾱὐ" + word[2:]
-    else:
-      word = "ᾱ̓" + word[1:]
-
-  if word[0] == "η":
-    if word[1] == "ι":
-      word = "ᾐ" + word[2:]
-    elif word[1] == "υ":
-      word = "ηὐ" + word[2:]
-    else:
-      word = "ἠ" + word[1:]
-
-  if word[0] == "ῑ":
-    word = "ῑ̓" + word[1:]
-
-  if word[0] == "ω":
-    if word[1] == "ι":
-      word = "ᾠ" + word[2:]
-    elif word[1] == "υ":
-      word = "ωὐ" + word[2:]
-    else:
-      word = "ὠ" + word[1:]
-
-  if word[0] == "ῡ":
-    if word[1] == "ι":
-      word = "ῡἰ" + word[2:]
-    else:
-      word = "ῡ̓" + word[1:]
+  if word[0] + word[1] in unAlbreathedVows:
+   
+    if word[0] == "α":
+      if word[1] == "ι":
+        word = "αἰ" + word[2:]
+      elif word[1] == "υ":
+        word = "αὐ" + word[2:]
+      else:
+        word = "ἀ" + word[1:]
+  
+    if word[0] == "ε":
+      if word[1] == "ι":
+        word = "εἰ" + word[2:]
+      elif word[1] == "υ":
+        word = "εὐ" + word[2:]
+      else:
+        word = "ἐ" + word[1:]
+  
+    if word[0] == "ι":
+      word = "ἰ" + word[1:]
+  
+    if word[0] == "ο":
+      if word[1] == "ι":
+        word = "οἰ" + word[2:]
+      elif word[1] == "υ":
+        word = "οὐ" + word[2:]
+      else:
+        word = "ὀ" + word[1:]
+  
+    if word[0] == "υ":
+      if word[1] == "ι":
+        word = "υἰ" + word[2:]
+      else:
+        word = "ὐ" + word[1:]
+  
+    if word[0] == "ᾱ":
+      if word[1] == "ι":
+        word = "ᾀ" + word[2:]
+      elif word[1] == "υ":
+        word = "ᾱὐ" + word[2:]
+      else:
+        word = "ᾱ̓" + word[1:]
+  
+    if word[0] == "η":
+      if word[1] == "ι":
+        word = "ᾐ" + word[2:]
+      elif word[1] == "υ":
+        word = "ηὐ" + word[2:]
+      else:
+        word = "ἠ" + word[1:]
+  
+    if word[0] == "ῑ":
+      word = "ῑ̓" + word[1:]
+  
+    if word[0] == "ω":
+      if word[1] == "ι":
+        word = "ᾠ" + word[2:]
+      elif word[1] == "υ":
+        word = "ωὐ" + word[2:]
+      else:
+        word = "ὠ" + word[1:]
+  
+    if word[0] == "ῡ":
+      if word[1] == "ι":
+        word = "ῡἰ" + word[2:]
+      else:
+        word = "ῡ̓" + word[1:]
 
  
     
