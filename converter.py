@@ -196,18 +196,17 @@ def unRomanize():
   word = word.replace("ἡυ", "ηὑ")
   word = word.replace("ὡυ", "ωὑ")
   #fix the final and initial letters
-	
+
   try: 
-	if word[-1] == "σ":
+    if word[-1] == "σ":
       word = word[:-1] + "ς"
   
     if word[0] == "ϐ":
       word = "β" + word[1:]
     if word[0] == "ρ":
       word = "ῤ" + word[1:]
-    st.write(word + " 1")
+    
     if word[0] not in allRoughBreathedVows:
-     
       if word [1] not in allRoughBreathedVows: #just to make sure that the first vowel doesnt get two breathing marks
       
        if word[0] == "α":
