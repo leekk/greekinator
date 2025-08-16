@@ -10,16 +10,16 @@ import streamlit as st
 st.sidebar.write("sidebar check")
 # check whether it works wout the sidebar
 
-st.markdown(
- """
- <style>
- .stApp {
-        background-color: #FFFFFF;
-    }
- </style>
- """,
- unsafe_allow_html=True
-)
+#st.markdown(
+# """
+# <style>
+# .stApp {
+#        background-color: #FFFFFF;
+#    }
+# </style>
+# """,
+# unsafe_allow_html=True
+#)
 
 st.markdown(
     """
