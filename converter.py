@@ -276,7 +276,7 @@ def unRomanize():
            word = "ῡ̓" + word[1:]
 
   except IndexError:
-	pass
+    pass
         
   st.write(word + " 3")
     
