@@ -2,6 +2,6 @@
 font = "New Athena Unicode version 2018"
 
 [[theme.fontFaces]]
-family="New Athena Unicode version 2018"
-src="url('https://www.classicalstudies.org/sites/default/files/userfiles/files/NAU5_005.zip')"
+family="New Athena Unicode"
+src="url('https://ucbclassics.dreamhosters.com/djm/greekkeys/NAUdownload.html')"
 weight="400"
