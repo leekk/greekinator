@@ -5,7 +5,7 @@ import matplotlib as mpl
 import matplotlib.font_manager as fm
 
 fe = fm.FontEntry(
-		fname='your custom ttf file path',
+		fname='static/newathu5_5.ttf',
     name='newathu5_5.ttf')
 fm.fontManager.ttflist.intert(0, fe)
 mpl.raParams['font.family'] = fe.name = 'newathu5_5.ttf'
