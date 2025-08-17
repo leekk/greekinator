@@ -574,6 +574,7 @@ def getVowelsAndConsonants(word):
   idx_list = []
 
   i = 0
+  word = regex.findall(r'\X', word)
   while i < len(word):
     if word[i] in allVowsAndConsonants:
       thing_1 = word[i]
