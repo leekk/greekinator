@@ -11,18 +11,25 @@ import regex
 #</style>
 #""", unsafe_allow_html=True)
 
-from fontTools.ttLib import TTFont
-font = TTFont('/static/newathu5_5.ttf')
-print(font['name'].getDebugName(1))
-
 st.markdown("""
 <style>
-html, body, [class*="css"]  {
-    font-family: 'NewAthenaUnicode';
-    font-size: 18px;
+* {
+    outline: 1px solid red !important;
+    font-family: 'NewAthenaUnicode' !important;
 }
 </style>
 """, unsafe_allow_html=True)
+
+# BELOW
+
+#st.markdown("""
+#<style>
+#html, body, [class*="css"]  {
+#    font-family: 'NewAthenaUnicode';
+#    font-size: 18px;
+#}
+#</style>
+#""", unsafe_allow_html=True)
 
 #st.markdown(
 #    """
