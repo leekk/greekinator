@@ -15,11 +15,13 @@ st.markdown("""
 
 # alanur tasks:
 # result history
+# being cute
 
 # vincent tasks:
 # ōi smooth breathing mark
 # ï circumflex
 # vowel stem checker
+# why do the a's dissapear in hīaa?
 # being handsome
 
 #class clustered:
