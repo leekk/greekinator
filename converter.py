@@ -14,6 +14,8 @@ class clustered:
         return len(self.clusters)
 
     def __getitem__(self, key):
+        if isinstance(key, slice):
+            return clustered("".join(self.clusters[key]))
         return self.clusters[key]
 
     def __iter__(self):
