@@ -3,6 +3,6 @@ enableStaticServing = true
 
 [[theme.fontFaces]]
 family = "New Athena Unicode"
-url = "static/newathu5_5.ttf"
+url = "app/static/newathu5_5.ttf"
 weight = 400
 style = "normal"
