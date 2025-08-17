@@ -2,13 +2,22 @@ import streamlit as st
 import regex
 
 
-st.markdown("""
-<style>
-body {
-    font-family: 'New Athena Unicode';
-}
-</style>
-""", unsafe_allow_html=True)
+st.markdown(
+    """
+    <style>
+    @font-face {
+        font-family: 'Newathu';
+        src: url('/static/newathu5_5.ttf') format('truetype');
+    }
+
+    html, body, [class*="css"], h1, h2, h3, h4, h5, h6, p, div, span {
+        font-family: 'Newathu', sans-serif !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 
 #st.markdown(
 #    """
