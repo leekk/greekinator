@@ -346,7 +346,7 @@ def unRomanize(word):
          else:
            word = ["ῡ̓"] + word[1:]
 
-       word = "".join(word)
+       #word = "".join(word)
  
   except IndexError:
     if word == "α":
@@ -371,7 +371,7 @@ def unRomanize(word):
         word = "ῡ̓"
     pass
         
-  return word
+  return "".join(word)
     
   if word:
     st.session_state.outputs.insert(0, word)
