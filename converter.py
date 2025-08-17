@@ -1,6 +1,8 @@
 import streamlit as st
 import regex
 
+import matplotlib.font_manager as font_manager
+
 config.toml
 
 [server]
