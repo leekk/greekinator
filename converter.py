@@ -12,7 +12,7 @@ import regex
 #""", unsafe_allow_html=True)
 
 from fontTools.ttLib import TTFont
-font = TTFont('.streamlit/static/newathu5_5.ttf')
+font = TTFont('/static/newathu5_5.ttf')
 print(font['name'].getDebugName(1))
 
 st.markdown("""
