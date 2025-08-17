@@ -1,7 +1,7 @@
 [theme]
 font = "New Athena Unicode version 2018"
 
-#[[theme.fontFaces]]
-#family="YourAlternativeFont"
-#src="url('https://fonts.googleapis.com/css2?family=YourAlternativeFont&display=swap')"
-#weight="400"
+[[theme.fontFaces]]
+family="New Athena Unicode version 2018"
+src="url('https://www.classicalstudies.org/sites/default/files/userfiles/files/NAU5_005woff.zip')"
+weight="400"
