@@ -3,6 +3,7 @@ import regex
 
 config.toml
 
+[server]
 enableStaticServing = True
 [[theme.fontFaces]]
 family=""
