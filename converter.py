@@ -1,11 +1,12 @@
 import streamlit as st
 import regex
 
-server.enableStaticServing = true
-
+[server]
+enableStaticServing = true
 [[theme.fontFaces]]
-family = "font_name"
-url = "newathu5_5.woff"
+family=""
+url=""
+style="normal"
 
 # alanur tasks:
 # secondary bg color
