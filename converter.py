@@ -4,14 +4,11 @@ import regex
 import matplotlib as mpl
 import matplotlib.font_manager as fm
 
-config.toml
-
-[server]
-enableStaticServing = True
-[[theme.fontFaces]]
-family=""
-url="static/newathu5_5.ttf"
-style="normal"
+fe = fm.FontEntry(
+		fname='your custom ttf file path',
+    name='your custom ttf font name')
+fm.fontManager.ttflist.intert(0, fe)
+mpl.raParams['font.family'] = fe.name = 'your custom ttf font name'
 
 # alanur tasks:
 # secondary bg color
