@@ -559,7 +559,7 @@ def rootsGuesser(word):
     st.write(rootStatus)
     
 
-word = cStr(st.text_input("Enter word:") or "")
+word = clustered(st.text_input("Enter word:") or "")
 
 try: 
   if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
