@@ -2,6 +2,7 @@ import streamlit as st
 import regex
 
 import matplotlib as mpl
+import matplotlib.font_manager as fm
 
 config.toml
 
