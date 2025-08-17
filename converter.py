@@ -7,6 +7,11 @@ import regex
 # secondary bg color
 # result history
 
+# vincent tasks:
+# ōi smooth breathing mark
+# ï circumflex
+# vowel stem checker
+
 #class clustered:
 #    def __init__(self, text: str):
 #        self.text = text
