@@ -512,7 +512,7 @@ def graveAccent(word, n): # n from last
   grv_vow = mapping.get(vow, vow)
 
   word = regex.findall(r'\X', word)
-  word = word[:idx] + [grv_vow] + word[idx + len(act_vow):]  
+  word = word[:idx] + [grv_vow] + word[idx + len(grv_vow):]  
   return "".join(word)
 
 
@@ -527,7 +527,7 @@ def circumflexAccent(word, n): # n from last
   crcm_vow = mapping.get(vow, vow)
 
   word = regex.findall(r'\X', word)
-  word = word[:idx] + [crcm_vow] + word[idx + len(act_vow):]  
+  word = word[:idx] + [crcm_vow] + word[idx + len(crcm_vow):]  
   return "".join(word)
 
 
