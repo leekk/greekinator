@@ -2,7 +2,7 @@ import streamlit as st
 import regex
 
 #[server]
-enableStaticServing = true
+server.enableStaticServing = true
 [[theme.fontFaces]]
 family=""
 url="static/newathu5_5.ttf"
