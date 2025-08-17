@@ -7,7 +7,7 @@ import matplotlib.font_manager as fm
 fe = fm.FontEntry(
 		fname='static/newathu5_5.ttf',
     name='newathu5_5.ttf')
-mp.rcParams['font.family'] = fe.name
+mpl.rcParams['font.family'] = fe.name
 
 # alanur tasks:
 # secondary bg color
