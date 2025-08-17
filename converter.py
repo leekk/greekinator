@@ -592,6 +592,9 @@ def getVowelsAndConsonants(word):
     return thing_list, idx_list
 
 def rootsGuesser(word):
+
+    # initializing root status
+    rootStatus = ""
     
     thing_list, idx_list = getVowelsAndConsonants(word)
     last_thing = thing_list[-1]
