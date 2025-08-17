@@ -1,3 +1,6 @@
+[server]
+enableStaticServing = true
+
 [theme]
 #base="light"
 #primaryColor="#F63366"
@@ -5,3 +8,9 @@
 #secondaryBackgroundColor="#F0F2F6"
 #textColor="#262730"
 #font="sans serif"
+
+[[theme.fontFaces]]
+family = "New Athena Unicode"
+url = "newathu5_5.ttf"
+weight = 400
+style = "normal"
