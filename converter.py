@@ -1,9 +1,10 @@
 import streamlit as st
+import regex
 
 # alanur tasks:
 # secondary bg color
 # result history
-# get rid of sidebar text
+
 
 
 # UI
@@ -88,6 +89,31 @@ allNonContractVows = ["i", "u", "ā", "ē", "ī", "ō", "ū", "ai", "au", "ei",
 allVowsAndConsonants = ["a", "e", "i", "o", "u", "ā", "ē", "ī", "ō", "ū", "ai", "au", "ei", 
              "eu", "oi", "ou", "ui", "āi", "āu", "ēi", "ēu", "ōi", "ōu", "ūi", "ï", 
              "ü", "r", "rh", "t", "th", "p", "ph", "s", "d", "g", "h", "k", "kh", "l", "z", "x", "b", "n", "m"]
+
+
+class clustered:
+    def __init__(self, text: str):
+        self.text = text
+        self.clusters = regex.findall(r"\X", text)
+
+    def __len__(self):
+        return len(self.clusters)
+
+    def __getitem__(self, key):
+        return self.clusters[key]
+
+    def __iter__(self):
+        return iter(self.clusters)
+
+    def __str__(self):
+        return self.text
+
+    def replace(self, old, new, count=-1):
+        old = str(old)
+        new = str(new)
+
+        replaced_text = self.text.replace(old, new, count)
+        return clustered(replaced_text)
 
 st.title("Ancient Greek Code Tester")
 
@@ -533,7 +559,7 @@ def rootsGuesser(word):
     st.write(rootStatus)
     
 
-word = st.text_input("Enter word:")
+word = cStr(st.text_input("Enter word:") or "")
 
 try: 
   if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
