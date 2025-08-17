@@ -5,7 +5,7 @@ import regex
 enableStaticServing = true
 [[theme.fontFaces]]
 family=""
-url=""
+url="static/newathu5_5.ttf"
 style="normal"
 
 # alanur tasks:
