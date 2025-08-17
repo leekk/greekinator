@@ -1,14 +1,21 @@
 import streamlit as st
 import regex
 
-import matplotlib as mpl
-import matplotlib.font_manager as fm
+st.markdown(
+    """
+    <style>
+    @font-face {
+        font-family: 'Newathu';
+        src: url('static/newathu5_5.ttf') format('truetype');
+    }
 
-fe = fm.FontEntry(
-		fname='leekk/greekinator/main/static/newathu5_5.ttf',
-    name='newathu5_5.ttf')
-fm. fontManager.ttflist.insert(0, fe)
-mpl.rcParams[font.family] = fe.name
+    html, body, [class*="css"]  {
+        font-family: 'Newathu', sans-serif;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # alanur tasks:
 # secondary bg color
