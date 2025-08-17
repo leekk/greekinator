@@ -1,77 +1,26 @@
 import streamlit as st
 import regex
 
-#  can I change for a second
 
-#st.markdown("""
-#<style>
-#body {
-#    font-family: 'New Athena Unicode';
-#}
-#</style>
-#""", unsafe_allow_html=True)
 
 st.markdown("""
 <style>
 * {
-    #outline: 1px solid red !important;
     font-family: 'NewAthenaUnicode' !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# BELOW
 
-#st.markdown("""
-#<style>
-#html, body, [class*="css"]  {
-#    font-family: 'NewAthenaUnicode';
-#    font-size: 18px;
-#}
-#</style>
-#""", unsafe_allow_html=True)
-
-#st.markdown(
-#    """
-#    <style>
-#    @font-face {
-#        font-family: 'Newathu';
-#        src: url('/static/newathu5_5.ttf') format('truetype');
-#    }
-
-#    html, body, [class*="css"], h1, h2, h3, h4, h5, h6, p, div, span {
-#        font-family: 'Newathu', sans-serif !important;
-#    }
-#    </style>
-#    """,
-#    unsafe_allow_html=True
-#)
-
-
-#st.markdown(
-#    """
-#    <style>
-#    @font-face {
-#        font-family: 'Newathu';
-#        src: url('static/newathu5_5.ttf') format('truetype');
-#    }
-
- #   html, body, [class*="css"]  {
- #       font-family: 'Newathu', sans-serif;
- #   }
- #   </style>
- #   """,
- #   unsafe_allow_html=True
-#)
 
 # alanur tasks:
-# secondary bg color
 # result history
 
 # vincent tasks:
 # ōi smooth breathing mark
 # ï circumflex
 # vowel stem checker
+# being handsome
 
 #class clustered:
 #    def __init__(self, text: str):
