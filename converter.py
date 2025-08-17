@@ -1,21 +1,30 @@
 import streamlit as st
 import regex
 
-st.markdown(
-    """
-    <style>
-    @font-face {
-        font-family: 'Newathu';
-        src: url('static/newathu5_5.ttf') format('truetype');
-    }
 
-    html, body, [class*="css"]  {
-        font-family: 'Newathu', sans-serif;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+st.markdown("""
+<style>
+body {
+    font-family: 'New Athena Unicode';
+}
+</style>
+""", unsafe_allow_html=True)
+
+#st.markdown(
+#    """
+#    <style>
+#    @font-face {
+#        font-family: 'Newathu';
+#        src: url('static/newathu5_5.ttf') format('truetype');
+#    }
+
+ #   html, body, [class*="css"]  {
+ #       font-family: 'Newathu', sans-serif;
+ #   }
+ #   </style>
+ #   """,
+ #   unsafe_allow_html=True
+#)
 
 # alanur tasks:
 # secondary bg color
