@@ -3,10 +3,19 @@ import regex
 
 #  can I change for a second
 
+#st.markdown("""
+#<style>
+#body {
+#    font-family: 'New Athena Unicode';
+#}
+#</style>
+#""", unsafe_allow_html=True)
+
 st.markdown("""
 <style>
-body {
-    font-family: 'New Athena Unicode';
+html, body, [class*="css"]  {
+    font-family: 'NewAthenaUnicode';
+    font-size: 18px;
 }
 </style>
 """, unsafe_allow_html=True)
