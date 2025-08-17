@@ -1,9 +1,7 @@
 import streamlit as st
 import regex
 
-import regex
-s = "string with 👨‍👩‍👧‍👦 emoji"
-word = regex.findall(r'\X', word)
+
 
 # alanur tasks:
 # secondary bg color
@@ -348,7 +346,8 @@ def unRomanize(word):
          else:
            word = ["ῡ̓"] + word[1:]
 
-  word = "".join(word)
+       word = "".join(word)
+ 
   except IndexError:
     if word == "α":
         word = "ἀ"
