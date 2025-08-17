@@ -565,7 +565,7 @@ def unRomanizeAndAccentuate(word):
     word = unRomanize(word)
     word = accentuate(word)
   
-    return(word)
+    return word 
   
     pass
 
