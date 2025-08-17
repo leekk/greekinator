@@ -8,7 +8,7 @@ fe = fm.FontEntry(
 		fname='leekk/greekinator/main/static/newathu5_5.ttf',
     name='newathu5_5.ttf')
 fm. fontManager.ttflist.insert(0, fe)
-mpl.rcParams['font.family'] = fe.name
+mpl.rcParams[font.family] = fe.name
 
 # alanur tasks:
 # secondary bg color
