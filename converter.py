@@ -5,7 +5,7 @@ import matplotlib as mpl
 import matplotlib.font_manager as fm
 
 fe = fm.FontEntry(
-		fname='static/newathu5_5.ttf',
+		fname='leekk/greekinator/main/static/newathu5_5.ttf',
     name='newathu5_5.ttf')
 mpl.rcParams['font.family'] = fe.name
 
