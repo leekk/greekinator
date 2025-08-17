@@ -29,6 +29,12 @@ class clustered:
         replaced_text = self.text.replace(old, new, count)
         return clustered(replaced_text)
 
+    def __add__(self, other):
+        return clustered(self.text + str(other))
+
+    def __radd__(self, other):
+        return clustered(str(other) + self.text)
+
 # UI
 #st.sidebar.write("sidebar check")
 # check whether it works wout the sidebar
