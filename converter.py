@@ -11,6 +11,10 @@ import regex
 #</style>
 #""", unsafe_allow_html=True)
 
+from fontTools.ttLib import TTFont
+font = TTFont('.streamlit/static/newathu5_5.ttf')
+print(font['name'].getDebugName(1))
+
 st.markdown("""
 <style>
 html, body, [class*="css"]  {
