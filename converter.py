@@ -1,6 +1,7 @@
 import streamlit as st
 import regex
 
+config.toml
 
 enableStaticServing = True
 [[theme.fontFaces]]
