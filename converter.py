@@ -1,7 +1,7 @@
 import streamlit as st
 import regex
 
-[server]
+
 enableStaticServing = True
 [[theme.fontFaces]]
 family=""
