@@ -1,2 +1,7 @@
 [theme]
-font = "comic sans"
+font = "New Athena Unicode version 2018"
+
+#[[theme.fontFaces]]
+#family="YourAlternativeFont"
+#src="url('https://fonts.googleapis.com/css2?family=YourAlternativeFont&display=swap')"
+#weight="400"
