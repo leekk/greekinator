@@ -14,7 +14,7 @@ import regex
 st.markdown("""
 <style>
 * {
-    outline: 1px solid red !important;
+    #outline: 1px solid red !important;
     font-family: 'NewAthenaUnicode' !important;
 }
 </style>
