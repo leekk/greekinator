@@ -1,41 +1,45 @@
 import streamlit as st
 import regex
 
+import regex
+s = "string with 👨‍👩‍👧‍👦 emoji"
+word = regex.findall(r'\X', word)
+
 # alanur tasks:
 # secondary bg color
 # result history
 
-class clustered:
-    def __init__(self, text: str):
-        self.text = text
-        self.clusters = regex.findall(r"\X", text)
+#class clustered:
+#    def __init__(self, text: str):
+#        self.text = text
+#        self.clusters = regex.findall(r"\X", text)
+#
+#    def __len__(self):
+#        return len(self.clusters)
+#
+#    def __getitem__(self, key):
+#        if isinstance(key, slice):
+#            return clustered("".join(self.clusters[key]))
+#        return self.clusters[key]
+#
+#    def __iter__(self):
+#        return iter(self.clusters)
 
-    def __len__(self):
-        return len(self.clusters)
+ #   def __str__(self):
+ #       return self.text
 
-    def __getitem__(self, key):
-        if isinstance(key, slice):
-            return clustered("".join(self.clusters[key]))
-        return self.clusters[key]
+#    def replace(self, old, new, count=-1):
+#        old = str(old)
+#        new = str(new)
 
-    def __iter__(self):
-        return iter(self.clusters)
+ #       replaced_text = self.text.replace(old, new, count)
+ #       return clustered(replaced_text)
 
-    def __str__(self):
-        return self.text
-
-    def replace(self, old, new, count=-1):
-        old = str(old)
-        new = str(new)
-
-        replaced_text = self.text.replace(old, new, count)
-        return clustered(replaced_text)
-
-    def __add__(self, other):
-        return clustered(self.text + str(other))
-
-    def __radd__(self, other):
-        return clustered(str(other) + self.text)
+   # def __add__(self, other):
+   #     return clustered(self.text + str(other))
+#
+  #  def __radd__(self, other):
+  #      return clustered(str(other) + self.text)
 
 # UI
 #st.sidebar.write("sidebar check")
@@ -80,7 +84,7 @@ allVows = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "ῡ", "αι"
              "εὑ", "οἱ", "οὑ", "υἱ", "ᾁ", "ᾱὑ", "ᾑ", "ηὑ", "ᾡ", "ωὑ", "ῡἱ"]
 
 
-allVows = [clustered(v) for v in allVows]
+#allVows = [clustered(v) for v in allVows]
 
 allAcuteVows = ["ά", "έ", "ί", "ό", "ύ", "ᾱ́", "ή", "ῑ́", "ώ", "ῡ́", "αί", "αύ", 
                   "εί", "εύ", "οί", "ού", "υί", "ᾴ", "ᾱύ", "ῄ", "ηύ", "ῴ", "ωύ",
@@ -90,7 +94,7 @@ allAcuteVows = ["ά", "έ", "ί", "ό", "ύ", "ᾱ́", "ή", "ῑ́", "ώ", "ῡ
                   "ὥ", "ῡ̔́", "αἵ", "αὕ", "εἵ", "εὕ", "οἵ", "οὕ", "υἵ", "ᾅ", "ᾱὕ",
                   "ᾕ", "ηὕ", "ᾥ", "ωὕ", "ῡἵ"]
 
-allAcuteVows = [clustered(v) for v in allAcuteVows]
+#allAcuteVows = [clustered(v) for v in allAcuteVows]
 
 allGraveVows = ["ὰ", "ὲ", "ὶ", "ὸ", "ὺ", "ᾱ̀", "ὴ", "ῑ̀", "ὼ", "ῡ̀", "αὶ", "αὺ", 
                   "εὶ", "εὺ", "οὶ", "οὺ", "υὶ", "ᾲ", "ᾱὺ", "ῂ", "ηὺ", "ῲ", "ωὺ", 
@@ -100,7 +104,7 @@ allGraveVows = ["ὰ", "ὲ", "ὶ", "ὸ", "ὺ", "ᾱ̀", "ὴ", "ῑ̀", "ὼ
                   "ὣ", "ῡ̔̀", "αἳ", "αὓ", "εἳ", "εὓ", "οἳ", "οὓ", "υἳ", "ᾃ", "ᾱὓ", 
                   "ᾓ", "ηὓ", "ᾣ", "ωὓ", "ῡἳ"]
 
-allGraveVows = [clustered(v) for v in allGraveVows]
+#allGraveVows = [clustered(v) for v in allGraveVows]
 
 allCircumflexVows = ["", "", "", "", "", "ᾶ", "ῆ", "ῗ", "ῶ", "ῧ", "αῖ", "αῦ", 
                        "εῖ", "εῦ", "οῖ", "οῦ", "υῖ", "ᾷ", "ᾱῦ", "ῇ", "ηῦ", "ῷ", 
@@ -110,35 +114,35 @@ allCircumflexVows = ["", "", "", "", "", "ᾶ", "ῆ", "ῗ", "ῶ", "ῧ", "α�
                        "ἷ", "ὧ", "ὗ", "αἷ", "αὗ", "εἷ", "εὗ", "οἷ", "οὗ", "υἷ",
                        "ᾇ", "ᾱὗ", "ᾗ", "ηὗ", "ᾧ", "ωὗ", "ῡἷ"]
 
-allCircumflexVows = [clustered(v) for v in allCircumflexVows]
+#allCircumflexVows = [clustered(v) for v in allCircumflexVows]
 
 allShortVows = ["α", "ε", "ι", "ο", "υ", "αι", "οι", "ϊ", "ϋ", "ἀ", "ἐ", "ἰ", "ὀ",
                 "ὐ", "αἰ", "οἰ", "ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "αἱ", "οἱ"]
 
-allShortVows = [clustered(v) for v in allShortVows]
+#allShortVows = [clustered(v) for v in allShortVows]
 
 allUnbreathedVows = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "ῡ", "αι", "αυ", "ει", 
              "ευ", "οι", "ου", "υι", "ᾳ", "ᾱυ", "ῃ", "ηυ", "ῳ", "ωυ", "ῡι", "ϊ", 
              "ϋ"]
 
-allUnbreathedVows = [clustered(v) for v in allUnbreathedVows]
+#allUnbreathedVows = [clustered(v) for v in allUnbreathedVows]
 
 allRoughBreathedVows = ["ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "ᾱ̔", "ἡ", "ῑ̔", "ὡ", "ῡ̔", "αἱ", "αὑ", "εἱ", 
              "εὑ", "οἱ", "οὑ", "υἱ", "ᾁ", "ᾱὑ", "ᾑ", "ηὑ", "ᾡ", "ωὑ", "ῡἱ"]
 
-allRoughBreathedVows = [clustered(v) for v in allRoughBreathedVows]
+#allRoughBreathedVows = [clustered(v) for v in allRoughBreathedVows]
             
 allNonContractVows = ["i", "u", "ā", "ē", "ī", "ō", "ū", "ai", "au", "ei", 
              "eu", "oi", "ou", "ui", "āi", "āu", "ēi", "ēu", "ōi", "ōu", "ūi", "ï", 
              "ü"]
 
-allNonContractVows = [clustered(v) for v in allNonContractVows]
+#allNonContractVows = [clustered(v) for v in allNonContractVows]
             
 allVowsAndConsonants = ["a", "e", "i", "o", "u", "ā", "ē", "ī", "ō", "ū", "ai", "au", "ei", 
              "eu", "oi", "ou", "ui", "āi", "āu", "ēi", "ēu", "ōi", "ōu", "ūi", "ï", 
              "ü", "r", "rh", "t", "th", "p", "ph", "s", "d", "g", "h", "k", "kh", "l", "z", "x", "b", "n", "m"]
 
-allVowsAndConsonants = [clustered(v) for v in allVowsAndConsonants]
+#allVowsAndConsonants = [clustered(v) for v in allVowsAndConsonants]
 
 
 
@@ -262,86 +266,89 @@ def unRomanize(word):
   word = word.replace("ὡυ", "ωὑ")
   #fix the final and initial letters
 
+  word = regex.findall(r'\X', word)
+
 
 
   try: 
     if word[-1] == "σ":
-      word = word[:-1] + "ς"
+      word = word[:-1] + ["ς"]
   
     if word[0] == "ϐ":
-      word = "β" + word[1:]
+      word = ["β"] + word[1:]
     if word[0] == "ρ":
-      word = "ῤ" + word[1:]
+      word = ["ῤ"] + word[1:]
     
     if word[0] not in allRoughBreathedVows:
       if word[1] not in allRoughBreathedVows: #just to make sure that the first vowel doesnt get two breathing marks
       
        if word[0] == "α":
          if word[1] == "ι":
-           word = "αἰ" + word[2:]
+           word = regex.findall(r'\X', "αἰ") + word[2:]
          elif word[1] == "υ":
-           word = "αὐ" + word[2:]
+           word = regex.findall(r'\X', "αὐ") + word[2:]
          else:
-           word = "ἀ" + word[1:]
+           word = ["ἀ"] + word[1:]
      
        if word[0] == "ε":
          if word[1] == "ι":
-           word = "εἰ" + word[2:]
+           word = regex.findall(r'\X', "εἰ") + word[2:]
          elif word[1] == "υ":
-           word = "εὐ" + word[2:]
+           word = regex.findall(r'\X', "εὐ") + word[2:]
          else:
-           word = "ἐ" + word[1:]
+           word = ["ἐ"] + word[1:]
      
        if word[0] == "ι":
-         word = "ἰ" + word[1:]
+         word = ["ἰ"] + word[1:]
        
        if word[0] == "ο":
          if word[1] == "ι":
-           word = "οἰ" + word[2:]
+           word = regex.findall(r'\X', "οἰ") + word[2:]
          elif word[1] == "υ":
-           word = "οὐ" + word[2:]
+           word = regex.findall(r'\X', "οὐ") + word[2:]
          else:
-           word = "ὀ" + word[1:]
+           word = ["ὀ"] + word[1:]
      
        if word[0] == "υ":
          if word[1] == "ι":
-           word = "υἰ" + word[2:]
+           word = regex.findall(r'\X', "υἰ") + word[2:]
          else:
-           word = "ὐ" + word[1:]
+           word = ["ὐ"] + word[1:]
      
        if word[0] == "ᾱ":
          if word[1] == "ι":
-           word = "ᾀ" + word[2:]
+           word = ["ᾀ"] + word[2:]
          elif word[1] == "υ":
-           word = "ᾱὐ" + word[2:]
+           word = regex.findall(r'\X', "ᾱὐ") + word[2:]
          else:
-           word = "ᾱ̓" + word[1:]
+           word = ["ᾱ̓"] + word[1:]
      
        if word[0] == "η":
          if word[1] == "ι":
-           word = "ᾐ" + word[2:]
+           word = ["ᾐ"] + word[2:]
          elif word[1] == "υ":
-           word = "ηὐ" + word[2:]
+           word = regex.findall(r'\X', "ηὐ") + word[2:]
          else:
-           word = "ἠ" + word[1:]
+           word = ["ἠ"] + word[1:]
      
        if word[0] == "ῑ":
-         word = "ῑ̓" + word[1:]
+         word = ["ῑ̓"] + word[1:]
      
        if word[0] == "ω":
          if word[1] == "ι":
-           word = "ᾠ" + word[2:]
+           word = ["ᾠ"] + word[2:]
          elif word[1] == "υ":
-           word = "ωὐ" + word[2:]
+           word = regex.findall(r'\X', "ωὐ") + word[2:]
          else:
-           word = "ὠ" + word[1:]
+           word = ["ὠ"] + word[1:]
      
        if word[0] == "ῡ":
          if word[1] == "ι":
-           word = "ῡἰ" + word[2:]
+           word = regex.findall(r'\X', "ῡἰ") + word[2:]
          else:
-           word = "ῡ̓" + word[1:]
+           word = ["ῡ̓"] + word[1:]
 
+  word = "".join(word)
   except IndexError:
     if word == "α":
         word = "ἀ"
@@ -466,6 +473,7 @@ def getVowels(word):
   idx_list = []
 
   i = 0
+  word = regex.findall(r'\X', word)
   while i < len(word):
     if word[i] in allVows:
       vowel_1 = word[i]
@@ -491,7 +499,9 @@ def acuteAccent(word, n): # n from last
   mapping = dict(zip(allVows, allAcuteVows))
   act_vow = mapping.get(vow, vow)
 
-  return word[:idx] + act_vow + word[idx + len(act_vow):]
+  word = regex.findall(r'\X', word)
+  word = word[:idx] + [act_vow] + word[idx + len(act_vow):]  
+  return "".join(word)
 
 def graveAccent(word, n): # n from last
   vow_lt, idx_lt = getVowels(word)
@@ -502,7 +512,11 @@ def graveAccent(word, n): # n from last
   mapping = dict(zip(allVows, allGraveVows))
   grv_vow = mapping.get(vow, vow)
 
-  return word[:idx] + grv_vow + word[idx + len(grv_vow):]
+  word = regex.findall(r'\X', word)
+  word = word[:idx] + [grv_vow] + word[idx + len(act_vow):]  
+  return "".join(word)
+
+
 
 def circumflexAccent(word, n): # n from last
   vow_lt, idx_lt = getVowels(word)
@@ -513,7 +527,11 @@ def circumflexAccent(word, n): # n from last
   mapping = dict(zip(allVows, allCircumflexVows))
   crcm_vow = mapping.get(vow, vow)
 
-  return word[:idx] + crcm_vow + word[idx + len(crcm_vow):]
+  word = regex.findall(r'\X', word)
+  word = word[:idx] + [crcm_vow] + word[idx + len(act_vow):]  
+  return "".join(word)
+
+
 
 
 def accentuate(word):
@@ -586,7 +604,8 @@ def rootsGuesser(word):
     st.write(rootStatus)
     
 
-word = clustered(st.text_input("Enter word:") or "")
+#word = clustered(st.text_input("Enter word:") or "")
+word = st.text_input("Enter word:")
 
 try: 
   if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
