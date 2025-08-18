@@ -382,7 +382,7 @@ try:
        #word = "".join(word)
     
  except IndexError: #one character words
-  	if word == "α":
+  	  if word == "α":
         word = "ἀ"
       if word == "ε":
         word = "ἐ"
