@@ -405,7 +405,7 @@ def unRomanize(word):
         word = "ᾠ"
     if word == "ῃ":
         word = "ᾐ"
-    if word[ == "ᾳ":
+    if word == "ᾳ":
         word = "ᾀ"
 
   pass
