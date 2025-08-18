@@ -408,8 +408,6 @@ def unRomanize(word):
        #word = "".join(word)
   
   except IndexError: #one character words
-    
-
   pass
         
   return "".join(word)
