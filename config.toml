@@ -11,6 +11,6 @@ src = "url('/static/New Athena Unicode V1.woff2') format('woff2'),
       "url('/static/NewAthenaUnicode.woff2') format('woff2'), 
       "url('/static/newathu5_5.woff') format('woff'), 
       "url('/static/newathu5_5.ttf') format('truetype')"
-weight = 400
+weight = "normal"
 style = "normal"
 fontDisplay = "swap"
