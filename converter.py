@@ -17,11 +17,11 @@ st.markdown("""
 # result history
 # being cute
 
-# vincent tasks:
+# vincent (actually Alanur) tasks:
 # ōi smooth breathing mark
 # ï circumflex
 # vowel stem checker
-# why do the a's dissapear in hīaa?
+# why do the a's dissapear in hīaa? (done)
 # being handsome
 
 
