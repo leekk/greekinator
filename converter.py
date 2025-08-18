@@ -382,31 +382,31 @@ def unRomanize(word):
     
   except IndexError: #one character words
     if word == "α":
-      word = "ἀ"
+    	word = "ἀ"
 	if word == "ε":
-      word = "ἐ"
+    	word = "ἐ"
     if word == "ι":
-      word = "ἰ"
+    	word = "ἰ"
     if word == "ο":
-      word = "ὀ"
+    	word = "ὀ"
     if word == "υ":
-      word = "ὐ"
+    	word = "ὐ"
     if word == "ᾱ":
-      word = "ᾱ̓"
+    	word = "ᾱ̓"
     if word == "η":
-      word = "ἠ"
+    	word = "ἠ"
     if word == "ῑ":
-      word = "ῑ̓"
+    	word = "ῑ̓"
     if word == "ω":
-      word = "ὠ"
+    	word = "ὠ"
     if word == "ῡ":
-      word = "ῡ̓"
+    	word = "ῡ̓"
     if word == "ῳ":
-      word = "ᾠ"
+     	word = "ᾠ"
     if word == "ῃ":
-      word = "ᾐ"
+    	word = "ᾐ"
     if word == "ᾳ":
-      word = "ᾀ"
+    	word = "ᾀ"
         
   pass      
   return "".join(word)
