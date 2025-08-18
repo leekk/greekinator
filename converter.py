@@ -28,37 +28,40 @@ st.markdown("""
 st.markdown(
     """
     <style>
-    .title-container {
+    .hero-container {
         position: relative;
-        text-align: center;
-        margin-top: -60px; /* adjust if Streamlit header overlaps */
-    }
-    .title-container img {
         width: 100%;
-        max-height: 250px;
-        object-fit: cover;
-        z-index: -1; /* behind text */
-        position: absolute;
-        top: 0;
-        left: 0;
+        height: 250px; /* adjust as needed */
+        overflow: hidden;
     }
-    .title-container h1 {
-        position: relative;
-        z-index: 1;
-        color: white; /* adjust for contrast */
-        padding: 80px 0;
+    .hero-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .hero-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 3em;
+        font-weight: bold;
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+        margin: 0;
     }
     </style>
 
-    <div class="title-container">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg" alt="Background Image">
-        <h1>My Streamlit Title</h1>
+    <div class="hero-container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg" alt="Hero Image">
+        <div class="hero-text">My Streamlit Title</div>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-
+# https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg
 
 # UI
 #st.sidebar.write("sidebar check")
