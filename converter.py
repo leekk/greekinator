@@ -24,37 +24,37 @@ st.markdown("""
 # why do the a's dissapear in hīaa?
 # being handsome
 
-#class clustered:
-#    def __init__(self, text: str):
-#        self.text = text
-#        self.clusters = regex.findall(r"\X", text)
-#
-#    def __len__(self):
-#        return len(self.clusters)
-#
-#    def __getitem__(self, key):
-#        if isinstance(key, slice):
-#            return clustered("".join(self.clusters[key]))
-#        return self.clusters[key]
-#
-#    def __iter__(self):
-#        return iter(self.clusters)
+st.markdown(
+    """
+    <style>
+    .hero-container {
+        position: relative;
+        width: 100%;
+        height: 250px; /* adjust height */
+        background-image: url("https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg", caption="Evangelist Mark Seated in his Study");
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .hero-container h1 {
+        color: white; /* contrast with background */
+        font-size: 3em;
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+        margin: 0;
+    }
+    </style>
 
- #   def __str__(self):
- #       return self.text
+    <div class="hero-container">
+        <h1>My Streamlit Title</h1>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-#    def replace(self, old, new, count=-1):
-#        old = str(old)
-#        new = str(new)
+       return self.text
 
- #       replaced_text = self.text.replace(old, new, count)
- #       return clustered(replaced_text)
-
-   # def __add__(self, other):
-   #     return clustered(self.text + str(other))
-#
-  #  def __radd__(self, other):
-  #      return clustered(str(other) + self.text)
 
 # UI
 #st.sidebar.write("sidebar check")
