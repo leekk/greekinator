@@ -12,6 +12,21 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+st.markdown(
+    """
+    <style>
+    @font-face {
+        font-family: 'NewAthenaUnicode';
+        src: url('/static/newathu5_5.ttf') format('truetype');
+    }
+    html, body, [class*="css"] {
+        font-family: 'NewAthenaUnicode', serif;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 
 # alanur tasks:
 # result history
