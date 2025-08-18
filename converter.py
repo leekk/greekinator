@@ -293,7 +293,8 @@ def unRomanize(word):
 
 
 
-  #try: 
+  #try:
+  if 1=1: 
     if word[-1] == "σ":
       word = word[:-1] + ["ς"]
   
