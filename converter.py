@@ -303,7 +303,7 @@ def unRomanize(word):
       word = ["ῤ"] + word[1:]
     
     if word[0] == "ῳ":
-	  word = ["ᾠ"] + word[1:]
+      word = ["ᾠ"] + word[1:]
     if word[0] == "ῃ":
       word = ["ᾐ"] + word[1:]
     if word[0] == "ᾳ":
