@@ -302,6 +302,13 @@ def unRomanize(word):
     if word[0] == "ρ":
       word = ["ῤ"] + word[1:]
     
+    if word[0] == "ῳ":
+         word = ["ᾠ"] + word[1:]
+       if word[0] == "ῃ":
+         word = ["ᾐ"] + word[1:]
+       if word[0] == "ᾳ":
+         word = ["ᾀ"] + word[1:]
+        
     if word[0] not in allRoughBreathedVows:
       if word[1] not in allRoughBreathedVows: #just to make sure that the first vowel doesnt get two breathing marks
       
@@ -371,13 +378,6 @@ def unRomanize(word):
          else:
            word = ["ῡ̓"] + word[1:]
         
-       if word[0] == "ῳ":
-         word = ["ᾠ"] + word[1:]
-       if word[0] == "ῃ":
-         word = ["ᾐ"] + word[1:]
-       if word[0] == "ᾳ":
-         word = ["ᾀ"] + word[1:]
-
        #word = "".join(word)
   
   except IndexError: #one character words
