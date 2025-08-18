@@ -527,7 +527,7 @@ def acuteAccent(word, n): # n from last
   st.write(len(act_vow))
     
   word = regex.findall(r'\X', word)
-  word = word[:idx] + [act_vow] + word[idx + len(act_vow):]  
+  word = word[:idx] + [act_vow] + word[idx + len(regex.findall(r'\X', act_vow)):]  
   return "".join(word)
 
 def graveAccent(word, n): # n from last
