@@ -575,10 +575,10 @@ def accentuate(word):
             st.write(word + " 3")
           else: # if long
             return circumflexAccent(word, 2)
-      		st.write(word + " 4")
+          st.write(word + " 4")
       else: # if long
         return acuteAccent(word, 2)
-        st.write(word + " 5")
+      st.write(word + " 5")
     elif vow_count >= 3:
       if last_vow in allShortVows:
         return acuteAccent(word, 3)
