@@ -53,7 +53,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-       return self.text
 
 
 # UI
