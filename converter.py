@@ -395,7 +395,7 @@ def unRomanize(word):
   word = word.replace("ηι", "ῃ")
   word = word.replace("ᾱι", "ᾳ")
 
-    pass
+  pass
         
   return "".join(word)
     
