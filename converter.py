@@ -380,7 +380,7 @@ def unRomanize(word):
 
        #word = "".join(word)
   
-  except IndexError:
+  except IndexError: #one character words
     if word == "α":
         word = "ἀ"
     if word == "ε":
@@ -401,6 +401,12 @@ def unRomanize(word):
         word = "ὠ"
     if word == "ῡ":
         word = "ῡ̓"
+    if word == "ῳ":
+        word = "ᾠ"
+    if word == "ῃ":
+        word = "ᾐ"
+    if word[ == "ᾳ":
+        word = "ᾀ"
 
   pass
         
