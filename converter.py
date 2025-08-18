@@ -269,10 +269,6 @@ def unRomanize(word):
 
   #fix the rough breathing marks and iota subscript
 
-  word = word.replace("ωι", "ῳ")
-  word = word.replace("ηι", "ῃ")
-  word = word.replace("ᾱι", "ᾳ")
-
   word = word.replace("ἁι", "αἱ")
   word = word.replace("ἑι", "εἱ")
   word = word.replace("ὁι", "οἱ")
@@ -373,6 +369,10 @@ def unRomanize(word):
 
        #word = "".join(word)
  
+  word = word.replace("ωι", "ῳ") #moved here due to the "hōi" not having a smooth breathing mark bug
+  word = word.replace("ηι", "ῃ")
+  word = word.replace("ᾱι", "ᾳ")
+  
   except IndexError:
     if word == "α":
         word = "ἀ"
