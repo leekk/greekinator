@@ -10,4 +10,4 @@ family = "New Athena Unicode"
 src = "url('/static/newathu5_5.woff') format('woff'), "url('/static/newathu5_5.ttf') format('truetype')"
 weight = 400
 style = "normal"
-
+fontDisplay = "swap"
