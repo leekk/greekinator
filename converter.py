@@ -31,7 +31,7 @@ st.markdown(
     .hero-container {
         position: relative;
         width: 100%;
-        height: 250px; /* adjust as needed */
+        height: 250px; 
         overflow: hidden;
     }
     .hero-container img {
@@ -43,7 +43,7 @@ st.markdown(
     .hero-text {
         position: absolute;
         top: 50%;
-        left: 50%;
+        left: 100%;
         transform: translate(-50%, -50%);
         color: white;
         font-size: 3em;
