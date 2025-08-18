@@ -269,6 +269,10 @@ def unRomanize(word):
 
   #fix the rough breathing marks and iota subscript
 
+  word = word.replace("ωι", "ῳ")
+  word = word.replace("ηι", "ῃ")
+  word = word.replace("ᾱι", "ᾳ")
+
   word = word.replace("ἁι", "αἱ")
   word = word.replace("ἑι", "εἱ")
   word = word.replace("ὁι", "οἱ")
@@ -335,17 +339,17 @@ def unRomanize(word):
            word = ["ὐ"] + word[1:]
      
        if word[0] == "ᾱ":
-         if word[1] == "ι":
-           word = ["ᾀ"] + word[2:]
-         elif word[1] == "υ":
+         #if word[1] == "ι":
+           #word = ["ᾀ"] + word[2:]
+         if word[1] == "υ":
            word = regex.findall(r'\X', "ᾱὐ") + word[2:]
          else:
            word = ["ᾱ̓"] + word[1:]
      
        if word[0] == "η":
-         if word[1] == "ι":
-           word = ["ᾐ"] + word[2:]
-         elif word[1] == "υ":
+         #if word[1] == "ι":
+           #word = ["ᾐ"] + word[2:]
+         if word[1] == "υ":
            word = regex.findall(r'\X', "ηὐ") + word[2:]
          else:
            word = ["ἠ"] + word[1:]
@@ -354,9 +358,9 @@ def unRomanize(word):
          word = ["ῑ̓"] + word[1:]
      
        if word[0] == "ω":
-         if word[1] == "ι":
-           word = ["ᾠ"] + word[2:]
-         elif word[1] == "υ":
+         #if word[1] == "ι":
+           #word = ["ᾠ"] + word[2:]
+         if word[1] == "υ":
            word = regex.findall(r'\X', "ωὐ") + word[2:]
          else:
            word = ["ὠ"] + word[1:]
@@ -366,6 +370,13 @@ def unRomanize(word):
            word = regex.findall(r'\X', "ῡἰ") + word[2:]
          else:
            word = ["ῡ̓"] + word[1:]
+        
+       if word[0] == "ῳ":
+         word = ["ᾠ"] + word[1:]
+       if word[0] == "ῃ":
+         word = ["ᾐ"] + word[1:]
+       if word[0] == "ᾳ":
+         word = ["ᾀ"] + word[1:]
 
        #word = "".join(word)
   
@@ -390,10 +401,6 @@ def unRomanize(word):
         word = "ὠ"
     if word == "ῡ":
         word = "ῡ̓"
-        
-  word = word.replace("ωι", "ῳ") #moved here due to the "ōi" not having a smooth breathing mark bug
-  word = word.replace("ηι", "ῃ")
-  word = word.replace("ᾱι", "ᾳ")
 
   pass
         
