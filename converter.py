@@ -368,10 +368,6 @@ def unRomanize(word):
            word = ["ῡ̓"] + word[1:]
 
        #word = "".join(word)
- 
-  word = word.replace("ωι", "ῳ") #moved here due to the "ōi" not having a smooth breathing mark bug
-  word = word.replace("ηι", "ῃ")
-  word = word.replace("ᾱι", "ᾳ")
   
   except IndexError:
     if word == "α":
@@ -394,6 +390,11 @@ def unRomanize(word):
         word = "ὠ"
     if word == "ῡ":
         word = "ῡ̓"
+        
+  word = word.replace("ωι", "ῳ") #moved here due to the "ōi" not having a smooth breathing mark bug
+  word = word.replace("ηι", "ῃ")
+  word = word.replace("ᾱι", "ᾳ")
+
     pass
         
   return "".join(word)
