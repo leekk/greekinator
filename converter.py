@@ -381,32 +381,32 @@ def unRomanize(word):
        #word = "".join(word)
     
   except IndexError: #one character words
-  	  if word == "α":
-        word = "ἀ"
-      if word == "ε":
-        word = "ἐ"
-      if word == "ι":
-        word = "ἰ"
-      if word == "ο":
-        word = "ὀ"
-      if word == "υ":
-        word = "ὐ"
-      if word == "ᾱ":
-        word = "ᾱ̓"
-      if word == "η":
-        word = "ἠ"
-      if word == "ῑ":
-        word = "ῑ̓"
-      if word == "ω":
-        word = "ὠ"
-      if word == "ῡ":
-        word = "ῡ̓"
-      if word == "ῳ":
-        word = "ᾠ"
-      if word == "ῃ":
-        word = "ᾐ"
-      if word == "ᾳ":
-        word = "ᾀ"
+    if word == "α":
+      word = "ἀ"
+    if word == "ε":
+	  word = "ἐ"
+    if word == "ι":
+      word = "ἰ"
+    if word == "ο":
+      word = "ὀ"
+    if word == "υ":
+      word = "ὐ"
+    if word == "ᾱ":
+      word = "ᾱ̓"
+    if word == "η":
+      word = "ἠ"
+    if word == "ῑ":
+      word = "ῑ̓"
+    if word == "ω":
+      word = "ὠ"
+    if word == "ῡ":
+      word = "ῡ̓"
+    if word == "ῳ":
+      word = "ᾠ"
+    if word == "ῃ":
+      word = "ᾐ"
+    if word == "ᾳ":
+      word = "ᾀ"
         
   pass      
   return "".join(word)
