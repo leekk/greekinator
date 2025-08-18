@@ -55,7 +55,7 @@ st.markdown(
 
     <div class="hero-container">
         <img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg" alt="Hero Image">
-        <div class="hero-text">My Streamlit Title</div>
+        <div class="hero-text">Ancient Greek Code Tester</div>
     </div>
     """,
     unsafe_allow_html=True
@@ -168,9 +168,9 @@ allVowsAndConsonants = ["a", "e", "i", "o", "u", "ā", "ē", "ī", "ō", "ū", "
 
 
 
-st.title("Ancient Greek Code Tester")
+#st.title("Ancient Greek Code Tester")
 
-st.image("https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg", caption="Evangelist Mark Seated in his Study", use_container_width=True)
+#st.image("https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg", caption="Evangelist Mark Seated in his Study", use_container_width=True)
 
 
 #step 1: Greek to Latin or Latin to Greek?
