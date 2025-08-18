@@ -24,29 +24,34 @@ st.markdown("""
 # why do the a's dissapear in hīaa?
 # being handsome
 
+
 st.markdown(
     """
     <style>
-    .hero-container {
+    .title-container {
         position: relative;
-        width: 100%;
-        height: 250px; /* adjust height */
-        background-image: url("https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg", caption="Evangelist Mark Seated in his Study");
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        text-align: center;
+        margin-top: -60px; /* adjust if Streamlit header overlaps */
     }
-    .hero-container h1 {
-        color: white; /* contrast with background */
-        font-size: 3em;
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
-        margin: 0;
+    .title-container img {
+        width: 100%;
+        max-height: 250px;
+        object-fit: cover;
+        z-index: -1; /* behind text */
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .title-container h1 {
+        position: relative;
+        z-index: 1;
+        color: white; /* adjust for contrast */
+        padding: 80px 0;
     }
     </style>
 
-    <div class="hero-container">
+    <div class="title-container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg" alt="Background Image">
         <h1>My Streamlit Title</h1>
     </div>
     """,
