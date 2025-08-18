@@ -75,7 +75,7 @@ st.markdown("""
 #    """
 #    <style>
 #    section[data-testid="stSidebar"] > div:first-child {
-#        background-image: url("https://cdn.discordapp.com/attachments/1245387818327347241/1405968152784928910/IMG_8713.jpeg?ex=68a0c161&is=689f6fe1&hm=c48537a411f380d820e1ff5838644f02d99cbca7ee06c91bf4190dd37190fdab");
+#        background-image: url("https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg");
 #        background-size: cover;
 #        background-position: 20% center; /* SHIFT */
 #        background-repeat: no-repeat;;
