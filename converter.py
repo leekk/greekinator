@@ -369,7 +369,7 @@ def unRomanize(word):
 
        #word = "".join(word)
  
-  word = word.replace("ωι", "ῳ") #moved here due to the "hōi" not having a smooth breathing mark bug
+  word = word.replace("ωι", "ῳ") #moved here due to the "ōi" not having a smooth breathing mark bug
   word = word.replace("ηι", "ῃ")
   word = word.replace("ᾱι", "ᾳ")
   
