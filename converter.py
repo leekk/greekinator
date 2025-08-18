@@ -516,15 +516,12 @@ def getVowels(word):
 
 def acuteAccent(word, n): # n from last
   vow_lt, idx_lt = getVowels(word)
-  st.write(vow_lt)
   
   vow = vow_lt[-n]
   idx =  idx_lt[-n]
 
   mapping = dict(zip(allVows, allAcuteVows))
   act_vow = mapping.get(vow, vow)
-  st.write(act_vow)
-  st.write(len(act_vow))
     
   word = regex.findall(r'\X', word)
   word = word[:idx] + [act_vow] + word[idx + len(regex.findall(r'\X', act_vow)):]  
@@ -540,7 +537,7 @@ def graveAccent(word, n): # n from last
   grv_vow = mapping.get(vow, vow)
 
   word = regex.findall(r'\X', word)
-  word = word[:idx] + [grv_vow] + word[idx + len(grv_vow):]  
+  word = word[:idx] + [grv_vow] + word[idx + len(regex.findall(r'\X', grv_vow)):]  
   return "".join(word)
 
 
@@ -555,7 +552,7 @@ def circumflexAccent(word, n): # n from last
   crcm_vow = mapping.get(vow, vow)
 
   word = regex.findall(r'\X', word)
-  word = word[:idx] + [crcm_vow] + word[idx + len(crcm_vow):]  
+  word = word[:idx] + [crcm_vow] + word[idx + len(regex.findall(r'\X', crcm_vow)):]  
   return "".join(word)
 
 
@@ -564,7 +561,7 @@ def circumflexAccent(word, n): # n from last
 def accentuate(word):
     # word = st.text_input("enter your unaccented Greek word:")
     vow_list, idx_list = getVowels(word)
-    st.write(vow_list)
+    
     last_vow = vow_list[-1]
 
     vow_count = len(vow_list)
