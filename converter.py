@@ -293,7 +293,7 @@ def unRomanize(word):
 
 
 
- try: 
+  try: 
     if word[-1] == "σ":
       word = word[:-1] + ["ς"]
   
@@ -380,7 +380,7 @@ def unRomanize(word):
         
        #word = "".join(word)
     
- except IndexError: #one character words
+  except IndexError: #one character words
   	  if word == "α":
         word = "ἀ"
       if word == "ε":
