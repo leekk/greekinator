@@ -561,6 +561,7 @@ def circumflexAccent(word, n): # n from last
 def accentuate(word):
     # word = st.text_input("enter your unaccented Greek word:")
     vow_list, idx_list = getVowels(word)
+    st.write(vow_list)
     last_vow = vow_list[-1]
 
     vow_count = len(vow_list)
