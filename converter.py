@@ -516,13 +516,16 @@ def getVowels(word):
 
 def acuteAccent(word, n): # n from last
   vow_lt, idx_lt = getVowels(word)
+  st.write(vow_lt)
   
   vow = vow_lt[-n]
   idx =  idx_lt[-n]
 
   mapping = dict(zip(allVows, allAcuteVows))
   act_vow = mapping.get(vow, vow)
-
+  st.write(act_vow)
+  st.write(len(act_vow))
+    
   word = regex.findall(r'\X', word)
   word = word[:idx] + [act_vow] + word[idx + len(act_vow):]  
   return "".join(word)
