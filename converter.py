@@ -41,11 +41,11 @@ st.markdown(
         display: block;
     }
     .hero-text {
-        position: relative;
+        position: absolute;
         top: 50%;
         left: 50%;
         transform: (-50%, -50%);
-        color: black;
+        color: white;
         font-size: 3em;
         font-weight: bold;
         text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
