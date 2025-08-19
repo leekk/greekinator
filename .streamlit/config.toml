@@ -20,5 +20,5 @@ style = "normal"
 [theme]
 #primaryColor = "#F63366"
 #backgroundColor = "black"
-base = "dark" #light
+base = "light" #dark
 font = "New Athena Unicode"
