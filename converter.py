@@ -54,7 +54,7 @@ st.markdown(
     .hero-text-2 {
         position: absolute;
         top: 70%;
-        left: 32%;
+        left: 33%;
         transform: (-50%, -50%);
         color: white;
         font-size: 3em;
