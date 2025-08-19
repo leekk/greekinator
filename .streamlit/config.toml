@@ -5,7 +5,8 @@ enableStaticServing = true
 
 [[theme.fontFaces]]
 family = "New Athena Unicode"
-url = "greekinator/static/NewAthenaUnicode.woff2"
+
+url = "https://fonts.gstatic.com/s/nunito/v31/XRXX3I6Li01BKofIMNaDRs7nczIH.woff2"
 weight = 400
 style = "normal"
 
@@ -14,6 +15,7 @@ style = "normal"
  #     "url('greekinator/static/newathu5_5.woff') format('woff'), 
  #     "url('greekinator/static/newathu5_5.ttf') format('truetype')"
 # "greekinator/static/New Athena Unicode V1.woff2" format('woff2'),
+#"greekinator/static/NewAthenaUnicode.woff2"
       
 [theme]
 #primaryColor = "#F63366"
