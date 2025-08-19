@@ -294,6 +294,7 @@ def unRomanize(word):
 
 
   try: 
+    st.write(word)
     if word[-1] == "σ":
       word = word[:-1] + ["ς"]
   
