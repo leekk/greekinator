@@ -377,24 +377,24 @@ def unRomanize(word):
   except IndexError:
     if word == ["α"]:
         word = ["ἀ"]
-    if word == "ε":
-        word = "ἐ"
-    if word == "ι":
-        word = "ἰ"
-    if word == "ο":
-        word = "ὀ"
-    if word == "υ":
-        word = "ὐ"
-    if word == "ᾱ":
-        word = "ᾱ̓"
-    if word == "η":
-        word = "ἠ"
-    if word == "ῑ":
-        word = "ῑ̓"
-    if word == "ω":
-        word = "ὠ"
-    if word == "ῡ":
-        word = "ῡ̓"
+    if word == ["ε"]:
+        word = ["ἐ"]
+    if word == ["ι"]:
+        word = ["ἰ"]
+    if word == ["ο"]:
+        word = ["ὀ"]
+    if word == ["υ"]:
+        word = ["ὐ"]
+    if word == ["ᾱ"]:
+        word = ["ᾱ̓"]
+    if word == ["η"]:
+        word = ["ἠ"]
+    if word == ["ῑ"]:
+        word = ["ῑ̓"]
+    if word == ["ω"]:
+        word = ["ὠ"]
+    if word == ["ῡ"]:
+        word = ["ῡ̓"]
     pass
         
   return "".join(word)
