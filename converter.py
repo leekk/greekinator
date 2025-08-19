@@ -184,38 +184,38 @@ romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (un
 
 def unRomanize(word):
   
-  # word = st.text_input("Enter your transliterated Greek word")
+  #word = st.text_input("Enter your transliterated Greek word")
  
-  word = word.replace("ch", "kh")
+  #word = word.replace("ch", "kh")
 
-  word = word.replace("ah", "a")
-  word = word.replace("eh", "e")
-  word = word.replace("ih", "i")
-  word = word.replace("oh", "o")
-  word = word.replace("uh", "u")
+  #word = word.replace("ah", "a")
+  #word = word.replace("ih", "i")
+  #word = word.replace("eh", "e")
+  #word = word.replace("oh", "o")
+  #word = word.replace("uh", "u")
 
-  word = word.replace("sh", "s")
-  word = word.replace("dh", "d")
-  word = word.replace("gh", "kh") #might change
-  word = word.replace("lh", "l")
-  word = word.replace("zh", "z")
-  word = word.replace("xh", "x")
-  word = word.replace("bh", "b")
-  word = word.replace("nh", "n")
-  word = word.replace("mh", "m")
+  #word = word.replace("sh", "s")
+  #word = word.replace("dh", "d")
+  #word = word.replace("gh", "kh") #might change
+  #word = word.replace("lh", "l")
+  #word = word.replace("zh", "z")
+  #word = word.replace("xh", "x")
+  #word = word.replace("bh", "b")
+  #word = word.replace("nh", "n")
+  #word = word.replace("mh", "m")
 
-  if word[0] == "r":
-    if word [1] == "h":
-      word = "@" + word[2:]
+  #if word[0] == "r":
+    #if word [1] == "h":
+      #word = "@" + word[2:]
 
-  word = word.replace("rrh", "@")
+  #word = word.replace("rrh", "@")
 
-  word = word.replace("rh", "r")
+  #word = word.replace("rh", "r")
 
-  if word[0] == "@":
-    word = "rh" + word[1:]
+  #if word[0] == "@":
+    #word = "rh" + word[1:]
 
-  word = word.replace("@", "rrh")
+  #word = word.replace("@", "rrh")
 
   #change the individual letters
 
