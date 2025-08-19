@@ -601,7 +601,7 @@ def accentuate(word):
     if vow_count == 1: # MONOSYLLABIC
       return graveAccent(word, 1)
     elif vow_count == 2: # DISYLLABIC
-      elif last_vow in allLongVows: # if long
+      if last_vow in allLongVows: # if long
         return acuteAccent(word, 2)
       else: 
           if vow_list[-2] in allShortVows: 
