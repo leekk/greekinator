@@ -302,15 +302,8 @@ def unRomanize(word):
     if word[0] == "ρ":
       word = ["ῤ"] + word[1:]
     
-    if word[0] == "ῳ":
-      word = ["ᾠ"] + word[1:]
-    if word[0] == "ῃ":
-      word = ["ᾐ"] + word[1:]
-    if word[0] == "ᾳ":
-      word = ["ᾀ"] + word[1:]
-        
     if word[0] not in allRoughBreathedVows:
-      if word[1] not in allRoughBreathedVows:
+      if word[1] not in allRoughBreathedVows: #just to make sure that the first vowel doesnt get two breathing marks
       
        if word[0] == "α":
          if word[1] == "ι":
@@ -346,17 +339,17 @@ def unRomanize(word):
            word = ["ὐ"] + word[1:]
      
        if word[0] == "ᾱ":
-         #if word[1] == "ι":
-           #word = ["ᾀ"] + word[2:]
-         if word[1] == "υ":
+         if word[1] == "ι":
+           word = ["ᾀ"] + word[2:]
+         elif word[1] == "υ":
            word = regex.findall(r'\X', "ᾱὐ") + word[2:]
          else:
            word = ["ᾱ̓"] + word[1:]
      
        if word[0] == "η":
-         #if word[1] == "ι":
-           #word = ["ᾐ"] + word[2:]
-         if word[1] == "υ":
+         if word[1] == "ι":
+           word = ["ᾐ"] + word[2:]
+         elif word[1] == "υ":
            word = regex.findall(r'\X', "ηὐ") + word[2:]
          else:
            word = ["ἠ"] + word[1:]
@@ -365,9 +358,9 @@ def unRomanize(word):
          word = ["ῑ̓"] + word[1:]
      
        if word[0] == "ω":
-         #if word[1] == "ι":
-           #word = ["ᾠ"] + word[2:]
-         if word[1] == "υ":
+         if word[1] == "ι":
+           word = ["ᾠ"] + word[2:]
+         elif word[1] == "υ":
            word = regex.findall(r'\X', "ωὐ") + word[2:]
          else:
            word = ["ὠ"] + word[1:]
@@ -377,38 +370,32 @@ def unRomanize(word):
            word = regex.findall(r'\X', "ῡἰ") + word[2:]
          else:
            word = ["ῡ̓"] + word[1:]
-        
+
        #word = "".join(word)
-    
-  except IndexError: #one character words
+ 
+  except IndexError:
     if word == "α":
-    	word = "ἀ"
-	if word == "ε":
-    	word = "ἐ"
+        word = "ἀ"
+    if word == "ε":
+        word = "ἐ"
     if word == "ι":
-    	word = "ἰ"
+        word = "ἰ"
     if word == "ο":
-    	word = "ὀ"
+        word = "ὀ"
     if word == "υ":
-    	word = "ὐ"
+        word = "ὐ"
     if word == "ᾱ":
-    	word = "ᾱ̓"
+        word = "ᾱ̓"
     if word == "η":
-    	word = "ἠ"
+        word = "ἠ"
     if word == "ῑ":
-    	word = "ῑ̓"
+        word = "ῑ̓"
     if word == "ω":
-    	word = "ὠ"
+        word = "ὠ"
     if word == "ῡ":
-    	word = "ῡ̓"
-    if word == "ῳ":
-     	word = "ᾠ"
-    if word == "ῃ":
-    	word = "ᾐ"
-    if word == "ᾳ":
-    	word = "ᾀ"
+        word = "ῡ̓"
+    pass
         
-  pass      
   return "".join(word)
     
   if word:
