@@ -5,7 +5,7 @@ enableStaticServing = true
 [theme]
 primaryColor = "#F63366"
 backgroundColor = "black"
-base = "light"
+base = "black" #light
 
 [[theme.fontFaces]]
 family = "New Athena Unicode"
