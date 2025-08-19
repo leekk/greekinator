@@ -2,8 +2,8 @@
 enableStaticServing = true
 
 [theme]
-primaryColor = "#F63366"
-backgroundColor = "black"
+#primaryColor = "#F63366"
+#backgroundColor = "black"
 base = "dark" #light
 
 [[theme.fontFaces]]
