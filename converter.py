@@ -40,7 +40,18 @@ st.markdown(
         object-fit: cover;
         display: block;
     }
-    .hero-text {
+    .hero-text-1 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: (-50%, -50%);
+        color: white;
+        font-size: 3em;
+        font-weight: bold;
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+        margin: 0;
+    }
+    .hero-text-2 {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -55,8 +66,8 @@ st.markdown(
 
     <div class="hero-container">
         <img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg" alt="Hero Image">
-        <div class="hero-text">Ancient Greek</div>
-        <div class="hero-text">Code Tester</div>
+        <div class="hero-text-1">Ancient Greek</div>
+        <div class="hero-text-1">Code Tester</div>
     </div>
     """,
     unsafe_allow_html=True
