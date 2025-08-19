@@ -42,7 +42,7 @@ st.markdown(
     }
     .hero-text-1 {
         position: absolute;
-        top: 50%;
+        top: 30%;
         left: 50%;
         transform: (-50%, -50%);
         color: white;
