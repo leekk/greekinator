@@ -609,10 +609,10 @@ def accentuate(word):
           else: # if long
             return circumflexAccent(word, 2)
     elif vow_count >= 3:
-      if last_vow in allShortVows or allAnnoyingVows:
-        return acuteAccent(word, 3)
-      else: # if long
+      if last_vow in allLongVows: # if long
         return acuteAccent(word, 2)
+      else:
+        return acuteAccent(word, 3)
 
 def unRomanizeAndAccentuate(word):
     #word = st.text_input("Enter your Romanized Greek word")
