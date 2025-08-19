@@ -6,7 +6,7 @@ enableStaticServing = true
 [[theme.fontFaces]]
 family = "New Athena Unicode"
 
-url = "https://fonts.gstatic.com/s/nunito/v31/XRXX3I6Li01BKofIMNaDRs7nczIH.woff2"
+url = "https://db.onlinewebfonts.com/t/636436091e8572de5ab7c1be78f0090e.woff2"
 weight = 400
 style = "normal"
 
