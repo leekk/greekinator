@@ -373,6 +373,12 @@ def unRomanize(word):
          else:
            word = ["ῡ̓"] + word[1:]
 
+       if word[0] == "ῳ":
+           word[0] == "ᾠ"
+  #word = word.replace("ηι", "ῃ")
+  #word = word.replace("ᾱι", "ᾳ")
+
+
        #word = "".join(word)
  
   except IndexError:
