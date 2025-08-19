@@ -382,6 +382,8 @@ def unRomanize(word):
        #word = "".join(word)
  
   except IndexError:
+    if word == ["ῳ"]:
+        word = ["ᾠ"]
     if word == ["α"]:
         word = ["ἀ"]
     if word == ["ε"]:
