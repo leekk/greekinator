@@ -375,13 +375,18 @@ def unRomanize(word):
 
        if word[0] == "ῳ":
            word = ["ᾠ"] + word[1:]
-  #word = word.replace("ηι", "ῃ")
-  #word = word.replace("ᾱι", "ᾳ")
+           
+       if word[0] == "ῃ":
+           word = ["ᾐ"] + word[1:]
+          
+       if word[0] == "ᾳ":
+           word = ["ᾀ"] + word[1:]
 
-
-       #word = "".join(word)
- 
   except IndexError:
+    if word == ["ῃ"]:
+        word = ["ᾐ"]
+    if word == ["ᾳ"]:
+        word = ["ᾀ"]
     if word == ["ῳ"]:
         word = ["ᾠ"]
     if word == ["α"]:
