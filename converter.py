@@ -606,7 +606,7 @@ def accentuate(word):
             return acuteAccent(word, 2)
           else: # if long
             return circumflexAccent(word, 2)
-      else: # if long
+      elif last_vow in allLongVows: # if long
         return acuteAccent(word, 2)
     elif vow_count >= 3:
       if last_vow in allShortVows or allAnnoyingVows:
