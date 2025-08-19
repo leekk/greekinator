@@ -18,11 +18,11 @@ st.markdown("""
 # being cute (done)
 
 # vincent (actually Alanur) tasks:
-# ōi smooth breathing mark
+# ōi smooth breathing mark (done)
 # ï circumflex
 # vowel stem checker
 # why do the a's dissapear in hīaa? (done)
-# being handsome
+# being handsome (done)
 
 
 st.markdown(
