@@ -43,7 +43,7 @@ st.markdown(
     .hero-text {
         position: absolute;
         text-align: center
-        top: 40%;
+        top: 10%;
         left: 50%;
         transform: translate(-50%, -50%);
         color: white;
