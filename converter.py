@@ -67,7 +67,7 @@ st.markdown(
     <div class="hero-container">
         <img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg" alt="Hero Image">
         <div class="hero-text-1">Ancient Greek</div>
-        <div class="hero-text-1">Code Tester</div>
+        <div class="hero-text-2">Code Tester</div>
     </div>
     """,
     unsafe_allow_html=True
