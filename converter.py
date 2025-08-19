@@ -374,7 +374,7 @@ def unRomanize(word):
            word = ["ῡ̓"] + word[1:]
 
        if word[0] == "ῳ":
-           word[0] == "ᾠ"
+           word = ["ᾠ"] + word[1:]
   #word = word.replace("ηι", "ῃ")
   #word = word.replace("ᾱι", "ᾳ")
 
