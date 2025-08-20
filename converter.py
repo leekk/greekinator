@@ -659,11 +659,13 @@ def rootsGuesser(word):
     rootStatus = ""
     
     thing_list, idx_list = getVowelsAndConsonants(word)
-    st.write(thing_list)
+    st.write(thing_list) #debug
     last_thing = thing_list[-1]
     
     if last_thing in allNonContractVows:
         rootStatus = "vowelStem"
+    if last_thing in allLiquidConsonants:
+        rootStatus = "liquidStem"
     
     st.write("Enter the first principal part root of your verb")
     st.write(last_thing)
