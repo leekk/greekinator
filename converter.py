@@ -654,6 +654,7 @@ def rootsGuesser(word):
     rootStatus = ""
     
     thing_list, idx_list = getVowelsAndConsonants(word)
+    st.write(thing_list)
     last_thing = thing_list[-1]
     
     if last_thing in allNonContractVows:
