@@ -627,25 +627,29 @@ def unRomanizeAndAccentuate(word):
     pass
 
 def getVowelsAndConsonants(word):
-  thing_list = []
-  idx_list = []
-
-  i = 0
-  word = regex.findall(r'\X', word)
-  while i < len(word):
-    if word[i] in allVowsAndConsonants:
-      thing_1 = word[i]
-      if i < len(word) - 1:
-        thing_2 = thing_1 + word[i+1]
-        if thing_2 in allVowsAndConsonants:
-          thing_list.append(thing_2)
-          idx_list.append(i)
-          i += 2
-          continue
-      thing_list.append(thing_1)
-      idx_list.append(i)
-    i += 1
+  try:
+      thing_list = []
+      idx_list = []
     
+      i = 0
+      word = regex.findall(r'\X', word)
+      while i < len(word):
+        if word[i] in allVowsAndConsonants:
+          thing_1 = word[i]
+          if i < len(word) - 1:
+            thing_2 = thing_1 + word[i+1]
+            if thing_2 in allVowsAndConsonants:
+              thing_list.append(thing_2)
+              idx_list.append(i)
+              i += 2
+              continue
+          thing_list.append(thing_1)
+          idx_list.append(i)
+        i += 1
+          
+    except TypeError:
+        pass
+
     return thing_list, idx_list
 
 def rootsGuesser(word):
