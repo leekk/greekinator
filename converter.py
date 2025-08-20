@@ -175,6 +175,7 @@ allRoughBreathedVows = ["ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "ᾱ̔", "ἡ", "ῑ�
 allNonContractVows = ["i", "u", "ā", "ē", "ī", "ō", "ū", "ai", "au", "ei", 
              "eu", "oi", "ou", "ui", "āi", "āu", "ēi", "ēu", "ōi", "ōu", "ūi", "ï", 
              "ü"]
+allLiquidConsonants = ["r", "rh", "l", "m", "n"]
 
 #allNonContractVows = [clustered(v) for v in allNonContractVows]
             
