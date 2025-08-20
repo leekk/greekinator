@@ -614,6 +614,8 @@ def accentuate(word):
       else:
         return acuteAccent(word, 3)
 
+#if ῗ ῧ before cons turns into ῖ ῦ
+
 def unRomanizeAndAccentuate(word):
     #word = st.text_input("Enter your Romanized Greek word")
   
