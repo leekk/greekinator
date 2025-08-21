@@ -622,22 +622,23 @@ def rootsGuesser():
     thing_list, idx_list = getVowelsAndConsonants(word_1)
     st.write(thing_list) #debug
 
-    if len(thing_list) == 0:
-      pass
+   
         
     last_thing = thing_list[-1]
       
             
     if last_thing in allNonContractVows:
       rootStatus = "vowelStem"
-    if last_thing in allLiquidConsonants:
+    elif last_thing in allLiquidConsonants:
       rootStatus = "liquidStem"
-    if last_thing in allLabialConsonants:
+    elif last_thing in allLabialConsonants:
       rootStatus = "labialStem"
-    if last_thing in allDentalConsonants:
+    elif last_thing in allDentalConsonants:
       rootStatus = "dentalStem"
-    if last_thing in allPalatalConsonants:
+    elif last_thing in allPalatalConsonants:
       rootStatus = "palatalStem"
+    else:
+      return
         
     rootStatusMessage = rootStatus + "Message"
     st.write(rootStatusMessage)
