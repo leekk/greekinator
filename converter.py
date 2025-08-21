@@ -599,10 +599,11 @@ def getVowelsAndConsonants(word):
         thing_list.append(thing_1)
         idx_list.append(i)
         i += 1
-  st.write(thing_list)
+  
   except TypeError:
     pass
-
+      
+  st.write(thing_list)
   return thing_list, idx_list
 
 def rootsGuesser():
