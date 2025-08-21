@@ -658,14 +658,12 @@ def getVowelsAndConsonants(word):
   return thing_list, idx_list
 
 def rootsGuesser(word):
-    
-  word_1 = st.text_input("Enter the root of your verb's first principle part (for more information enter '?')")
-    
-  if word_1 == "?":
-    st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
-    
-  else:
-        # initializing root status
+
+  col1, col2 = st.columns([0.7, 0.3])
+  with col1:
+    word_1 = st.text_input("Enter the root of your verb's first principle part (for more information enter '?')")
+
+         # initializing root status
     rootStatus = ""
             
     thing_list, idx_list = getVowelsAndConsonants(word_1)
@@ -691,6 +689,15 @@ def rootsGuesser(word):
     if rootStatusMessage == "vowelStemMessage":
       st.write("It seems like your verb is what is known as a 'vowel stem verb.' This is great news, because this class of verb usually has a predictable root formation.")
     
+  with col2:
+    if st.button("More information"):
+       st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
+          
+  #if word_1 == "?":
+  #  st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
+    
+  #else:
+   
 
 #word = clustered(st.text_input("Enter word:") or "")
 word = st.text_input("Enter word:")
