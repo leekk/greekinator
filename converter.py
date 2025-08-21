@@ -655,9 +655,9 @@ def getVowelsAndConsonants(word):
 
 def rootsGuesser(word):
     
-  word = st.text_input("Enter the root of your verb's first principle part (for more information enter '?')")
+  word_1 = st.text_input("Enter the root of your verb's first principle part (for more information enter '?')")
     
-  if word == ["?"]:
+  if word_1 == ["?"]:
     st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
     
   else:
@@ -681,6 +681,7 @@ def rootsGuesser(word):
 
 #word = clustered(st.text_input("Enter word:") or "")
 word = st.text_input("Enter word:")
+word_1 = ""
 
 try: 
   if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
@@ -696,7 +697,7 @@ try:
       st.write(unRomanizeAndAccentuate(word))
 
   if romanizeAnswer == "Principal part roots guesser (experimental)":
-      rootsGuesser()
+      rootsGuesser(word_1)
    
 except IndexError:
   pass
