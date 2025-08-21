@@ -623,9 +623,10 @@ def rootsGuesser():
     st.write(thing_list) #debug
 
     if len(thing_list) == 0:
+      pass
         
     last_thing = thing_list[-1]:
-      pass
+      
             
     if last_thing in allNonContractVows:
       rootStatus = "vowelStem"
