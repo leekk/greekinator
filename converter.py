@@ -584,6 +584,7 @@ def getVowelsAndConsonants(word):
     
     i = 0
     word = regex.findall(r'\X', word)
+    st.write(word)
     while i < len(word):
       if word[i] in allVowsAndConsonants:
         thing_1 = word[i]
@@ -594,10 +595,10 @@ def getVowelsAndConsonants(word):
             idx_list.append(i)
             i += 2
             continue
-      thing_list.append(thing_1)
-      idx_list.append(i)
-      i += 1
-          
+        thing_list.append(thing_1)
+        idx_list.append(i)
+        i += 1
+
   except TypeError:
     pass
 
@@ -611,6 +612,7 @@ def rootsGuesser():
     st.write("")
     if st.button("More information"):
         st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
+        
   with col1:
     word_1 = st.text_input("Enter the root of your verb's first principle part")
 
@@ -619,6 +621,10 @@ def rootsGuesser():
             
     thing_list, idx_list = getVowelsAndConsonants(word_1)
     st.write(thing_list) #debug
+      
+    if len(thing_list) == 0:
+      return 
+        
     last_thing = thing_list[-1]
             
     if last_thing in allNonContractVows:
