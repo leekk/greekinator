@@ -691,6 +691,7 @@ def rootsGuesser():
       st.write("It seems like your verb is what is known as a 'vowel stem verb.' This is great news, because this class of verb usually has a predictable root formation.")
     
   with col2:
+    st.write("test test")
     st.button("test", type="primary")
     if st.button('Click Me'):
       st.write('Button clicked!')
