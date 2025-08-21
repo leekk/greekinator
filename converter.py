@@ -692,6 +692,8 @@ def rootsGuesser():
     
   with col2:
     st.button("test", type="primary")
+    if st.button('Click Me'):
+      st.write('Button clicked!')
     if st.button("More information"):
        st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
           
