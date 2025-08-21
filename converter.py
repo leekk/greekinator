@@ -20,7 +20,7 @@ st.markdown("""
 # vincent (actually Alanur) tasks:
 # ōi smooth breathing mark (done)
 # ï circumflex
-# vowel stem checker
+# vowel stem checker (ongoing)
 # why do the a's dissapear in hīaa? (done)
 # being handsome (done)
 
@@ -667,8 +667,10 @@ def rootsGuesser(word):
     if last_thing in allLiquidConsonants:
         rootStatus = "liquidStem"
     
-    st.write("Enter the first principal part root of your verb")
+    st.write("Enter the root of your verb's first principle part")
     st.write(last_thing)
+    if word = "?"
+        st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
     st.write(rootStatus)
     
 
