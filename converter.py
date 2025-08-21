@@ -688,7 +688,7 @@ def rootsGuesser(word):
     st.write("")
     st.write(last_thing)
     
-    if rootStatus = "vowelStemMessage":
+    if rootStatus == "vowelStemMessage":
       st.write("It seems like your verb is what is known as a 'vowel stem verb.' This is great news, because this class of verb usually has a predictable root formation.")
     
 
