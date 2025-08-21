@@ -655,23 +655,23 @@ def getVowelsAndConsonants(word):
 
 def rootsGuesser(word):
     
-	word = st.text_input("Enter the root of your verb's first principle part (for more information enter '?')")
+  word = st.text_input("Enter the root of your verb's first principle part (for more information enter '?')")
     
-    if word == ["?"]:
-        st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
+  if word == ["?"]:
+    st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
     
-    else:
+  else:
         # initializing root status
-        rootStatus = ""
-        
-        thing_list, idx_list = getVowelsAndConsonants(word)
-        st.write(thing_list) #debug
-        last_thing = thing_list[-1]
-        
-        if last_thing in allNonContractVows:
-            rootStatus = "vowelStem"
-        if last_thing in allLiquidConsonants:
-            rootStatus = "liquidStem"
+    rootStatus = ""
+            
+    thing_list, idx_list = getVowelsAndConsonants(word)
+    st.write(thing_list) #debug
+    last_thing = thing_list[-1]
+            
+    if last_thing in allNonContractVows:
+        rootStatus = "vowelStem"
+    if last_thing in allLiquidConsonants:
+        rootStatus = "liquidStem"
     
     st.write("")
     st.write(last_thing)
