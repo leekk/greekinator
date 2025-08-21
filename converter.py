@@ -659,7 +659,7 @@ def getVowelsAndConsonants(word):
 
 def rootsGuesser():
 
-  col1, col2 = st.columns([0.7, 0.3])
+  col1, col2 = st.columns(2)
     
   with col1:
     word_1 = st.text_input("Enter the root of your verb's first principle part (for more information enter '?')")
