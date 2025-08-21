@@ -661,6 +661,7 @@ def rootsGuesser():
 
   col1, col2 = st.columns([0.7, 0.3])
   with col2:
+    st.write("")
     if st.button("More information"):
         st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
   with col1:
@@ -692,13 +693,6 @@ def rootsGuesser():
     if rootStatusMessage == "vowelStemMessage":
       st.write("It seems like your verb is what is known as a 'vowel stem verb.' This is great news, because this class of verb usually has a predictable root formation.")
     
-  with col2:
-    st.write("test test")
-    st.button("test", type="primary")
-    if st.button('Click Me'):
-      st.write('Button clicked!')
-    if st.button("More information"):
-       st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
           
   #if word_1 == "?":
   #  st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
