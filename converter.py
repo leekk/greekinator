@@ -584,7 +584,7 @@ def getVowelsAndConsonants(word):
     
     i = 0
     word = regex.findall(r'\X', word)
-    st.write(word)
+
     while i < len(word):
       if word[i] in allVowsAndConsonants:
         thing_1 = word[i]
@@ -621,9 +621,11 @@ def rootsGuesser():
             
     thing_list, idx_list = getVowelsAndConsonants(word_1)
     st.write(thing_list) #debug
-      
+
+    if len(thing_list) == 0:
         
-    last_thing = thing_list[-1]
+    last_thing = thing_list[-1]:
+      pass
             
     if last_thing in allNonContractVows:
       rootStatus = "vowelStem"
