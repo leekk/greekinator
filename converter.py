@@ -14,7 +14,8 @@ st.markdown("""
 # alanur tasks:
 # result history
 # being cute (done)
-# error handling for empty strings & stupid people entering NOT letters
+# weird strings to accented greek don't produce an output
+
 
 # vincent (actually Alanur) tasks:
 # ōi smooth breathing mark (done)
@@ -598,9 +599,7 @@ def getVowelsAndConsonants(word):
             continue
         thing_list.append(thing_1)
         idx_list.append(i)
-        i += 1
-      else:
-        i += 1
+      i += 1
   
   except TypeError:
     pass
