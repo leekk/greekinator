@@ -680,7 +680,7 @@ def rootsGuesser(word):
       rootStatus = "labialStem"
 	if last_thing in allDentalConsonants
       rootStatus = "dentalStem"
-	if last_thing in allPalatalConsonants
+    if last_thing in allPalatalConsonants
       rootStatus = "palatalStem"
         
     rootStatusMessage = rootStatus + "Message"
