@@ -599,6 +599,8 @@ def getVowelsAndConsonants(word):
         thing_list.append(thing_1)
         idx_list.append(i)
         i += 1
+     else:
+        i += 1
   
   except TypeError:
     pass
