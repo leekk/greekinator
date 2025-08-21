@@ -673,15 +673,15 @@ def rootsGuesser(word):
     last_thing = thing_list[-1]
             
     if last_thing in allNonContractVows:
-        rootStatus = "vowelStem"
+      rootStatus = "vowelStem"
     if last_thing in allLiquidConsonants:
-        rootStatus = "liquidStem"
+      rootStatus = "liquidStem"
 	if last_thing in allLabialConsonants
-    	rootStatus = "labialStem"
+      rootStatus = "labialStem"
 	if last_thing in allDentalConsonants
-    	rootStatus = "dentalStem"
+      rootStatus = "dentalStem"
 	if last_thing in allPalatalConsonants
-    	rootStatus = "palatalStem"
+      rootStatus = "palatalStem"
         
     rootStatusMessage = rootStatus + "Message"
     
@@ -689,7 +689,7 @@ def rootsGuesser(word):
     st.write(last_thing)
     
     if rootStatus = "vowelStemMessage":
-    	st.write("It seems like your verb is what is known as a 'vowel stem verb.' This is great news, because this class of verb usually has a predictable root formation.")
+      st.write("It seems like your verb is what is known as a 'vowel stem verb.' This is great news, because this class of verb usually has a predictable root formation.")
     
 
 #word = clustered(st.text_input("Enter word:") or "")
