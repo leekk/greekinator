@@ -684,7 +684,7 @@ def rootsGuesser(word):
       rootStatus = "palatalStem"
         
     rootStatusMessage = rootStatus + "Message"
-    
+    st.write(rootStatusMessage)
     st.write("")
     st.write(last_thing)
     
