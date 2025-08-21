@@ -661,8 +661,8 @@ def rootsGuesser():
 
   col1, col2 = st.columns([0.7, 0.3])
   with col2:
-    if st.button("test"):
-        st.write("test test")
+    if st.button("More information"):
+        st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
   with col1:
     word_1 = st.text_input("Enter the root of your verb's first principle part (for more information enter '?')")
 
