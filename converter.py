@@ -14,6 +14,7 @@ st.markdown("""
 # alanur tasks:
 # result history
 # being cute (done)
+# error handling for empty strings & stupid people entering NOT letters
 
 # vincent (actually Alanur) tasks:
 # ōi smooth breathing mark (done)
