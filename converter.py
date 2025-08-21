@@ -1,8 +1,6 @@
 import streamlit as st
 import regex
 
-
-
 st.markdown("""
 <style>
 * {
@@ -72,39 +70,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg
-
-# UI
-#st.sidebar.write("sidebar check")
-# check whether it works wout the sidebar
-
-#st.markdown(
-# """
-# <style>
-# .stApp {
-#        background-color: #FFFFFF;
-#    }
-# </style>
-# """,
-# unsafe_allow_html=True
-#)
-
-#st.markdown(
-#    """
-#    <style>
-#    section[data-testid="stSidebar"] > div:first-child {
-#        background-image: url("https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg");
-#        background-size: cover;
-#        background-position: 20% center; /* SHIFT */
-#        background-repeat: no-repeat;;
-#    }
-#    </style>
-#    """,
-#    unsafe_allow_html=True
-#)
-
-
-
 tab1, tab2 = st.tabs(["Word Modifier", "Greekinator"])
 
 if "outputs" not in st.session_state:
@@ -118,9 +83,6 @@ allVows = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "ῡ", "αι"
              "ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "ᾱ̔", "ἡ", "ῑ̔", "ὡ", "ῡ̔", "αἱ", "αὑ", "εἱ", 
              "εὑ", "οἱ", "οὑ", "υἱ", "ᾁ", "ᾱὑ", "ᾑ", "ηὑ", "ᾡ", "ωὑ", "ῡἱ"]
 
-
-#allVows = [clustered(v) for v in allVows]
-
 allAcuteVows = ["ά", "έ", "ί", "ό", "ύ", "ᾱ́", "ή", "ῑ́", "ώ", "ῡ́", "αί", "αύ", 
                   "εί", "εύ", "οί", "ού", "υί", "ᾴ", "ᾱύ", "ῄ", "ηύ", "ῴ", "ωύ",
                   "ῡί", "ΐ", "ΰ", "ἄ", "ἔ", "ἴ", "ὄ", "ὔ", "ᾱ̓́", "ἤ", "ῑ̓́", "ὤ",
@@ -128,8 +90,6 @@ allAcuteVows = ["ά", "έ", "ί", "ό", "ύ", "ᾱ́", "ή", "ῑ́", "ώ", "ῡ
                   "ηὔ", "ᾤ", "ωὔ", "ῡἴ", "ἅ", "ἕ", "ἵ", "ὅ", "ὕ", "ᾱ̔́", "ἥ", "ῑ̔́", 
                   "ὥ", "ῡ̔́", "αἵ", "αὕ", "εἵ", "εὕ", "οἵ", "οὕ", "υἵ", "ᾅ", "ᾱὕ",
                   "ᾕ", "ηὕ", "ᾥ", "ωὕ", "ῡἵ"]
-
-#allAcuteVows = [clustered(v) for v in allAcuteVows]
 
 allGraveVows = ["ὰ", "ὲ", "ὶ", "ὸ", "ὺ", "ᾱ̀", "ὴ", "ῑ̀", "ὼ", "ῡ̀", "αὶ", "αὺ", 
                   "εὶ", "εὺ", "οὶ", "οὺ", "υὶ", "ᾲ", "ᾱὺ", "ῂ", "ηὺ", "ῲ", "ωὺ", 
@@ -139,8 +99,6 @@ allGraveVows = ["ὰ", "ὲ", "ὶ", "ὸ", "ὺ", "ᾱ̀", "ὴ", "ῑ̀", "ὼ
                   "ὣ", "ῡ̔̀", "αἳ", "αὓ", "εἳ", "εὓ", "οἳ", "οὓ", "υἳ", "ᾃ", "ᾱὓ", 
                   "ᾓ", "ηὓ", "ᾣ", "ωὓ", "ῡἳ"]
 
-#allGraveVows = [clustered(v) for v in allGraveVows]
-
 allCircumflexVows = ["", "", "", "", "", "ᾶ", "ῆ", "ῗ", "ῶ", "ῧ", "αῖ", "αῦ", 
                        "εῖ", "εῦ", "οῖ", "οῦ", "υῖ", "ᾷ", "ᾱῦ", "ῇ", "ηῦ", "ῷ", 
                        "ωῦ", "ῡῖ", "", "", "", "", "", "", "", "ἆ", "ἦ", "ἶ", "ὦ",
@@ -149,12 +107,9 @@ allCircumflexVows = ["", "", "", "", "", "ᾶ", "ῆ", "ῗ", "ῶ", "ῧ", "α�
                        "ἷ", "ὧ", "ὗ", "αἷ", "αὗ", "εἷ", "εὗ", "οἷ", "οὗ", "υἷ",
                        "ᾇ", "ᾱὗ", "ᾗ", "ηὗ", "ᾧ", "ωὗ", "ῡἷ"]
 
-#allCircumflexVows = [clustered(v) for v in allCircumflexVows]
-
 allShortVows = ["α", "ε", "ι", "ο", "υ", "ϊ", "ϋ", "ἀ", "ἐ", "ἰ", "ὀ",
                 "ὐ", "ἁ", "ἑ", "ἱ", "ὁ", "ὑ"]
 
-#allShortVows = [clustered(v) for v in allShortVows]
 
 allLongVows = ["ᾱ", "η", "ῑ", "ω", "ῡ", "αυ", "ει", "ευ", "ου", "υι", "ᾳ", "ᾱυ", "ῃ", "ηυ", "ῳ", "ωυ", "ῡι", 
              "ᾱ̓", "ἠ", "ῑ̓", "ὠ", "ῡ̓", "αὐ", "εἰ", "εὐ", "οὐ", "υἰ", "ᾀ", "ᾱὐ", "ᾐ", "ηὐ", "ᾠ", "ωὐ", "ῡἰ", 
@@ -166,13 +121,9 @@ allUnbreathedVows = ["α", "ε", "ι", "ο", "υ", "ᾱ", "η", "ῑ", "ω", "�
              "ευ", "οι", "ου", "υι", "ᾳ", "ᾱυ", "ῃ", "ηυ", "ῳ", "ωυ", "ῡι", "ϊ", 
              "ϋ"]
 
-#allUnbreathedVows = [clustered(v) for v in allUnbreathedVows]
-
 allRoughBreathedVows = ["ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "ᾱ̔", "ἡ", "ῑ̔", "ὡ", "ῡ̔", "αἱ", "αὑ", "εἱ", 
              "εὑ", "οἱ", "οὑ", "υἱ", "ᾁ", "ᾱὑ", "ᾑ", "ηὑ", "ᾡ", "ωὑ", "ῡἱ"]
 
-#allRoughBreathedVows = [clustered(v) for v in allRoughBreathedVows]
-            
 allNonContractVows = ["i", "u", "ā", "ē", "ī", "ō", "ū", "ai", "au", "ei", 
              "eu", "oi", "ou", "ui", "āi", "āu", "ēi", "ēu", "ōi", "ōu", "ūi", "ï", 
              "ü"]
@@ -181,27 +132,20 @@ allLiquidConsonants = ["r", "rh", "l", "m", "n"]
 allLabialConsonants = ["p", "ph", "b"]
 allDentalConsonants = ["t", "th", "d"]
 allPalatalConsonants = ["k", "kh", "g"]
-
-#allNonContractVows = [clustered(v) for v in allNonContractVows]
             
 allVowsAndConsonants = ["a", "e", "i", "o", "u", "ā", "ē", "ī", "ō", "ū", "ai", "au", "ei", 
              "eu", "oi", "ou", "ui", "āi", "āu", "ēi", "ēu", "ōi", "ōu", "ūi", "ï", 
              "ü", "r", "rh", "t", "th", "p", "ph", "s", "d", "g", "h", "k", "kh", "l", "z", "x", "b", "n", "m"]
 
-#allVowsAndConsonants = [clustered(v) for v in allVowsAndConsonants]
 
 
 
 #st.title("Ancient Greek Code Tester")
 
-#st.image("https://upload.wikimedia.org/wikipedia/commons/b/bc/Byzantine_-_Evangelist_Mark_Seated_in_his_Study_-_Walters_W530A.jpg", caption="Evangelist Mark Seated in his Study", use_container_width=True)
-
-
 #step 1: Greek to Latin or Latin to Greek?
 
-st.subheader("Please select how you would like to modify your Greek word")
-romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (unaccented)", "Greek (unaccented) -> Latin (unaccented)", "Greek (unaccented) -> Greek (accented)", "Latin (unaccented) -> Greek (accented)", "Principal part roots guesser (experimental)"])
-
+#st.subheader("Please select how you would like to modify your Greek word")
+#romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (unaccented)", "Greek (unaccented) -> Latin (unaccented)", "Greek (unaccented) -> Greek (accented)", "Latin (unaccented) -> Greek (accented)"])
 
 #step 2 (Greek): change the individual letters
 
@@ -666,9 +610,9 @@ def rootsGuesser():
     if st.button("More information"):
         st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
   with col1:
-    word_1 = st.text_input("Enter the root of your verb's first principle part (for more information enter '?')")
+    word_1 = st.text_input("Enter the root of your verb's first principle part")
 
-         # initializing root status
+    # initializing root status
     rootStatus = ""
             
     thing_list, idx_list = getVowelsAndConsonants(word_1)
@@ -695,33 +639,40 @@ def rootsGuesser():
       st.write("It seems like your verb is what is known as a 'vowel stem verb.' This is great news, because this class of verb usually has a predictable root formation.")
     
           
-  #if word_1 == "?":
-  #  st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
-    
-  #else:
-   
+ 
+with tab1:
+  st.subheader("Please select how you would like to modify your Greek word")
+  romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (unaccented)", "Greek (unaccented) -> Latin (unaccented)", "Greek (unaccented) -> Greek (accented)", "Latin (unaccented) -> Greek (accented)"])
+  
+  word = st.text_input("Enter word:")
 
-#word = clustered(st.text_input("Enter word:") or "")
-word = st.text_input("Enter word:")
-
-try: 
-  if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
-      st.write(romanize(word))
+  try: 
+    if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
+        st.write(romanize(word))
     
-  if romanizeAnswer == "Greek (unaccented) -> Greek (accented)":
-      st.write(accentuate(word))
+    if romanizeAnswer == "Greek (unaccented) -> Greek (accented)":
+        st.write(accentuate(word))
     
-  if romanizeAnswer == "Latin (unaccented) -> Greek (unaccented)":
-      st.write(unRomanize(word))
+    if romanizeAnswer == "Latin (unaccented) -> Greek (unaccented)":
+        st.write(unRomanize(word))
    
-  if romanizeAnswer == "Latin (unaccented) -> Greek (accented)":
-      st.write(unRomanizeAndAccentuate(word))
+    if romanizeAnswer == "Latin (unaccented) -> Greek (accented)":
+        st.write(unRomanizeAndAccentuate(word))
 
-  if romanizeAnswer == "Principal part roots guesser (experimental)":
-      rootsGuesser()
+    if romanizeAnswer == "Principal part roots guesser (experimental)":
+        rootsGuesser()
    
-except IndexError:
-  pass
+  except IndexError:
+    pass
+
+with tab2:
+  st.subheader("Principal part roots guesser (experimental)")
+    
+  try: 
+    rootsGuesser()
+   
+  except IndexError:
+    pass
 
 #st.write("")
 #st.write("Past results:")
