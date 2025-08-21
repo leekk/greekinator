@@ -625,7 +625,7 @@ def rootsGuesser():
     if len(thing_list) == 0:
       pass
         
-    last_thing = thing_list[-1]:
+    last_thing = thing_list[-1]
       
             
     if last_thing in allNonContractVows:
