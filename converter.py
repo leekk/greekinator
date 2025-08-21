@@ -12,9 +12,10 @@ st.markdown("""
 
 
 # alanur tasks:
-# result history
-# being cute (done)
-# weird strings to accented greek don't produce an output
+# -> result history
+# -> parse out strings by space to get individual words 
+# filter them to consider the letters only for the INDEXING
+# THIS MIGHT NOT BE NEEDED FOR THE REGEX PARTS - check again!!
 
 
 # vincent (actually Alanur) tasks:
