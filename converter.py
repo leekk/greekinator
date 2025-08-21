@@ -664,7 +664,7 @@ def rootsGuesser(word):
         # initializing root status
     rootStatus = ""
             
-    thing_list, idx_list = getVowelsAndConsonants(word)
+    thing_list, idx_list = getVowelsAndConsonants(word_1)
     st.write(thing_list) #debug
     last_thing = thing_list[-1]
             
