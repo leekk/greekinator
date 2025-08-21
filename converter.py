@@ -657,7 +657,7 @@ def rootsGuesser(word):
     
   word_1 = st.text_input("Enter the root of your verb's first principle part (for more information enter '?')")
     
-  if word_1 == ["?"]:
+  if word_1 == "?":
     st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
     
   else:
