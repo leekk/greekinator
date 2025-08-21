@@ -24,7 +24,6 @@ st.markdown("""
 # why do the a's dissapear in hīaa? (done)
 # being handsome (done)
 
-
 st.markdown(
     """
     <style>
@@ -105,6 +104,8 @@ st.markdown(
 #)
 
 
+
+tab1, tab2 = st.tabs(["Word Modifier", "Greekinator"])
 
 if "outputs" not in st.session_state:
     st.session_state.outputs = []
