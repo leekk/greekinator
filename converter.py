@@ -175,7 +175,11 @@ allRoughBreathedVows = ["ἁ", "ἑ", "ἱ", "ὁ", "ὑ", "ᾱ̔", "ἡ", "ῑ�
 allNonContractVows = ["i", "u", "ā", "ē", "ī", "ō", "ū", "ai", "au", "ei", 
              "eu", "oi", "ou", "ui", "āi", "āu", "ēi", "ēu", "ōi", "ōu", "ūi", "ï", 
              "ü"]
+            
 allLiquidConsonants = ["r", "rh", "l", "m", "n"]
+allLabialConsonants = ["p", "ph", "b"]
+allDentalConsonants = ["t", "th", "d"]
+allPalatalConsonants = ["k", "kh", "g"]
 
 #allNonContractVows = [clustered(v) for v in allNonContractVows]
             
@@ -672,11 +676,20 @@ def rootsGuesser(word):
         rootStatus = "vowelStem"
     if last_thing in allLiquidConsonants:
         rootStatus = "liquidStem"
+	if last_thing in allLabialConsonants
+    	rootStatus = "labialStem"
+	if last_thing in allDentalConsonants
+    	rootStatus = "dentalStem"
+	if last_thing in allPalatalConsonants
+    	rootStatus = "palatalStem"
+        
+    rootStatusMessage = rootStatus + "Message"
     
     st.write("")
     st.write(last_thing)
     
-    st.write(rootStatus)
+    if rootStatus = "vowelStemMessage":
+    	st.write("It seems like your verb is what is known as a 'vowel stem verb.' This is great news, because this class of verb usually has a predictable root formation.")
     
 
 #word = clustered(st.text_input("Enter word:") or "")
