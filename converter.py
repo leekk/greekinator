@@ -615,7 +615,7 @@ def rootsGuesser():
     st.write("")
     st.write("")
     if st.button("More information"):
-        st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root.")
+        st.write("Whilst the principle part is created by adding a verb ending to the stem, the stem is created by adding one or multiple affixes to the root. This means that the root is the primary building block when constructing a verb's morphology. Whilst, idealy, the root stays constant between every stem, it is not uncommon for the root to change. Though those changes are sometimes irregular, often they are predictable.")
         
   with col1:
     word_1 = st.text_input("Enter the root of your verb's first principle part")
