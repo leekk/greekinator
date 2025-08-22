@@ -619,6 +619,7 @@ def rootsGuesser():
         
   with col1:
     word_1 = st.text_input("Enter the root of your verb's first principle part")
+    romanize(word_1)
 
     # initializing root status
     rootStatus = ""
