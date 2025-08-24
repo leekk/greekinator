@@ -133,7 +133,7 @@ allNonContractVows = ["i", "u", "ā", "ē", "ī", "ō", "ū", "ai", "au", "ei",
             
 allLiquidConsonants = ["r", "rh", "l", "m", "n"]
 allLabialConsonants = ["p", "ph", "b"]
-allDentalConsonants = ["t", "th", "d"]
+allDentalConsonants = ["t", "th", "d", "z", "s"]
 allPalatalConsonants = ["k", "kh", "g"]
             
 allVowsAndConsonants = ["a", "e", "i", "o", "u", "ā", "ē", "ī", "ō", "ū", "ai", "au", "ei", 
