@@ -73,7 +73,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-tab1, tab2, tab3 = st.tabs(["Word Modifier", "Greekinator", "I_hate_Github")
+tab1, tab2, tab3 = st.tabs(["Word Modifier", "Greekinator", "I_hate_Github"])
 
 if "outputs" not in st.session_state:
     st.session_state.outputs = []
