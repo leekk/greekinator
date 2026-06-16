@@ -694,4 +694,4 @@ with tab2:
 #
 
 with tab3:
-    st.print(fuck you)
+    st.print("fuck you")
