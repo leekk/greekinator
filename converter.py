@@ -796,11 +796,9 @@ with tab2:
 #
 
 with tab3:
-  if __name__ == "__main__":
-    # This will print to console AND save to a file
-    html = process_input_files(
-        "input/text/aristotle.txt", 
-        "input/sync/aristotle_sync.txt",
-        "output/aristotle.html"  # optional: saves to file
-    )
-    print(html)
+  html = process_input_files(
+    "input/text/aristotle.txt", 
+    "input/sync/aristotle_sync.txt",
+    "output/aristotle.html"  # optional: saves to file
+  )
+  print(html)
