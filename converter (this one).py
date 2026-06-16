@@ -691,9 +691,112 @@ with tab2:
 
 with tab3:
 
-    st.write("hello bitch")
+    def parse_textgrid(tg_string: str) -> dict:
+    """
+    Extract word intervals from a textgrid string.
+    Returns a dict: interval index → {xmin, xmax, text}
+    (empty text intervals are kept in the dict but are later filtered out)
+    """
+    interval_pattern = re.compile(
+        r'intervals\s*\[(\d+)\]:\s*\n'
+        r'\s*xmin\s*=\s*([\d.]+)\s*\n'
+        r'\s*xmax\s*=\s*([\d.]+)\s*\n'
+        r'\s*text\s*=\s*"(.*?)"'
+    )
+    intervals = {}
+    for match in interval_pattern.finditer(tg_string):
+        idx = int(match.group(1))
+        intervals[idx] = {
+            'xmin': float(match.group(2)),
+            'xmax': float(match.group(3)),
+            'text': match.group(4),
+        }
+    return intervals
 
-#st.write("")
-#st.write("Past results:")
-#for output in st.session_state.outputs:
-    #st.write(output)
+    def format_time(t: float) -> str:
+        """Format a float to a minimal decimal string (e.g. 2.2, 7.15)."""
+        s = f"{t:.2f}".rstrip('0').rstrip('.')
+        return s
+    
+    # ----------------------------------------------------------------------
+    def build_phrase_spans(original_text: str, word_intervals: dict) -> str:
+        """
+        Split the text into phrases, using punctuation as phrase boundaries,
+        but keeping consecutive punctuation marks in the same phrase.
+        """
+        # 1. Tokenise: Greek letters (including diacritics) and single punctuation marks
+        tokens = re.findall(r'\w+|[^\w\s]', original_text)
+    
+        # 2. Group tokens into phrases
+        #    A phrase ends when a punctuation token is immediately followed
+        #    by a word token or by the end of the text.
+        phrases = []
+        current = []
+        for i, tok in enumerate(tokens):
+            current.append(tok)
+            if not re.match(r'\w+', tok):   # it’s punctuation
+                # Look ahead: if next token is a word (or does not exist), the phrase ends here
+                next_tok = tokens[i + 1] if i + 1 < len(tokens) else None
+                if next_tok is None or re.match(r'\w+', next_tok):
+                    phrases.append(current)
+                    current = []
+        if current:   # any remaining tokens (e.g., text ending with a word)
+            phrases.append(current)
+    
+        # 3. Build a list of word‑only intervals (skip empty text)
+        word_list = []
+        for idx in sorted(word_intervals.keys()):
+            w = word_intervals[idx]
+            if w['text'].strip():
+                word_list.append(w)
+    
+        # 4. Walk through phrases, assign timing, and build HTML spans
+        output_spans = []
+        word_idx = 0                     # index into word_list
+        for phrase_tokens in phrases:
+            # Skip phrases that contain no real words
+            if not any(re.match(r'\w+', t) for t in phrase_tokens):
+                continue
+    
+            # Start time = xmin of the FIRST WORD in this phrase
+            first_word_xmin = word_list[word_idx]['xmin']
+    
+            inner_parts = []
+            for tok in phrase_tokens:
+                if re.match(r'\w+', tok):
+                    inner_parts.append(f'<span class="word">{tok}</span>')
+                    word_idx += 1               # consume one word interval
+                else:
+                    # All punctuation is treated the same (no special 'wrap' class)
+                    inner_parts.append(f'<span class="punctuation">{tok}</span>')
+    
+            # Re‑build the inner HTML: a single space between non‑punctuation elements
+            phrase_html = ''
+            for i, part in enumerate(inner_parts):
+                if i > 0 and not inner_parts[i-1].startswith('<span class="punctuation'):
+                    phrase_html += ' '
+                phrase_html += part
+    
+            span = (
+                f'<span data-start="{format_time(first_word_xmin)}" '
+                f'class="phrase">{phrase_html}</span>'
+            )
+            output_spans.append(span)
+    
+        return '\n'.join(output_spans)
+    
+    # ----------------------------------------------------------------------
+    def process_input_files(text_file: str, textgrid_file: str) -> str:
+        """Read input from two files and return the HTML."""
+        with open(text_file, 'r', encoding='utf-8') as f:
+            text = f.read().strip()
+        with open(textgrid_file, 'r', encoding='utf-8') as f:
+            tg_string = f.read()
+        word_intervals = parse_textgrid(tg_string)
+        return build_phrase_spans(text, word_intervals)
+    
+    # ----------------------------------------------------------------------
+    if __name__ == "__main__":
+        # Replace with your actual file names
+        html = process_input_files("input/text/aristotle.txt", "input/sync/aristotle_sync.txt")
+        st.write(html)
