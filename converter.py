@@ -798,5 +798,6 @@ with tab2:
 
 with tab3:
   if __name__ == "__main__":
-    html = process_input_files("input/text/aristotle.txt", "input/sync/aristotle_sync.txt")
-    print(html)
+        # Replace with your actual file names
+        html = process_input_files("input/text/aristotle.txt", "input/sync/aristotle_sync.txt")
+        st.write(html)
