@@ -657,19 +657,16 @@ def rootsGuesser():
 #START OF AKROOMENOIS DEFINITIONS
 
 # ----------------------------------------------------------------------
-def parse_textgrid(tg_string: str) -> dict:
+def parse_textgrid(tg_string):
     """
     Extract word intervals from a textgrid string.
     Returns a dict: interval index → {xmin, xmax, text}
     """
-    interval_pattern = re.compile(
-        r'intervals\s*\[(\d+)\]:\s*\n'
-        r'\s*xmin\s*=\s*([\d.]+)\s*\n'
-        r'\s*xmax\s*=\s*([\d.]+)\s*\n'
-        r'\s*text\s*=\s*"(.*?)"'
-    )
+    # Single-line pattern
+    pattern = r'intervals\s*\[(\d+)\]:\s*\n\s*xmin\s*=\s*([\d.]+)\s*\n\s*xmax\s*=\s*([\d.]+)\s*\n\s*text\s*=\s*"(.*?)"'
+    
     intervals = {}
-    for match in interval_pattern.finditer(tg_string):
+    for match in re.finditer(pattern, tg_string):
         idx = int(match.group(1))
         intervals[idx] = {
             'xmin': float(match.group(2)),
@@ -678,26 +675,24 @@ def parse_textgrid(tg_string: str) -> dict:
         }
     return intervals
 
-def format_time(t: float) -> str:
+def format_time(t):
     """Format a float to a minimal decimal string (e.g. 2.2, 7.15)."""
     s = f"{t:.2f}".rstrip('0').rstrip('.')
     return s
 
 # ----------------------------------------------------------------------
-def build_phrase_spans(original_text: str, word_intervals: dict) -> str:
+def build_phrase_spans(original_text, word_intervals):
     """
     Split the text into phrases, using punctuation as phrase boundaries,
     but keeping consecutive punctuation marks in the same phrase.
     """
-    # 1. Tokenise: Greek letters and single punctuation marks
     tokens = re.findall(r'\w+|[^\w\s]', original_text)
 
-    # 2. Group tokens into phrases
     phrases = []
     current = []
     for i, tok in enumerate(tokens):
         current.append(tok)
-        if not re.match(r'\w+', tok):   # it's punctuation
+        if not re.match(r'\w+', tok):
             next_tok = tokens[i + 1] if i + 1 < len(tokens) else None
             if next_tok is None or re.match(r'\w+', next_tok):
                 phrases.append(current)
@@ -705,14 +700,12 @@ def build_phrase_spans(original_text: str, word_intervals: dict) -> str:
     if current:
         phrases.append(current)
 
-    # 3. Build a list of word-only intervals (skip empty text)
     word_list = []
     for idx in sorted(word_intervals.keys()):
         w = word_intervals[idx]
         if w['text'].strip():
             word_list.append(w)
 
-    # 4. Walk through phrases, assign timing, and build HTML spans
     output_spans = []
     word_idx = 0
     for phrase_tokens in phrases:
@@ -729,30 +722,36 @@ def build_phrase_spans(original_text: str, word_intervals: dict) -> str:
             else:
                 inner_parts.append(f'<span class="punctuation">{tok}</span>')
 
-        # Rebuild inner HTML with spaces between non-punctuation elements
         phrase_html = ''
         for i, part in enumerate(inner_parts):
             if i > 0 and not inner_parts[i-1].startswith('<span class="punctuation'):
                 phrase_html += ' '
             phrase_html += part
 
-        span = (
-            f'<span data-start="{format_time(first_word_xmin)}" '
-            f'class="phrase">{phrase_html}</span>'
-        )
+        span = f'<span data-start="{format_time(first_word_xmin)}" class="phrase">{phrase_html}</span>'
         output_spans.append(span)
 
     return '\n'.join(output_spans)
 
 # ----------------------------------------------------------------------
-def process_input_files(text_file: str, textgrid_file: str) -> str:
-    """Read input from two files and return the HTML."""
+def process_input_files(text_file, textgrid_file, output_file=None):
+    """
+    Read input from two files and return the HTML.
+    If output_file is provided, also save the HTML to that file.
+    """
     with open(text_file, 'r', encoding='utf-8') as f:
         text = f.read().strip()
     with open(textgrid_file, 'r', encoding='utf-8') as f:
         tg_string = f.read()
     word_intervals = parse_textgrid(tg_string)
-    return build_phrase_spans(text, word_intervals)
+    html = build_phrase_spans(text, word_intervals)
+    
+    if output_file:
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(html)
+        print(f"HTML saved to {output_file}")
+    
+    return html
 
 # ----------------------------------------------------------------------
 
@@ -798,6 +797,10 @@ with tab2:
 
 with tab3:
   if __name__ == "__main__":
-        # Replace with your actual file names
-        html = process_input_files("input/text/aristotle.txt", "input/sync/aristotle_sync.txt")
-        st.write(html)
+    # This will print to console AND save to a file
+    html = process_input_files(
+        "input/text/aristotle.txt", 
+        "input/sync/aristotle_sync.txt",
+        "output/aristotle.html"  # optional: saves to file
+    )
+    print(html)
