@@ -742,7 +742,7 @@ def build_phrase_spans(original_text: str, word_intervals: dict) -> str:
         )
         output_spans.append(span)
 
-    return '<br>'.join(output_spans)
+    return '\n'.join(output_spans)
 
 # ----------------------------------------------------------------------
 def process_input_files(text_file: str, textgrid_file: str) -> str:
