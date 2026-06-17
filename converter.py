@@ -800,5 +800,4 @@ with tab3:
   if __name__ == "__main__":
         # Replace with your actual file names
         html = process_input_files("input/text/aristotle.txt", "input/sync/aristotle_sync.txt")
-        #st.write(html)
-        st.markdown(html, unsafe_allow_html=True)
+        st.write(html)
