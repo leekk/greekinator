@@ -689,8 +689,9 @@ def build_phrase_spans(original_text: str, word_intervals: dict) -> str:
     Split the text into phrases, using punctuation as phrase boundaries,
     but keeping consecutive punctuation marks in the same phrase.
     """
-    # 1. Tokenise: Greek letters and single punctuation marks
-    tokens = re.findall(r'\w+|[^\w\s]', original_text)
+    # 1. Tokenise: Greek letters (including elision marks) and single punctuation marks
+    # We include \u2019 (curly apostrophe), \u0027 (straight quote), \u1FBF (psili), and \u1FBD (koronis) inside the word match
+    tokens = re.findall(r'[\w\u2019\u0027\u1FBF\u1FBD]+|[^\w\s]', original_text)
 
     # 2. Group tokens into phrases
     phrases = []
