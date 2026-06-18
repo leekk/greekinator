@@ -810,5 +810,5 @@ with tab2:
 with tab3:
   if __name__ == "__main__":
         # Replace with your actual file names
-        html = process_input_files("input/text/aristotle.txt", "input/sync/aristotle_sync.txt")
+        html = process_input_files("input/text/xen_an_book1_chapter1.txt", "input/sync/xen_an_book1_chapter1_sync.txt")
         st.code(html)
