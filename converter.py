@@ -751,7 +751,9 @@ def build_phrase_spans(original_text: str, word_intervals: dict) -> str:
         )
         output_spans.append(span)
 
-    return '\n'.join(output_spans)
+    # Joins spans with newlines and prefixes every line with exactly 2 spaces
+    indented_output = '\n'.join(f"  {span}" for span in output_spans)
+    return indented_output
 
 # ----------------------------------------------------------------------
 def process_input_files(text_file: str, textgrid_file: str) -> str:
