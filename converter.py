@@ -742,7 +742,7 @@ def build_phrase_spans(original_text: str, word_intervals: dict) -> str:
         )
         output_spans.append(span)
 
-    return '\n\n'.join(output_spans)
+    return '\n'.join(output_spans)
 
 # ----------------------------------------------------------------------
 def process_input_files(text_file: str, textgrid_file: str) -> str:
@@ -800,4 +800,4 @@ with tab3:
   if __name__ == "__main__":
         # Replace with your actual file names
         html = process_input_files("input/text/aristotle.txt", "input/sync/aristotle_sync.txt")
-        st.write(html)
+        st.code(html)
