@@ -756,12 +756,12 @@ def build_phrase_spans(original_text: str, word_intervals: dict) -> str:
     return indented_output
 
 # ----------------------------------------------------------------------
-def process_input_files(text_file: str, textgrid_file: str) -> str:
-    """Read input from two files and return the HTML."""
-    with open(text_file, 'r', encoding='utf-8') as f:
-        text = f.read().strip()
-    with open(textgrid_file, 'r', encoding='utf-8') as f:
-        tg_string = f.read()
+def process_input_files(text_file_obj, textgrid_file_obj) -> str:
+    """Read input from uploaded file objects and return the HTML."""
+    # Read directly from the file-like objects uploaded via Streamlit
+    text = text_file_obj.read().decode("utf-8").strip()
+    tg_string = textgrid_file_obj.read().decode("utf-8")
+    
     word_intervals = parse_textgrid(tg_string)
     return build_phrase_spans(text, word_intervals)
 
@@ -808,7 +808,22 @@ with tab2:
 #
 
 with tab3:
-  if __name__ == "__main__":
-        # Replace with your actual file names
-        html = process_input_files("input/text/xen_an_book1_chapter1.txt", "input/sync/xen_an_book1_chapter1_sync.txt")
-        st.code(html)
+    st.subheader("Akroomenois HTML Generator")
+    st.write("Upload your text and TextGrid alignment files to generate timed HTML spans.")
+
+    # File uploaders for the user
+    uploaded_text = st.file_uploader("Upload Text File (.txt)", type=["txt"])
+    uploaded_textgrid = st.file_uploader("Upload TextGrid Sync File (.txt/TextGrid)", type=["txt", "textgrid"])
+
+    if uploaded_text and uploaded_textgrid:
+        try:
+            # Pass the file buffers straight into your processed function
+            html = process_input_files(uploaded_text, uploaded_textgrid)
+            
+            st.success("HTML generated successfully!")
+            st.code(html, language="html")
+            
+        except Exception as e:
+            st.error(f"An error occurred while processing the files: {e}")
+    else:
+        st.info("Please upload both files above to test the generator.")
