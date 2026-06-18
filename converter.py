@@ -731,9 +731,17 @@ def build_phrase_spans(original_text: str, word_intervals: dict) -> str:
 
         # Rebuild inner HTML with spaces between non-punctuation elements
         phrase_html = ''
+        # Rebuild inner HTML with spaces ONLY between consecutive word spans
+        phrase_html = ''
         for i, part in enumerate(inner_parts):
-            if i > 0 and not inner_parts[i-1].startswith('<span class="punctuation'):
-                phrase_html += ' '
+            if i > 0:
+                # Only add a space if the previous item was a word AND the current item is a word
+                prev_is_word = inner_parts[i-1].startswith('<span class="word"')
+                curr_is_word = part.startswith('<span class="word"')
+                
+                if prev_is_word and curr_is_word:
+                    phrase_html += ' '
+                    
             phrase_html += part
 
         span = (
