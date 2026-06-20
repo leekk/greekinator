@@ -963,3 +963,54 @@ with tab3:
                 
         except Exception as e:
             st.error(f"Execution Error encountered: {str(e)}")
+
+########
+########
+def prepare_readalong_studio_text(raw_text):
+    """
+    Extracts pure text content from raw DiogenesWeb outputs, removing structural 
+    section headers, metadata markers, and excessive layouts for seamless integration 
+    with forced-alignment engines like ReadAlong Studio.
+    """
+    lines = raw_text.split('\n')
+    cleaned_lines = []
+    
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+            
+        # 1. Filter out known metadata, event tags, and structural metadata rules
+        if "Event Date:" in line:
+            continue
+            
+        # 2. Skip standalone structural headers specific to DiogenesWeb (e.g., "Book 1, Chapter 1, Section 9.")
+        if re.search(r'Book\s+\d+,\s*Chapter\s+\d+,\s*Section\s+\d+\.', line, re.IGNORECASE):
+            continue
+        if re.search(r'Section\s+\d+\.', line, re.IGNORECASE):
+            continue
+            
+        # 3. Skip ToposText paragraph structural codes just in case they overlap
+        if re.search(r'(?:§\s*\d+\.\d+\.\d+|\[\d+\])', line):
+            continue
+            
+        # Append the valid clean prose string
+        cleaned_lines.append(line)
+        
+    # Join everything back together into flat, clean paragraph layouts
+    return "\n\n".join(cleaned_lines)
+########
+########
+
+# NEW TAB FOR READALONG STUDIO CLEANER
+with tab4 if 'tab4' in locals() else st.tabs(["...","...","...","ReadAlong Studio Input Preparation"])[-1]:
+    st.subheader("DiogenesWeb Text Cleaner for ReadAlong Studio")
+    st.write("Paste your raw Greek text below to strip out section headings and metadata, leaving only clean, continuous text.")
+
+    raw_diogenes_greek = st.text_area("Paste raw DiogenesWeb Greek text here:", height=300)
+
+    if raw_diogenes_greek:
+        cleaned_studio_text = prepare_readalong_studio_text(raw_diogenes_greek)
+        
+        st.success("Text cleaned successfully!")
+        st.text_area("Cleaned output (Ready to copy-paste):", value=cleaned_studio_text, height=300)
