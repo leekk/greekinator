@@ -661,6 +661,10 @@ def rootsGuesser():
 #################################
 #START OF AKROOMENOIS DEFINITIONS
 
+import re
+import streamlit as st
+import html
+
 def clean_for_matching(text):
     """Normalize text into pure alphabetic lowercase characters for safe alignment matching."""
     # Strips diacritics, layout punctuation, numbers, and capitalization anomalies
@@ -689,7 +693,7 @@ def parse_textgrid_intervals(textgrid_content):
     return intervals
 
 def parse_source_text(raw_text, mode="grc"):
-    """Parse web text files, filtering fluff, grouping elements by section and processing sentences."""
+    """Parse web text files, filtering fluff, grouping elements by section."""
     lines = raw_text.split('\n')
     sections_dict = {}
     current_section = None
@@ -722,11 +726,15 @@ def parse_source_text(raw_text, mode="grc"):
         if current_section not in sections_dict:
             sections_dict[current_section] = []
             
-        # Split layout lines into discrete phrases using punctuation breaks (. ; · , : •)
-        phrases = re.split(r'(?<=[.,·;:•!?’\x27])\s+', line)
-        for p in phrases:
-            if p.strip():
-                sections_dict[current_section].append(p.strip())
+        if mode == "grc":
+            # Greek splits layout lines into discrete phrases using punctuation breaks (. ; · , : •)
+            phrases = re.split(r'(?<=[.,·;:•!?’\x27])\s+', line)
+            for p in phrases:
+                if p.strip():
+                    sections_dict[current_section].append(p.strip())
+        else:
+            # English preserves the whole paragraph chunk structure section-by-section
+            sections_dict[current_section].append(line)
                 
     return sections_dict
 
@@ -802,7 +810,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 if phrase_start_time is None:
                     phrase_start_time = 0.0
                     
-                # Build Output 1 (Standard Layout Spans)
+                # Build Output 1 (Standard Layout Spans) with accurate initial indent
                 o1_words_str = ""
                 for item in matched_words_data:
                     punc_match = re.match(r'^([^\w\s]+)(.*?)$|^([\s\w\W]*?)([.,·;:’\']+)$', item["text"])
@@ -813,10 +821,10 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                     else:
                         o1_words_str += f'<span class="word">{html.escape(item["text"])}</span> '
                 
-                o1_phrase = f'<span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o1_words_str.strip()}</span>\n'
+                o1_phrase = f'  <span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o1_words_str.strip()}</span>\n'
                 output_1_lines.append(o1_phrase)
                 
-                # Build Output 2 (Advanced Word-by-Word Timings)
+                # Build Output 2 (Advanced Word-by-Word Timings) with accurate initial indent
                 o2_words_str = ""
                 for item in matched_words_data:
                     if item["is_punc"]:
@@ -829,7 +837,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                             word_span += f'<span class="punctuation">{html.escape(punc_only)}</span>'
                         o2_words_str += word_span + " "
                         
-                o2_phrase = f'<span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o2_words_str.strip()}</span>\n'
+                o2_phrase = f'  <span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o2_words_str.strip()}</span>\n'
                 output_2_lines.append(o2_phrase)
                 
         # --- PROCESS ENGLISH PHRASES ---
@@ -838,10 +846,12 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
             sec_start_est = tg_intervals[tg_idx-1]["start"]
             
         if sec in english_sections and english_sections[sec]:
+            # Print English paragraph label on its own standalone line first
             output_3_lines.append(f"  [{sec}] ")
-            for eng_phrase in english_sections[sec]:
-                o3_phrase = f'<span data-start="{sec_start_est:.2f}" class="phrase_en">{html.escape(eng_phrase)}</span>\n'
-                output_3_lines.append(o3_phrase)
+            # Print the entire combined section together as one flat paragraph block
+            combined_eng_paragraph = " ".join(english_sections[sec])
+            o3_phrase = f'<span data-start="{sec_start_est:.2f}" class="phrase_en">{html.escape(combined_eng_paragraph)}</span>\n'
+            output_3_lines.append(o3_phrase)
             
         # Append standalone section break lines explicitly
         output_1_lines.append("  <br><br>\n")
