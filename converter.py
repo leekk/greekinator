@@ -1,6 +1,7 @@
 import streamlit as st
 import regex
 import re
+import html
 
 st.markdown("""
 <style>
@@ -660,6 +661,33 @@ def rootsGuesser():
 #################################
 #START OF AKROOMENOIS DEFINITIONS
 
+def clean_for_matching(text):
+    """Normalize text into pure alphabetic lowercase characters for safe alignment matching."""
+    # Strips diacritics, layout punctuation, numbers, and capitalization anomalies
+    cleaned = re.sub(r'[\d\W_]+', '', text.lower())
+    return cleaned
+
+def parse_textgrid_intervals(textgrid_content):
+    """Parse a standard TextGrid file buffer into a flat sequence list of timed words."""
+    intervals = []
+    # Regular expressions to catch xmin, xmax, and text components seamlessly
+    block_pattern = re.compile(r'intervals\s*\[\d+\]\s*:\s*xmin\s*=\s*([\d.]+)\s*xmax\s*=\s*([\d.]+)\s*text\s*=\s*"([^"]*)"')
+    
+    for match in block_pattern.finditer(textgrid_content):
+        xmin = float(match.group(1))
+        xmax = float(match.group(2))
+        word_text = match.group(3).strip()
+        
+        # Keep only segments that contain physical audio voice content
+        if word_text:
+            intervals.append({
+                "start": xmin,
+                "end": xmax,
+                "text": word_text,
+                "clean": clean_for_matching(word_text)
+            })
+    return intervals
+
 def parse_source_text(raw_text, mode="grc"):
     """Parse web text files, filtering fluff, grouping elements by section and processing sentences."""
     lines = raw_text.split('\n')
@@ -671,23 +699,21 @@ def parse_source_text(raw_text, mode="grc"):
         if not line:
             continue
             
-        # 1. Φιλτράρισμα άχρηστων πληροφοριών / μεταδεδομένων
+        # 1. Filter out known structural metadata/fluff markers
         if "Event Date:" in line:
             continue
             
-        # 2. Εξαγωγή αριθμού ενότητας (Section) ανάλογα με το format της σελίδας
-        # Έλεγχος για DiogenesWeb: "Book 1, Chapter 1, Section 1."
+        # 2. Extract section indices safely handling both DiogenesWeb and ToposText formats
         diogenes_match = re.search(r'Section\s+(\d+)\.', line, re.IGNORECASE)
-        # Έλεγχος για ToposText: "§ 1.1.1" ή "[1]"
         topos_match = re.search(r'(?:§\s*\d+\.\d+\.(\d+)|\[(\d+)\])', line)
         
         if diogenes_match:
             current_section = int(diogenes_match.group(1))
-            continue  # Πάμε στην επόμενη γραμμή που έχει το πραγματικό κείμενο
+            continue  # Section header isolated on its own line; skip to text body line
         elif topos_match:
             sec_num = topos_match.group(1) or topos_match.group(2)
             current_section = int(sec_num)
-            # Αφαιρούμε το tag και το "Book_1" από τη γραμμή για να μείνει μόνο το κείμενο
+            # Remove tag and optional site annotations (e.g. Book_1) from the text line string
             line = re.sub(r'(?:§\s*\d+\.\d+\.\d+|\[\d+\])\s*(?:Book_\d+)?', '', line).strip()
             
         if current_section is None:
@@ -696,7 +722,7 @@ def parse_source_text(raw_text, mode="grc"):
         if current_section not in sections_dict:
             sections_dict[current_section] = []
             
-        # Χωρισμός σε φράσεις με βάση τα σημεία στίξης (. ; · , : •)
+        # Split layout lines into discrete phrases using punctuation breaks (. ; · , : •)
         phrases = re.split(r'(?<=[.,·;:•!?’\x27])\s+', line)
         for p in phrases:
             if p.strip():
@@ -717,10 +743,9 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
     output_2_lines = []
     output_3_lines = []
     
-    # Βρίσκουμε τις κοινές ενότητες μεταξύ των δύο αρχείων
+    # Check intersecting index boundaries safely
     all_sections = sorted(list(set(greek_sections.keys()).intersection(set(english_sections.keys()))))
     
-    # Αν δεν βρέθηκαν κοινές ενότητες, χρησιμοποιούμε όλες τις διαθέσιμες ελληνικές για να μην βγει κενό
     if not all_sections:
         all_sections = sorted(list(greek_sections.keys()))
         
@@ -777,7 +802,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 if phrase_start_time is None:
                     phrase_start_time = 0.0
                     
-                # Build Output 1
+                # Build Output 1 (Standard HTML Spans)
                 o1_words_str = ""
                 for item in matched_words_data:
                     punc_match = re.match(r'^([^\w\s]+)(.*?)$|^([\s\w\W]*?)([.,·;:’\']+)$', item["text"])
@@ -791,7 +816,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 o1_phrase = f'<span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o1_words_str.strip()}</span>'
                 output_1_lines.append(o1_phrase)
                 
-                # Build Output 2
+                # Build Output 2 (Advanced Click-Audio Targets)
                 o2_words_str = ""
                 for item in matched_words_data:
                     if item["is_punc"]:
