@@ -660,37 +660,6 @@ def rootsGuesser():
 #################################
 #START OF AKROOMENOIS DEFINITIONS
 
-import re
-import streamlit as st
-import html
-
-def clean_for_matching(text):
-    """Normalize text into pure alphabetic lowercase characters for safe alignment matching."""
-    # Strips diacritics, layout punctuation, numbers, and capitalization anomalies
-    cleaned = re.sub(r'[\d\W_]+', '', text.lower())
-    return cleaned
-
-def parse_textgrid_intervals(textgrid_content):
-    """Parse a standard TextGrid file buffer into a flat sequence list of timed words."""
-    intervals = []
-    # Regular expressions to catch xmin, xmax, and text components seamlessly
-    block_pattern = re.compile(r'intervals\s*\[\d+\]\s*:\s*xmin\s*=\s*([\d.]+)\s*xmax\s*=\s*([\d.]+)\s*text\s*=\s*"([^"]*)"')
-    
-    for match in block_pattern.finditer(textgrid_content):
-        xmin = float(match.group(1))
-        xmax = float(match.group(2))
-        word_text = match.group(3).strip()
-        
-        # Keep only segments that contain physical audio voice content
-        if word_text:
-            intervals.append({
-                "start": xmin,
-                "end": xmax,
-                "text": word_text,
-                "clean": clean_for_matching(word_text)
-            })
-    return intervals
-
 def parse_source_text(raw_text, mode="grc"):
     """Parse web text files, filtering fluff, grouping elements by section and processing sentences."""
     lines = raw_text.split('\n')
@@ -702,17 +671,24 @@ def parse_source_text(raw_text, mode="grc"):
         if not line:
             continue
             
-        # 1. Filter out known structural metadata/fluff markers
-        if "Event Date:" in line or "Book" in line and "Chapter" in line:
+        # 1. Φιλτράρισμα άχρηστων πληροφοριών / μεταδεδομένων
+        if "Event Date:" in line:
             continue
             
-        # 2. Extract section indices (e.g., "§ 1.1.1" or "[1]")
-        section_match = re.search(r'(?:§\s*\d+\.\d+\.(\d+)|\[(\d+)\])', line)
-        if section_match:
-            sec_num = section_match.group(1) or section_match.group(2)
+        # 2. Εξαγωγή αριθμού ενότητας (Section) ανάλογα με το format της σελίδας
+        # Έλεγχος για DiogenesWeb: "Book 1, Chapter 1, Section 1."
+        diogenes_match = re.search(r'Section\s+(\d+)\.', line, re.IGNORECASE)
+        # Έλεγχος για ToposText: "§ 1.1.1" ή "[1]"
+        topos_match = re.search(r'(?:§\s*\d+\.\d+\.(\d+)|\[(\d+)\])', line)
+        
+        if diogenes_match:
+            current_section = int(diogenes_match.group(1))
+            continue  # Πάμε στην επόμενη γραμμή που έχει το πραγματικό κείμενο
+        elif topos_match:
+            sec_num = topos_match.group(1) or topos_match.group(2)
             current_section = int(sec_num)
-            # Remove the tag from the text string to avoid pollution
-            line = re.sub(r'(?:§\s*\d+\.\d+\.\d+|\[\d+\])', '', line).strip()
+            # Αφαιρούμε το tag και το "Book_1" από τη γραμμή για να μείνει μόνο το κείμενο
+            line = re.sub(r'(?:§\s*\d+\.\d+\.\d+|\[\d+\])\s*(?:Book_\d+)?', '', line).strip()
             
         if current_section is None:
             continue
@@ -720,8 +696,7 @@ def parse_source_text(raw_text, mode="grc"):
         if current_section not in sections_dict:
             sections_dict[current_section] = []
             
-        # Split layout lines into discrete phrases using punctuation breaks (. ; · , : •)
-        # Keeps punctuation married to the word it ends
+        # Χωρισμός σε φράσεις με βάση τα σημεία στίξης (. ; · , : •)
         phrases = re.split(r'(?<=[.,·;:•!?’\x27])\s+', line)
         for p in phrases:
             if p.strip():
@@ -731,7 +706,6 @@ def parse_source_text(raw_text, mode="grc"):
 
 def align_and_generate_html(greek_text, english_text, textgrid_text):
     """Run cross-source text matching and generate parallel outputs for checking."""
-    # Build clean internal structures
     greek_sections = parse_source_text(greek_text, mode="grc")
     english_sections = parse_source_text(english_text, mode="en")
     tg_intervals = parse_textgrid_intervals(textgrid_text)
@@ -739,114 +713,110 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
     tg_idx = 0
     num_intervals = len(tg_intervals)
     
-    # Repositories for the 3 distinct output pipelines
     output_1_lines = []
     output_2_lines = []
     output_3_lines = []
     
-    # Process sorted text keys sequentially
+    # Βρίσκουμε τις κοινές ενότητες μεταξύ των δύο αρχείων
     all_sections = sorted(list(set(greek_sections.keys()).intersection(set(english_sections.keys()))))
     
+    # Αν δεν βρέθηκαν κοινές ενότητες, χρησιμοποιούμε όλες τις διαθέσιμες ελληνικές για να μην βγει κενό
+    if not all_sections:
+        all_sections = sorted(list(greek_sections.keys()))
+        
     for sec in all_sections:
         output_1_lines.append(f"  [{sec}] ")
         output_2_lines.append(f"  [{sec}] ")
         output_3_lines.append(f"  [{sec}] ")
         
         # --- PROCESS GREEK PHRASES ---
-        for phrase in greek_sections[sec]:
-            words = phrase.split()
-            matched_words_data = []
-            phrase_start_time = None
-            
-            for word in words:
-                clean_w = clean_for_matching(word)
-                if not clean_w:
-                    # Pure punctuation block tracking
-                    matched_words_data.append({"text": word, "start": None, "end": None, "is_punc": True})
-                    continue
+        if sec in greek_sections:
+            for phrase in greek_sections[sec]:
+                words = phrase.split()
+                matched_words_data = []
+                phrase_start_time = None
                 
-                # Match forward along the TextGrid timeline safely
-                word_start = 0.0
-                word_end = 0.0
-                found_match = False
-                
-                attempts = 0
-                while tg_idx < num_intervals and attempts < 15:
-                    if tg_intervals[tg_idx]["clean"] == clean_w or clean_w in tg_intervals[tg_idx]["clean"] or tg_intervals[tg_idx]["clean"] in clean_w:
-                        word_start = tg_intervals[tg_idx]["start"]
-                        word_end = tg_intervals[tg_idx]["end"]
+                for word in words:
+                    clean_w = clean_for_matching(word)
+                    if not clean_w:
+                        matched_words_data.append({"text": word, "start": None, "end": None, "is_punc": True})
+                        continue
+                    
+                    word_start = 0.0
+                    word_end = 0.0
+                    found_match = False
+                    
+                    attempts = 0
+                    while tg_idx < num_intervals and attempts < 15:
+                        tg_clean = tg_intervals[tg_idx]["clean"]
+                        if tg_clean == clean_w or clean_w in tg_clean or tg_clean in clean_w:
+                            word_start = tg_intervals[tg_idx]["start"]
+                            word_end = tg_intervals[tg_idx]["end"]
+                            if phrase_start_time is None:
+                                phrase_start_time = word_start
+                            tg_idx += 1
+                            found_match = True
+                            break
+                        else:
+                            tg_idx += 1
+                            attempts += 1
+                    
+                    if not found_match:
+                        word_start = tg_intervals[tg_idx-1]["end"] if tg_idx > 0 else 0.0
+                        word_end = word_start + 0.5
                         if phrase_start_time is None:
                             phrase_start_time = word_start
-                        tg_idx += 1
-                        found_match = True
-                        break
-                    else:
-                        # Skip unmatched standalone textgrid noise frames gracefully
-                        tg_idx += 1
-                        attempts += 1
-                
-                # Fallback safeguard structure if sync breaks
-                if not found_match:
-                    word_start = tg_intervals[tg_idx-1]["end"] if tg_idx > 0 else 0.0
-                    word_end = word_start + 0.5
-                    if phrase_start_time is None:
-                        phrase_start_time = word_start
-                
-                matched_words_data.append({
-                    "text": word,
-                    "start": word_start,
-                    "end": word_end,
-                    "is_punc": False
-                })
-            
-            # Use baseline fallback if phrase contains zero audio matches
-            if phrase_start_time is None:
-                phrase_start_time = 0.0
-                
-            # Build Output 1 (Standard Greek HTML Spans)
-            o1_words_str = ""
-            for item in matched_words_data:
-                # Delineate explicit punctuation elements safely
-                punc_match = re.match(r'^([^\w\s]+)(.*?)$|^([\s\w\W]*?)([.,·;:’\']+)$', item["text"])
-                if punc_match:
-                    # Clean tags of hanging outer layouts
-                    base_txt = re.sub(r'[.,·;:’\']', '', item["text"])
-                    punc_txt = "".join([g for g in punc_match.groups() if g and g != base_txt])
-                    o1_words_str += f'<span class="word">{html.escape(base_txt)}</span><span class="punctuation">{html.escape(punc_txt)}</span> '
-                else:
-                    o1_words_str += f'<span class="word">{html.escape(item["text"])}</span> '
-            
-            o1_phrase = f'<span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o1_words_str.strip()}</span>'
-            output_1_lines.append(o1_phrase)
-            
-            # Build Output 2 (Advanced Greek Spans with Word Isolation Audio Targets)
-            o2_words_str = ""
-            for item in matched_words_data:
-                if item["is_punc"]:
-                    o2_words_str += f'<span class="punctuation">{html.escape(item["text"])}</span> '
-                else:
-                    base_txt = re.sub(r'[.,·;:’\']', '', item["text"])
-                    punc_only = item["text"].replace(base_txt, "")
-                    word_span = f'<span class="word" data-word-start="{item["start"]:.2f}" data-word-end="{item["end"]:.2f}">{html.escape(base_txt)}</span>'
-                    if punc_only:
-                        word_span += f'<span class="punctuation">{html.escape(punc_only)}</span>'
-                    o2_words_str += word_span + " "
                     
-            o2_phrase = f'<span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o2_words_str.strip()}</span>'
-            output_2_lines.append(o2_phrase)
-            
-        # --- PROCESS ENGLISH PHRASES ---
-        # Map English strings down to the derived starting baseline time of the section segment
-        sec_start_est = 0.0
-        for item in tg_intervals:
-            if item["clean"] and sec_start_est == 0.0:
-                sec_start_est = item["start"]
+                    matched_words_data.append({
+                        "text": word,
+                        "start": word_start,
+                        "end": word_end,
+                        "is_punc": False
+                    })
                 
-        for eng_phrase in english_sections[sec]:
-            o3_phrase = f'<span data-start="{sec_start_est:.2f}" class="phrase_en">{html.escape(eng_phrase)}</span>'
-            output_3_lines.append(o3_phrase)
+                if phrase_start_time is None:
+                    phrase_start_time = 0.0
+                    
+                # Build Output 1
+                o1_words_str = ""
+                for item in matched_words_data:
+                    punc_match = re.match(r'^([^\w\s]+)(.*?)$|^([\s\w\W]*?)([.,·;:’\']+)$', item["text"])
+                    if punc_match:
+                        base_txt = re.sub(r'[.,·;:’\']', '', item["text"])
+                        punc_txt = "".join([g for g in punc_match.groups() if g and g != base_txt])
+                        o1_words_str += f'<span class="word">{html.escape(base_txt)}</span><span class="punctuation">{html.escape(punc_txt)}</span> '
+                    else:
+                        o1_words_str += f'<span class="word">{html.escape(item["text"])}</span> '
+                
+                o1_phrase = f'<span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o1_words_str.strip()}</span>'
+                output_1_lines.append(o1_phrase)
+                
+                # Build Output 2
+                o2_words_str = ""
+                for item in matched_words_data:
+                    if item["is_punc"]:
+                        o2_words_str += f'<span class="punctuation">{html.escape(item["text"])}</span> '
+                    else:
+                        base_txt = re.sub(r'[.,·;:’\']', '', item["text"])
+                        punc_only = item["text"].replace(base_txt, "")
+                        word_span = f'<span class="word" data-word-start="{item["start"]:.2f}" data-word-end="{item["end"]:.2f}">{html.escape(base_txt)}</span>'
+                        if punc_only:
+                            word_span += f'<span class="punctuation">{html.escape(punc_only)}</span>'
+                        o2_words_str += word_span + " "
+                        
+                o2_phrase = f'<span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o2_words_str.strip()}</span>'
+                output_2_lines.append(o2_phrase)
+                
+        # --- PROCESS ENGLISH PHRASES ---
+        sec_start_est = 0.0
+        if tg_idx > 0 and tg_idx - 1 < num_intervals:
+            sec_start_est = tg_intervals[tg_idx-1]["start"]
             
-        # Inject systematic breaks for visual alignment clarity
+        if sec in english_sections:
+            for eng_phrase in english_sections[sec]:
+                o3_phrase = f'<span data-start="{sec_start_est:.2f}" class="phrase_en">{html.escape(eng_phrase)}</span>'
+                output_3_lines.append(o3_phrase)
+            
         output_1_lines.append("<br><br>\n")
         output_2_lines.append("<br><br>\n")
         output_3_lines.append("<br><br>\n")
