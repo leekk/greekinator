@@ -660,7 +660,198 @@ def rootsGuesser():
 #################################
 #START OF AKROOMENOIS DEFINITIONS
 
+import re
+import streamlit as st
+import html
 
+def clean_for_matching(text):
+    """Normalize text into pure alphabetic lowercase characters for safe alignment matching."""
+    # Strips diacritics, layout punctuation, numbers, and capitalization anomalies
+    cleaned = re.sub(r'[\d\W_]+', '', text.lower())
+    return cleaned
+
+def parse_textgrid_intervals(textgrid_content):
+    """Parse a standard TextGrid file buffer into a flat sequence list of timed words."""
+    intervals = []
+    # Regular expressions to catch xmin, xmax, and text components seamlessly
+    block_pattern = re.compile(r'intervals\s*\[\d+\]\s*:\s*xmin\s*=\s*([\d.]+)\s*xmax\s*=\s*([\d.]+)\s*text\s*=\s*"([^"]*)"')
+    
+    for match in block_pattern.finditer(textgrid_content):
+        xmin = float(match.group(1))
+        xmax = float(match.group(2))
+        word_text = match.group(3).strip()
+        
+        # Keep only segments that contain physical audio voice content
+        if word_text:
+            intervals.append({
+                "start": xmin,
+                "end": xmax,
+                "text": word_text,
+                "clean": clean_for_matching(word_text)
+            })
+    return intervals
+
+def parse_source_text(raw_text, mode="grc"):
+    """Parse web text files, filtering fluff, grouping elements by section and processing sentences."""
+    lines = raw_text.split('\n')
+    sections_dict = {}
+    current_section = None
+    
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+            
+        # 1. Filter out known structural metadata/fluff markers
+        if "Event Date:" in line or "Book" in line and "Chapter" in line:
+            continue
+            
+        # 2. Extract section indices (e.g., "§ 1.1.1" or "[1]")
+        section_match = re.search(r'(?:§\s*\d+\.\d+\.(\d+)|\[(\d+)\])', line)
+        if section_match:
+            sec_num = section_match.group(1) or section_match.group(2)
+            current_section = int(sec_num)
+            # Remove the tag from the text string to avoid pollution
+            line = re.sub(r'(?:§\s*\d+\.\d+\.\d+|\[\d+\])', '', line).strip()
+            
+        if current_section is None:
+            continue
+            
+        if current_section not in sections_dict:
+            sections_dict[current_section] = []
+            
+        # Split layout lines into discrete phrases using punctuation breaks (. ; · , : •)
+        # Keeps punctuation married to the word it ends
+        phrases = re.split(r'(?<=[.,·;:•!?’\x27])\s+', line)
+        for p in phrases:
+            if p.strip():
+                sections_dict[current_section].append(p.strip())
+                
+    return sections_dict
+
+def align_and_generate_html(greek_text, english_text, textgrid_text):
+    """Run cross-source text matching and generate parallel outputs for checking."""
+    # Build clean internal structures
+    greek_sections = parse_source_text(greek_text, mode="grc")
+    english_sections = parse_source_text(english_text, mode="en")
+    tg_intervals = parse_textgrid_intervals(textgrid_text)
+    
+    tg_idx = 0
+    num_intervals = len(tg_intervals)
+    
+    # Repositories for the 3 distinct output pipelines
+    output_1_lines = []
+    output_2_lines = []
+    output_3_lines = []
+    
+    # Process sorted text keys sequentially
+    all_sections = sorted(list(set(greek_sections.keys()).intersection(set(english_sections.keys()))))
+    
+    for sec in all_sections:
+        output_1_lines.append(f"  [{sec}] ")
+        output_2_lines.append(f"  [{sec}] ")
+        output_3_lines.append(f"  [{sec}] ")
+        
+        # --- PROCESS GREEK PHRASES ---
+        for phrase in greek_sections[sec]:
+            words = phrase.split()
+            matched_words_data = []
+            phrase_start_time = None
+            
+            for word in words:
+                clean_w = clean_for_matching(word)
+                if not clean_w:
+                    # Pure punctuation block tracking
+                    matched_words_data.append({"text": word, "start": None, "end": None, "is_punc": True})
+                    continue
+                
+                # Match forward along the TextGrid timeline safely
+                word_start = 0.0
+                word_end = 0.0
+                found_match = False
+                
+                attempts = 0
+                while tg_idx < num_intervals and attempts < 15:
+                    if tg_intervals[tg_idx]["clean"] == clean_w or clean_w in tg_intervals[tg_idx]["clean"] or tg_intervals[tg_idx]["clean"] in clean_w:
+                        word_start = tg_intervals[tg_idx]["start"]
+                        word_end = tg_intervals[tg_idx]["end"]
+                        if phrase_start_time is None:
+                            phrase_start_time = word_start
+                        tg_idx += 1
+                        found_match = True
+                        break
+                    else:
+                        # Skip unmatched standalone textgrid noise frames gracefully
+                        tg_idx += 1
+                        attempts += 1
+                
+                # Fallback safeguard structure if sync breaks
+                if not found_match:
+                    word_start = tg_intervals[tg_idx-1]["end"] if tg_idx > 0 else 0.0
+                    word_end = word_start + 0.5
+                    if phrase_start_time is None:
+                        phrase_start_time = word_start
+                
+                matched_words_data.append({
+                    "text": word,
+                    "start": word_start,
+                    "end": word_end,
+                    "is_punc": False
+                })
+            
+            # Use baseline fallback if phrase contains zero audio matches
+            if phrase_start_time is None:
+                phrase_start_time = 0.0
+                
+            # Build Output 1 (Standard Greek HTML Spans)
+            o1_words_str = ""
+            for item in matched_words_data:
+                # Delineate explicit punctuation elements safely
+                punc_match = re.match(r'^([^\w\s]+)(.*?)$|^([\s\w\W]*?)([.,·;:’\']+)$', item["text"])
+                if punc_match:
+                    # Clean tags of hanging outer layouts
+                    base_txt = re.sub(r'[.,·;:’\']', '', item["text"])
+                    punc_txt = "".join([g for g in punc_match.groups() if g and g != base_txt])
+                    o1_words_str += f'<span class="word">{html.escape(base_txt)}</span><span class="punctuation">{html.escape(punc_txt)}</span> '
+                else:
+                    o1_words_str += f'<span class="word">{html.escape(item["text"])}</span> '
+            
+            o1_phrase = f'<span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o1_words_str.strip()}</span>'
+            output_1_lines.append(o1_phrase)
+            
+            # Build Output 2 (Advanced Greek Spans with Word Isolation Audio Targets)
+            o2_words_str = ""
+            for item in matched_words_data:
+                if item["is_punc"]:
+                    o2_words_str += f'<span class="punctuation">{html.escape(item["text"])}</span> '
+                else:
+                    base_txt = re.sub(r'[.,·;:’\']', '', item["text"])
+                    punc_only = item["text"].replace(base_txt, "")
+                    word_span = f'<span class="word" data-word-start="{item["start"]:.2f}" data-word-end="{item["end"]:.2f}">{html.escape(base_txt)}</span>'
+                    if punc_only:
+                        word_span += f'<span class="punctuation">{html.escape(punc_only)}</span>'
+                    o2_words_str += word_span + " "
+                    
+            o2_phrase = f'<span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o2_words_str.strip()}</span>'
+            output_2_lines.append(o2_phrase)
+            
+        # --- PROCESS ENGLISH PHRASES ---
+        # Map English strings down to the derived starting baseline time of the section segment
+        sec_start_est = 0.0
+        for item in tg_intervals:
+            if item["clean"] and sec_start_est == 0.0:
+                sec_start_est = item["start"]
+                
+        for eng_phrase in english_sections[sec]:
+            o3_phrase = f'<span data-start="{sec_start_est:.2f}" class="phrase_en">{html.escape(eng_phrase)}</span>'
+            output_3_lines.append(o3_phrase)
+            
+        # Inject systematic breaks for visual alignment clarity
+        output_1_lines.append("<br><br>\n")
+        output_2_lines.append("<br><br>\n")
+        output_3_lines.append("<br><br>\n")
+        
+    return "".join(output_1_lines), "".join(output_2_lines), "".join(output_3_lines)
 
 #END OF AKROOMENOIS DEFINITIONS
 ###############################
@@ -706,4 +897,48 @@ with tab2:
 #
 #
 
+# ASSIGNMENT FOR TAB 3 INTERFACE EVALUATION
 with tab3:
+    st.subheader("Akroomenois Classical Alignment System")
+    st.write("Upload your structural text dumps and matching timeline TextGrids.")
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        src_greek = st.file_uploader("1. Greek Source File (DiogenesWeb)", type=["txt"])
+    with col2:
+        src_english = st.file_uploader("2. English Translation (ToposText)", type=["txt"])
+    with col3:
+        src_sync = st.file_uploader("3. Timing Configuration File (TextGrid)", type=["txt", "textgrid"])
+
+    if src_greek and src_english and src_sync:
+        try:
+            # Decode incoming layout raw bytes streams
+            greek_raw = src_greek.read().decode("utf-8")
+            english_raw = src_english.read().decode("utf-8")
+            sync_raw = src_sync.read().decode("utf-8")
+            
+            # Execute logic engine to extract the three check zones
+            out1, out2, out3 = align_and_generate_html(greek_raw, english_raw, sync_raw)
+            st.success("Automated processing loops complete! Outputs ready below:")
+            
+            # Render testing columns side-by-side
+            check_tab1, check_tab2, check_tab3 = st.tabs([
+                "1. Baseline Greek HTML (Matches Index)", 
+                "2. Enhanced Greek HTML (Isolated Word Audio Enabled)", 
+                "3. Standalone English HTML Line Blocks"
+            ])
+            
+            with check_tab1:
+                st.info("Sanity check layout matching your baseline production index file.")
+                st.code(out1, language="html")
+                
+            with check_tab2:
+                st.info("Armed with 'data-word-start' and 'data-word-end' hooks ready for your click popup updates.")
+                st.code(out2, language="html")
+                
+            with check_tab3:
+                st.info("Clean English line-break spans isolated from metadata clutter.")
+                st.code(out3, language="html")
+                
+        except Exception as e:
+            st.error(f"Execution Error encountered: {str(e)}")
