@@ -661,10 +661,6 @@ def rootsGuesser():
 #################################
 #START OF AKROOMENOIS DEFINITIONS
 
-import re
-import streamlit as st
-import html
-
 def clean_for_matching(text):
     """Normalize text into pure alphabetic lowercase characters for safe alignment matching."""
     # Strips diacritics, layout punctuation, numbers, and capitalization anomalies
@@ -760,9 +756,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
     for sec in all_sections:
         # --- PROCESS GREEK PHRASES ---
         if sec in greek_sections and greek_sections[sec]:
-            # Print the section label on its own standalone line first
-            output_1_lines.append(f"  [{sec}] ")
-            output_2_lines.append(f"  [{sec}] ")
+            is_first_phrase = True
             
             for phrase in greek_sections[sec]:
                 words = phrase.split()
@@ -810,7 +804,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 if phrase_start_time is None:
                     phrase_start_time = 0.0
                     
-                # Build Output 1 (Standard Layout Spans) with accurate initial indent
+                # Build Output 1 (Standard Layout Spans)
                 o1_words_str = ""
                 for item in matched_words_data:
                     punc_match = re.match(r'^([^\w\s]+)(.*?)$|^([\s\w\W]*?)([.,·;:’\']+)$', item["text"])
@@ -821,10 +815,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                     else:
                         o1_words_str += f'<span class="word">{html.escape(item["text"])}</span> '
                 
-                o1_phrase = f'  <span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o1_words_str.strip()}</span>\n'
-                output_1_lines.append(o1_phrase)
-                
-                # Build Output 2 (Advanced Word-by-Word Timings) with accurate initial indent
+                # Build Output 2 (Advanced Word-by-Word Timings)
                 o2_words_str = ""
                 for item in matched_words_data:
                     if item["is_punc"]:
@@ -836,8 +827,17 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                         if punc_only:
                             word_span += f'<span class="punctuation">{html.escape(punc_only)}</span>'
                         o2_words_str += word_span + " "
-                        
-                o2_phrase = f'  <span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o2_words_str.strip()}</span>\n'
+                
+                # Layout formatting logic: First phrase stays inline on the [x] line, others indent safely below
+                if is_first_phrase:
+                    o1_phrase = f"  [{sec}] <span data-start=\"{phrase_start_time:.2f}\" data-section=\"{sec}\" class=\"phrase\">{o1_words_str.strip()}</span>\n"
+                    o2_phrase = f"  [{sec}] <span data-start=\"{phrase_start_time:.2f}\" data-section=\"{sec}\" class=\"phrase\">{o2_words_str.strip()}</span>\n"
+                    is_first_phrase = False
+                else:
+                    o1_phrase = f"  <span data-start=\"{phrase_start_time:.2f}\" data-section=\"{sec}\" class=\"phrase\">{o1_words_str.strip()}</span>\n"
+                    o2_phrase = f"  <span data-start=\"{phrase_start_time:.2f}\" data-section=\"{sec}\" class=\"phrase\">{o2_words_str.strip()}</span>\n"
+                    
+                output_1_lines.append(o1_phrase)
                 output_2_lines.append(o2_phrase)
                 
         # --- PROCESS ENGLISH PHRASES ---
@@ -846,11 +846,11 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
             sec_start_est = tg_intervals[tg_idx-1]["start"]
             
         if sec in english_sections and english_sections[sec]:
-            # Print English paragraph label on its own standalone line first
-            output_3_lines.append(f"  [{sec}] ")
-            # Print the entire combined section together as one flat paragraph block
             combined_eng_paragraph = " ".join(english_sections[sec])
-            o3_phrase = f'<span data-start="{sec_start_est:.2f}" class="phrase_en">{html.escape(combined_eng_paragraph)}</span>\n'
+            # Escape standard HTML tokens safely without touching regular straight quotes (')
+            escaped_eng = html.escape(combined_eng_paragraph, quote=False)
+            
+            o3_phrase = f"  [{sec}] <span data-start=\"{sec_start_est:.2f}\" class=\"phrase_en\">{escaped_eng}</span>\n"
             output_3_lines.append(o3_phrase)
             
         # Append standalone section break lines explicitly
