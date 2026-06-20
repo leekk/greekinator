@@ -661,6 +661,10 @@ def rootsGuesser():
 #################################
 #START OF AKROOMENOIS DEFINITIONS
 
+import re
+import streamlit as st
+import html
+
 def clean_for_matching(text):
     """Normalize text into pure alphabetic lowercase characters for safe alignment matching."""
     # Strips diacritics, layout punctuation, numbers, and capitalization anomalies
@@ -754,6 +758,9 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
         all_sections = sorted(list(greek_sections.keys()))
         
     for sec in all_sections:
+        # Keep track of the timestamp belonging to the very first phrase of the section
+        section_start_timestamp = None
+        
         # --- PROCESS GREEK PHRASES ---
         if sec in greek_sections and greek_sections[sec]:
             is_first_phrase = True
@@ -803,6 +810,10 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 
                 if phrase_start_time is None:
                     phrase_start_time = 0.0
+                
+                # Cache the true starting timestamp of the section's first phrase
+                if section_start_timestamp is None:
+                    section_start_timestamp = phrase_start_time
                     
                 # Build Output 1 (Standard Layout Spans)
                 o1_words_str = ""
@@ -828,7 +839,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                             word_span += f'<span class="punctuation">{html.escape(punc_only)}</span>'
                         o2_words_str += word_span + " "
                 
-                # Layout formatting logic: First phrase stays inline on the [x] line, others indent safely below
+                # Layout formatting logic
                 if is_first_phrase:
                     o1_phrase = f"  [{sec}] <span data-start=\"{phrase_start_time:.2f}\" data-section=\"{sec}\" class=\"phrase\">{o1_words_str.strip()}</span>\n"
                     o2_phrase = f"  [{sec}] <span data-start=\"{phrase_start_time:.2f}\" data-section=\"{sec}\" class=\"phrase\">{o2_words_str.strip()}</span>\n"
@@ -840,17 +851,18 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 output_1_lines.append(o1_phrase)
                 output_2_lines.append(o2_phrase)
                 
-        # --- PROCESS ENGLISH PHRASES ---
-        sec_start_est = 0.0
-        if tg_idx > 0 and tg_idx - 1 < num_intervals:
-            sec_start_est = tg_intervals[tg_idx-1]["start"]
+        # Fallback if Greek section was absent or empty to protect time calculations
+        if section_start_timestamp is None:
+            section_start_timestamp = tg_intervals[tg_idx-1]["start"] if tg_idx > 0 else 0.0
             
+        # --- PROCESS ENGLISH PHRASES ---
         if sec in english_sections and english_sections[sec]:
             combined_eng_paragraph = " ".join(english_sections[sec])
             # Escape standard HTML tokens safely without touching regular straight quotes (')
             escaped_eng = html.escape(combined_eng_paragraph, quote=False)
             
-            o3_phrase = f"  [{sec}] <span data-start=\"{sec_start_est:.2f}\" class=\"phrase_en\">{escaped_eng}</span>\n"
+            # Uses the exact cached initial Greek timestamp matching the section start
+            o3_phrase = f"  [{sec}] <span data-start=\"{section_start_timestamp:.2f}\" class=\"phrase_en\">{escaped_eng}</span>\n"
             output_3_lines.append(o3_phrase)
             
         # Append standalone section break lines explicitly
