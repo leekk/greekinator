@@ -653,121 +653,20 @@ def rootsGuesser():
     
     if rootStatusMessage == "vowelStemMessage":
       st.write("It seems like your verb is what is known as a 'vowel stem verb.' This is great news, because this class of verb usually has a predictable root formation.")
-    
+
+#################################
+#################################
+#################################
+#################################
 #START OF AKROOMENOIS DEFINITIONS
 
-# ----------------------------------------------------------------------
-def parse_textgrid(tg_string: str) -> dict:
-    """
-    Extract word intervals from a textgrid string.
-    Returns a dict: interval index → {xmin, xmax, text}
-    """
-    interval_pattern = re.compile(
-        r'intervals\s*\[(\d+)\]:\s*\n'
-        r'\s*xmin\s*=\s*([\d.]+)\s*\n'
-        r'\s*xmax\s*=\s*([\d.]+)\s*\n'
-        r'\s*text\s*=\s*"(.*?)"'
-    )
-    intervals = {}
-    for match in interval_pattern.finditer(tg_string):
-        idx = int(match.group(1))
-        intervals[idx] = {
-            'xmin': float(match.group(2)),
-            'xmax': float(match.group(3)),
-            'text': match.group(4),
-        }
-    return intervals
 
-def format_time(t: float) -> str:
-    """Format a float to a minimal decimal string (e.g. 2.2, 7.15)."""
-    s = f"{t:.2f}".rstrip('0').rstrip('.')
-    return s
-
-# ----------------------------------------------------------------------
-def build_phrase_spans(original_text: str, word_intervals: dict) -> str:
-    """
-    Split the text into phrases, using punctuation as phrase boundaries,
-    but keeping consecutive punctuation marks in the same phrase.
-    """
-    # 1. Tokenise: Greek letters (including elision marks) and single punctuation marks
-    # We include \u2019 (curly apostrophe), \u0027 (straight quote), \u1FBF (psili), and \u1FBD (koronis) inside the word match
-    tokens = re.findall(r'[\w\u2019\u0027\u1FBF\u1FBD]+|[^\w\s]', original_text)
-
-    # 2. Group tokens into phrases
-    phrases = []
-    current = []
-    for i, tok in enumerate(tokens):
-        current.append(tok)
-        if not re.match(r'\w+', tok):   # it's punctuation
-            next_tok = tokens[i + 1] if i + 1 < len(tokens) else None
-            if next_tok is None or re.match(r'\w+', next_tok):
-                phrases.append(current)
-                current = []
-    if current:
-        phrases.append(current)
-
-    # 3. Build a list of word-only intervals (skip empty text)
-    word_list = []
-    for idx in sorted(word_intervals.keys()):
-        w = word_intervals[idx]
-        if w['text'].strip():
-            word_list.append(w)
-
-    # 4. Walk through phrases, assign timing, and build HTML spans
-    output_spans = []
-    word_idx = 0
-    for phrase_tokens in phrases:
-        if not any(re.match(r'\w+', t) for t in phrase_tokens):
-            continue
-
-        first_word_xmin = word_list[word_idx]['xmin']
-
-        inner_parts = []
-        for tok in phrase_tokens:
-            if re.match(r'\w+', tok):
-                inner_parts.append(f'<span class="word">{tok}</span>')
-                word_idx += 1
-            else:
-                inner_parts.append(f'<span class="punctuation">{tok}</span>')
-
-        # Rebuild inner HTML with spaces between non-punctuation elements
-        phrase_html = ''
-        # Rebuild inner HTML with spaces ONLY between consecutive word spans
-        phrase_html = ''
-        for i, part in enumerate(inner_parts):
-            if i > 0:
-                # Only add a space if the previous item was a word AND the current item is a word
-                prev_is_word = inner_parts[i-1].startswith('<span class="word"')
-                curr_is_word = part.startswith('<span class="word"')
-                
-                if prev_is_word and curr_is_word:
-                    phrase_html += ' '
-                    
-            phrase_html += part
-
-        span = (
-            f'<span data-start="{format_time(first_word_xmin)}" '
-            f'class="phrase">{phrase_html}</span>'
-        )
-        output_spans.append(span)
-
-    # Joins spans with newlines and prefixes every line with exactly 2 spaces
-    indented_output = '\n'.join(f"  {span}" for span in output_spans)
-    return indented_output
-
-# ----------------------------------------------------------------------
-def process_input_files(text_file_obj, textgrid_file_obj) -> str:
-    """Read input from uploaded file objects and return the HTML."""
-    # Read directly from the file-like objects uploaded via Streamlit
-    text = text_file_obj.read().decode("utf-8").strip()
-    tg_string = textgrid_file_obj.read().decode("utf-8")
-    
-    word_intervals = parse_textgrid(tg_string)
-    return build_phrase_spans(text, word_intervals)
-
-# ----------------------------------------------------------------------
 
 #END OF AKROOMENOIS DEFINITIONS
+###############################
+###############################
+###############################
+###############################
  
 with tab1:
   st.subheader("Please select how you would like to modify your Greek word")
@@ -808,22 +707,3 @@ with tab2:
 #
 
 with tab3:
-    st.subheader("Akroomenois HTML Generator")
-    st.write("Upload your text and TextGrid alignment files to generate timed HTML spans.")
-
-    # File uploaders for the user
-    uploaded_text = st.file_uploader("Upload Text File (.txt)", type=["txt"])
-    uploaded_textgrid = st.file_uploader("Upload TextGrid Sync File (.txt/TextGrid)", type=["txt", "textgrid"])
-
-    if uploaded_text and uploaded_textgrid:
-        try:
-            # Pass the file buffers straight into your processed function
-            html = process_input_files(uploaded_text, uploaded_textgrid)
-            
-            st.success("HTML generated successfully!")
-            st.code(html, language="html")
-            
-        except Exception as e:
-            st.error(f"An error occurred while processing the files: {e}")
-    else:
-        st.info("Please upload both files above to test the generator.")
