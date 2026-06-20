@@ -757,7 +757,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
     if not all_sections:
         all_sections = sorted(list(greek_sections.keys()))
         
-    for sec in all_sections:
+    for idx, sec in enumerate(all_sections):
         # Keep track of the timestamp belonging to the very first phrase of the section
         section_start_timestamp = None
         
@@ -857,7 +857,8 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
             
         # --- PROCESS ENGLISH PHRASES ---
         if sec in english_sections and english_sections[sec]:
-            combined_eng_paragraph = " ".join(english_sections[sec])
+            # Join fragments and strip any hidden outer whitespace to avoid unwanted gaps before the text starts
+            combined_eng_paragraph = " ".join(english_sections[sec]).strip()
             # Escape standard HTML tokens safely without touching regular straight quotes (')
             escaped_eng = html.escape(combined_eng_paragraph, quote=False)
             
@@ -865,10 +866,11 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
             o3_phrase = f"  [{sec}] <span data-start=\"{section_start_timestamp:.2f}\" class=\"phrase_en\">{escaped_eng}</span>\n"
             output_3_lines.append(o3_phrase)
             
-        # Append standalone section break lines explicitly
-        output_1_lines.append("  <br><br>\n")
-        output_2_lines.append("  <br><br>\n")
-        output_3_lines.append("  <br><br>\n")
+        # Append standalone section break lines explicitly—except on the very last element sequence
+        if idx < len(all_sections) - 1:
+            output_1_lines.append("  <br><br>\n")
+            output_2_lines.append("  <br><br>\n")
+            output_3_lines.append("  <br><br>\n")
         
     return "".join(output_1_lines), "".join(output_2_lines), "".join(output_3_lines)
 
