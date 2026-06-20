@@ -743,19 +743,19 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
     output_2_lines = []
     output_3_lines = []
     
-    # Check intersecting index boundaries safely
+    # Process sorted text keys sequentially based on section overlap
     all_sections = sorted(list(set(greek_sections.keys()).intersection(set(english_sections.keys()))))
     
     if not all_sections:
         all_sections = sorted(list(greek_sections.keys()))
         
     for sec in all_sections:
-        output_1_lines.append(f"  [{sec}] ")
-        output_2_lines.append(f"  [{sec}] ")
-        output_3_lines.append(f"  [{sec}] ")
-        
         # --- PROCESS GREEK PHRASES ---
-        if sec in greek_sections:
+        if sec in greek_sections and greek_sections[sec]:
+            # Print the section label on its own standalone line first
+            output_1_lines.append(f"  [{sec}] ")
+            output_2_lines.append(f"  [{sec}] ")
+            
             for phrase in greek_sections[sec]:
                 words = phrase.split()
                 matched_words_data = []
@@ -802,7 +802,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 if phrase_start_time is None:
                     phrase_start_time = 0.0
                     
-                # Build Output 1 (Standard HTML Spans)
+                # Build Output 1 (Standard Layout Spans)
                 o1_words_str = ""
                 for item in matched_words_data:
                     punc_match = re.match(r'^([^\w\s]+)(.*?)$|^([\s\w\W]*?)([.,·;:’\']+)$', item["text"])
@@ -813,10 +813,10 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                     else:
                         o1_words_str += f'<span class="word">{html.escape(item["text"])}</span> '
                 
-                o1_phrase = f'<span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o1_words_str.strip()}</span>'
+                o1_phrase = f'<span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o1_words_str.strip()}</span>\n'
                 output_1_lines.append(o1_phrase)
                 
-                # Build Output 2 (Advanced Click-Audio Targets)
+                # Build Output 2 (Advanced Word-by-Word Timings)
                 o2_words_str = ""
                 for item in matched_words_data:
                     if item["is_punc"]:
@@ -829,7 +829,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                             word_span += f'<span class="punctuation">{html.escape(punc_only)}</span>'
                         o2_words_str += word_span + " "
                         
-                o2_phrase = f'<span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o2_words_str.strip()}</span>'
+                o2_phrase = f'<span data-start="{phrase_start_time:.2f}" data-section="{sec}" class="phrase">{o2_words_str.strip()}</span>\n'
                 output_2_lines.append(o2_phrase)
                 
         # --- PROCESS ENGLISH PHRASES ---
@@ -837,14 +837,16 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
         if tg_idx > 0 and tg_idx - 1 < num_intervals:
             sec_start_est = tg_intervals[tg_idx-1]["start"]
             
-        if sec in english_sections:
+        if sec in english_sections and english_sections[sec]:
+            output_3_lines.append(f"  [{sec}] ")
             for eng_phrase in english_sections[sec]:
-                o3_phrase = f'<span data-start="{sec_start_est:.2f}" class="phrase_en">{html.escape(eng_phrase)}</span>'
+                o3_phrase = f'<span data-start="{sec_start_est:.2f}" class="phrase_en">{html.escape(eng_phrase)}</span>\n'
                 output_3_lines.append(o3_phrase)
             
-        output_1_lines.append("<br><br>\n")
-        output_2_lines.append("<br><br>\n")
-        output_3_lines.append("<br><br>\n")
+        # Append standalone section break lines explicitly
+        output_1_lines.append("  <br><br>\n")
+        output_2_lines.append("  <br><br>\n")
+        output_3_lines.append("  <br><br>\n")
         
     return "".join(output_1_lines), "".join(output_2_lines), "".join(output_3_lines)
 
