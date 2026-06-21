@@ -667,14 +667,12 @@ import html
 
 def clean_for_matching(text):
     """Normalize text into pure alphabetic lowercase characters for safe alignment matching."""
-    # Strips diacritics, layout punctuation, numbers, and capitalization anomalies
     cleaned = re.sub(r'[\d\W_]+', '', text.lower())
     return cleaned
 
 def parse_textgrid_intervals(textgrid_content):
-    """Parse a standard TextGrid file buffer into a flat sequence list of timed words."""
+    """Parse a standard TextGrid file buffer or raw string into a flat sequence list of timed words."""
     intervals = []
-    # Regular expressions to catch xmin, xmax, and text components seamlessly
     block_pattern = re.compile(r'intervals\s*\[\d+\]\s*:\s*xmin\s*=\s*([\d.]+)\s*xmax\s*=\s*([\d.]+)\s*text\s*=\s*"([^"]*)"')
     
     for match in block_pattern.finditer(textgrid_content):
@@ -682,7 +680,6 @@ def parse_textgrid_intervals(textgrid_content):
         xmax = float(match.group(2))
         word_text = match.group(3).strip()
         
-        # Keep only segments that contain physical audio voice content
         if word_text:
             intervals.append({
                 "start": xmin,
@@ -693,7 +690,7 @@ def parse_textgrid_intervals(textgrid_content):
     return intervals
 
 def parse_source_text(raw_text, mode="grc"):
-    """Parse web text files, filtering fluff, grouping elements by section."""
+    """Parse web text inputs, filtering fluff, grouping elements by section."""
     lines = raw_text.split('\n')
     sections_dict = {}
     current_section = None
@@ -703,21 +700,18 @@ def parse_source_text(raw_text, mode="grc"):
         if not line:
             continue
             
-        # 1. Filter out known structural metadata/fluff markers
         if "Event Date:" in line:
             continue
             
-        # 2. Extract section indices safely handling both DiogenesWeb and ToposText formats
         diogenes_match = re.search(r'Section\s+(\d+)\.', line, re.IGNORECASE)
         topos_match = re.search(r'(?:§\s*\d+\.\d+\.(\d+)|\[(\d+)\])', line)
         
         if diogenes_match:
             current_section = int(diogenes_match.group(1))
-            continue  # Section header isolated on its own line; skip to text body line
+            continue 
         elif topos_match:
             sec_num = topos_match.group(1) or topos_match.group(2)
             current_section = int(sec_num)
-            # Remove tag and optional site annotations (e.g. Book_1) from the text line string
             line = re.sub(r'(?:§\s*\d+\.\d+\.\d+|\[\d+\])\s*(?:Book_\d+)?', '', line).strip()
             
         if current_section is None:
@@ -727,13 +721,11 @@ def parse_source_text(raw_text, mode="grc"):
             sections_dict[current_section] = []
             
         if mode == "grc":
-            # Greek splits layout lines into discrete phrases using punctuation breaks (. ; · , : •)
             phrases = re.split(r'(?<=[.,·;:•!?’\x27])\s+', line)
             for p in phrases:
                 if p.strip():
                     sections_dict[current_section].append(p.strip())
         else:
-            # English preserves the whole paragraph chunk structure section-by-section
             sections_dict[current_section].append(line)
                 
     return sections_dict
@@ -751,14 +743,11 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
     output_2_lines = []
     output_3_lines = []
     
-    # Process sorted text keys sequentially based on section overlap
     all_sections = sorted(list(set(greek_sections.keys()).intersection(set(english_sections.keys()))))
-    
     if not all_sections:
         all_sections = sorted(list(greek_sections.keys()))
         
     for idx, sec in enumerate(all_sections):
-        # Keep track of the timestamp belonging to the very first phrase of the section
         section_start_timestamp = None
         
         # --- PROCESS GREEK PHRASES ---
@@ -811,11 +800,9 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 if phrase_start_time is None:
                     phrase_start_time = 0.0
                 
-                # Cache the true starting timestamp of the section's first phrase
                 if section_start_timestamp is None:
                     section_start_timestamp = phrase_start_time
                     
-                # Build Output 1 (Standard Layout Spans)
                 o1_words_str = ""
                 for item in matched_words_data:
                     punc_match = re.match(r'^([^\w\s]+)(.*?)$|^([\s\w\W]*?)([.,·;:’\']+)$', item["text"])
@@ -826,7 +813,6 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                     else:
                         o1_words_str += f'<span class="word">{html.escape(item["text"])}</span> '
                 
-                # Build Output 2 (Advanced Word-by-Word Timings)
                 o2_words_str = ""
                 for item in matched_words_data:
                     if item["is_punc"]:
@@ -839,7 +825,6 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                             word_span += f'<span class="punctuation">{html.escape(punc_only)}</span>'
                         o2_words_str += word_span + " "
                 
-                # Layout formatting logic
                 if is_first_phrase:
                     o1_phrase = f"  [{sec}] <span data-start=\"{phrase_start_time:.2f}\" data-section=\"{sec}\" class=\"phrase\">{o1_words_str.strip()}</span>\n"
                     o2_phrase = f"  [{sec}] <span data-start=\"{phrase_start_time:.2f}\" data-section=\"{sec}\" class=\"phrase\">{o2_words_str.strip()}</span>\n"
@@ -851,22 +836,17 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 output_1_lines.append(o1_phrase)
                 output_2_lines.append(o2_phrase)
                 
-        # Fallback if Greek section was absent or empty to protect time calculations
         if section_start_timestamp is None:
             section_start_timestamp = tg_intervals[tg_idx-1]["start"] if tg_idx > 0 else 0.0
             
         # --- PROCESS ENGLISH PHRASES ---
         if sec in english_sections and english_sections[sec]:
-            # Join fragments and strip any hidden outer whitespace to avoid unwanted gaps before the text starts
             combined_eng_paragraph = " ".join(english_sections[sec]).strip()
-            # Escape standard HTML tokens safely without touching regular straight quotes (')
             escaped_eng = html.escape(combined_eng_paragraph, quote=False)
             
-            # Uses the exact cached initial Greek timestamp matching the section start
             o3_phrase = f"  [{sec}] <span data-start=\"{section_start_timestamp:.2f}\" class=\"phrase_en\">{escaped_eng}</span>\n"
             output_3_lines.append(o3_phrase)
             
-        # Append standalone section break lines explicitly—except on the very last element sequence
         if idx < len(all_sections) - 1:
             output_1_lines.append("  <br><br>\n")
             output_2_lines.append("  <br><br>\n")
@@ -874,104 +854,9 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
         
     return "".join(output_1_lines), "".join(output_2_lines), "".join(output_3_lines)
 
-#END OF AKROOMENOIS DEFINITIONS
-###############################
-###############################
-###############################
-###############################
- 
-with tab1:
-  st.subheader("Please select how you would like to modify your Greek word")
-  romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (unaccented)", "Greek (unaccented) -> Latin (unaccented)", "Greek (unaccented) -> Greek (accented)", "Latin (unaccented) -> Greek (accented)"])
-  
-  word = st.text_input("Enter word:")
 
-  try: 
-    if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
-        st.write(romanize(word))
-    
-    if romanizeAnswer == "Greek (unaccented) -> Greek (accented)":
-        st.write(accentuate(word))
-    
-    if romanizeAnswer == "Latin (unaccented) -> Greek (unaccented)":
-        st.write(unRomanize(word))
-   
-    if romanizeAnswer == "Latin (unaccented) -> Greek (accented)":
-        st.write(unRomanizeAndAccentuate(word))
-
-    if romanizeAnswer == "Principal part roots guesser (experimental)":
-        rootsGuesser()
-   
-  except IndexError:
-    pass
-
-with tab2:
-  st.subheader("Principal part roots guesser (experimental)")
-    
-  try: 
-    rootsGuesser()
-   
-  except IndexError:
-    pass
-
-#IM USING TAB 3 TO TEST AKROOMENOIS CODE
-#
-#
-
-# ASSIGNMENT FOR TAB 3 INTERFACE EVALUATION
-with tab3:
-    st.subheader("Akroomenois Classical Alignment System")
-    st.write("Upload your structural text dumps and matching timeline TextGrids.")
-
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        src_greek = st.file_uploader("1. Greek Source File (DiogenesWeb)", type=["txt"])
-    with col2:
-        src_english = st.file_uploader("2. English Translation (ToposText)", type=["txt"])
-    with col3:
-        src_sync = st.file_uploader("3. Timing Configuration File (TextGrid)", type=["txt", "textgrid"])
-
-    if src_greek and src_english and src_sync:
-        try:
-            # Decode incoming layout raw bytes streams
-            greek_raw = src_greek.read().decode("utf-8")
-            english_raw = src_english.read().decode("utf-8")
-            sync_raw = src_sync.read().decode("utf-8")
-            
-            # Execute logic engine to extract the three check zones
-            out1, out2, out3 = align_and_generate_html(greek_raw, english_raw, sync_raw)
-            st.success("Automated processing loops complete! Outputs ready below:")
-            
-            # Render testing columns side-by-side
-            check_tab1, check_tab2, check_tab3 = st.tabs([
-                "1. Baseline Greek HTML (Matches Index)", 
-                "2. Enhanced Greek HTML (Isolated Word Audio Enabled)", 
-                "3. Standalone English HTML Line Blocks"
-            ])
-            
-            with check_tab1:
-                st.info("Sanity check layout matching your baseline production index file.")
-                st.code(out1, language="html")
-                
-            with check_tab2:
-                st.info("Armed with 'data-word-start' and 'data-word-end' hooks ready for your click popup updates.")
-                st.code(out2, language="html")
-                
-            with check_tab3:
-                st.info("Clean English line-break spans isolated from metadata clutter.")
-                st.code(out3, language="html")
-                
-        except Exception as e:
-            st.error(f"Execution Error encountered: {str(e)}")
-
-########
-########
 def prepare_readalong_studio_text(raw_text):
-    """
-    Extracts pure text content from raw DiogenesWeb outputs, removing structural 
-    section headers, metadata markers, and excessive layouts for seamless integration 
-    with forced-alignment engines like ReadAlong Studio.
-    """
+    """Extracts pure text content from raw web-scraped outputs, removing structural headers."""
     lines = raw_text.split('\n')
     cleaned_lines = []
     
@@ -980,37 +865,84 @@ def prepare_readalong_studio_text(raw_text):
         if not line:
             continue
             
-        # 1. Filter out known metadata, event tags, and structural metadata rules
         if "Event Date:" in line:
             continue
             
-        # 2. Skip standalone structural headers specific to DiogenesWeb (e.g., "Book 1, Chapter 1, Section 9.")
-        if re.search(r'Book\s+\d+,\s*Chapter\s+\d+,\s*Section\s+\d+\.', line, re.IGNORECASE):
+        if re.match(r'^Book\s+\d+,\s*Chapter\s+\d+,\s*Section\s+\d+\.?$', line, re.IGNORECASE):
             continue
-        if re.search(r'Section\s+\d+\.', line, re.IGNORECASE):
-            continue
-            
-        # 3. Skip ToposText paragraph structural codes just in case they overlap
-        if re.search(r'(?:§\s*\d+\.\d+\.\d+|\[\d+\])', line):
+        if re.match(r'^Section\s+\d+\.?$', line, re.IGNORECASE):
             continue
             
-        # Append the valid clean prose string
-        cleaned_lines.append(line)
+        line = re.sub(r'^(?:§\s*\d+\.\d+\.\d+|\[\d+\])\s*(?:Book_\d+)?\s*', '', line).strip()
         
-    # Join everything back together into flat, clean paragraph layouts
-    return "\n\n".join(cleaned_lines)
-########
-########
-
-# NEW TAB FOR READALONG STUDIO CLEANER
-with tab4 if 'tab4' in locals() else st.tabs(["...","...","...","ReadAlong Studio Input Preparation"])[-1]:
-    st.subheader("DiogenesWeb Text Cleaner for ReadAlong Studio")
-    st.write("Paste your raw Greek text below to strip out section headings and metadata, leaving only clean, continuous text.")
-
-    raw_diogenes_greek = st.text_area("Paste raw DiogenesWeb Greek text here:", height=300)
-
-    if raw_diogenes_greek:
-        cleaned_studio_text = prepare_readalong_studio_text(raw_diogenes_greek)
+        if line:
+            cleaned_lines.append(line)
         
-        st.success("Text cleaned successfully!")
-        st.text_area("Cleaned output (Ready to copy-paste):", value=cleaned_studio_text, height=300)
+    return "\n".join(cleaned_lines)
+
+#END OF AKROOMENOIS DEFINITIONS
+###############################
+###############################
+###############################
+###############################
+
+
+# --- STREAMLIT TAB 3: AKROOMENOIS INTERFACE REFACTOR ---
+with tab3:
+    st.subheader("Akroomenois HTML Alignment Generator")
+    st.write("Provide your Greek text, English text, and TextGrid alignments using files OR direct copy-paste.")
+
+    # 1. GREEK INPUT
+    st.markdown("### 1. Greek Text Input")
+    uploaded_greek = st.file_uploader("Upload Greek Source Text (.txt)", type=["txt"], key="upload_grc")
+    pasted_greek = st.text_area("OR Paste Greek text directly here:", height=150, key="paste_grc")
+
+    # 2. ENGLISH INPUT
+    st.markdown("### 2. English Text Input")
+    uploaded_english = st.file_uploader("Upload English Translation (.txt)", type=["txt"], key="upload_en")
+    pasted_english = st.text_area("OR Paste English translation directly here:", height=150, key="paste_en")
+
+    # 3. TEXTGRID INPUT
+    st.markdown("### 3. TextGrid Alignment Input")
+    uploaded_tg = st.file_uploader("Upload TextGrid File (.txt/.TextGrid)", type=["txt", "textgrid"], key="upload_tg")
+    pasted_tg = st.text_area("OR Paste TextGrid content directly here:", height=150, key="paste_tg")
+
+    # Resolve Data Sources (Direct Copy-Paste overrides File Upload)
+    greek_content = pasted_greek.strip() if pasted_greek.strip() else (uploaded_greek.read().decode("utf-8") if uploaded_greek else None)
+    english_content = pasted_english.strip() if pasted_english.strip() else (uploaded_english.read().decode("utf-8") if uploaded_english else None)
+    tg_content = pasted_tg.strip() if pasted_tg.strip() else (uploaded_tg.read().decode("utf-8") if uploaded_tg else None)
+
+    if greek_content and english_content and tg_content:
+        try:
+            out1, out2, out3 = align_and_generate_html(greek_content, english_content, tg_content)
+            
+            st.success("HTML Outputs Generated Successfully!")
+            
+            sub_tab1, sub_tab2, sub_tab3 = st.tabs(["Tab 1: Standard Spans", "Tab 2: Word-by-Word Timings", "Tab 3: English Paragraphs"])
+            
+            with sub_tab1:
+                st.code(out1, language="html")
+            with sub_tab2:
+                st.code(out2, language="html")
+            with sub_tab3:
+                st.code(out3, language="html")
+                
+        except Exception as e:
+            st.error(f"Error executing text processing alignment: {str(e)}")
+
+
+# --- STREAMLIT TAB 4: READALONG STUDIO CLEANER INTERFACE ---
+with tab4 if 'tab4' in locals() else st.tabs(["...","...","...","ReadAlong Studio Preparation"])[-1]:
+    st.subheader("Text Normalizer for Forced-Alignment Audio Sync")
+    st.write("Paste raw text or upload files below to discard headers, metadata tags, and paragraph codes.")
+
+    uploaded_ra = st.file_uploader("Upload Raw Text File (.txt)", type=["txt"], key="upload_ra")
+    pasted_ra = st.text_area("OR Paste raw source text directly here:", height=200, key="paste_ra")
+
+    ra_content = pasted_ra.strip() if pasted_ra.strip() else (uploaded_ra.read().decode("utf-8") if uploaded_ra else None)
+
+    if ra_content:
+        cleaned_studio_text = prepare_readalong_studio_text(ra_content)
+        
+        st.success("Text normalized and cleared of structural fluff!")
+        st.text_area("Cleaned output (Ready to copy directly into alignment tools):", value=cleaned_studio_text, height=300, key="readalong_clean_output")
