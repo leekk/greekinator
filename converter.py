@@ -928,6 +928,49 @@ def prepare_readalong_studio_text(raw_text):
 ###############################
 ###############################
 
+#TABS 2 AND 1
+with tab1:
+  st.subheader("Please select how you would like to modify your Greek word")
+  romanizeAnswer = st.selectbox("Choose below:", ["Latin (unaccented) -> Greek (unaccented)", "Greek (unaccented) -> Latin (unaccented)", "Greek (unaccented) -> Greek (accented)", "Latin (unaccented) -> Greek (accented)"])
+  
+  word = st.text_input("Enter word:")
+
+  try: 
+    if romanizeAnswer == "Greek (unaccented) -> Latin (unaccented)":
+        st.write(romanize(word))
+    
+    if romanizeAnswer == "Greek (unaccented) -> Greek (accented)":
+        st.write(accentuate(word))
+    
+    if romanizeAnswer == "Latin (unaccented) -> Greek (unaccented)":
+        st.write(unRomanize(word))
+   
+    if romanizeAnswer == "Latin (unaccented) -> Greek (accented)":
+        st.write(unRomanizeAndAccentuate(word))
+
+    if romanizeAnswer == "Principal part roots guesser (experimental)":
+        rootsGuesser()
+   
+  except IndexError:
+    pass
+
+with tab2:
+  st.subheader("Principal part roots guesser (experimental)")
+    
+  try: 
+    rootsGuesser()
+   
+  except IndexError:
+    pass
+
+#
+
+
+
+
+
+
+
 
 # --- STREAMLIT TAB 3: AKROOMENOIS INTERFACE REFACTOR ---
 with tab3:
