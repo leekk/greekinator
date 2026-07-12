@@ -688,8 +688,8 @@ def parse_textgrid_intervals(textgrid_content):
 def parse_source_text_with_subsections(raw_text, mode="grc"):
     """
     Parses raw text inputs into sections.
-    Greek: Phrases split by everything (including commas). Subsections ignore commas.
-    English: Phrases split by everything EXCEPT commas.
+    Greek: Splits by ALL punctuation (including commas), tracking sections, sentences, and sub-sentences.
+    English: Splits by commas to match the sub-sentence depth structure cleanly.
     """
     lines = raw_text.split('\n')
     sections_dict = {}
@@ -720,33 +720,55 @@ def parse_source_text_with_subsections(raw_text, mode="grc"):
         if mode == "grc":
             # Greek split on everything including commas
             raw_phrases = re.split(r'(?<=[,.,·;:•!?\x27’])\s+', line)
-            sub_sec_counter = 1
+            sentence_counter = 1
+            sub_sentence_counter = 1
+            
             for p in raw_phrases:
                 p_str = p.strip()
                 if not p_str:
                     continue
+                
                 sections_dict[current_section].append({
                     "text": p_str,
-                    "sub_section": sub_sec_counter
+                    "sentence_num": sentence_counter,
+                    "sub_sentence_num": sub_sentence_counter
                 })
-                # Increment subsection only on major punctuation (EXCEPT commas)
-                if re.search(r'[.·;:•!?]$', p_str):
-                    sub_sec_counter += 1
+                
+                # Check how sentences/sub-sentences step forward:
+                if re.search(r'[,]$', p_str):
+                    # It's a comma: next phrase is a new sub-sentence inside the same main sentence
+                    sub_sentence_counter += 1
+                elif re.search(r'[.·;:•!?]$', p_str):
+                    # Terminal punctuation: move to next main sentence block, reset sub-counter
+                    sentence_counter += 1
+                    sub_sentence_counter = 1
         else:
-            # English split on everything EXCEPT commas
-            raw_phrases = re.split(r'(?<=[.;:!?])\s+', line)
+            # English splits on both structural markers AND commas to attempt sub-sentence pairing
+            raw_phrases = re.split(r'(?<=[,.;:!?])\s+', line)
+            sentence_counter = 1
+            sub_sentence_counter = 1
+            
             for p in raw_phrases:
                 p_str = p.strip()
                 if not p_str:
                     continue
+                
                 sections_dict[current_section].append({
-                    "text": p_str
+                    "text": p_str,
+                    "sentence_num": sentence_counter,
+                    "sub_sentence_num": sub_sentence_counter
                 })
+                
+                if re.search(r'[,]$', p_str):
+                    sub_sentence_counter += 1
+                elif re.search(r'[.;:!?]$', p_str):
+                    sentence_counter += 1
+                    sub_sentence_counter = 1
                 
     return sections_dict
 
 def align_and_generate_html(greek_text, english_text, textgrid_text):
-    """Run cross-source text matching and generate parallel outputs for checking."""
+    """Run cross-source text matching and generate parallel outputs using 3-tier sub-sentence tags."""
     greek_sections = parse_source_text_with_subsections(greek_text, mode="grc")
     english_sections = parse_source_text_with_subsections(english_text, mode="en")
     tg_intervals = parse_textgrid_intervals(textgrid_text)
@@ -763,9 +785,8 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
         all_sections = sorted(list(greek_sections.keys()))
         
     for idx, sec in enumerate(all_sections):
-        sub_section_timestamps = {}
+        sub_sentence_timestamps = {}
         section_start_timestamp = None
-        total_subsections = 0
         
         # --- PROCESS GREEK PHRASES ---
         if sec in greek_sections and greek_sections[sec]:
@@ -773,8 +794,8 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
             
             for item in greek_sections[sec]:
                 phrase = item["text"]
-                sub_sec_num = item["sub_section"]
-                total_subsections = max(total_subsections, sub_sec_num)
+                s_num = item["sentence_num"]
+                ss_num = item["sub_sentence_num"]
                 
                 words = phrase.split()
                 matched_words_data = []
@@ -824,33 +845,35 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 if section_start_timestamp is None:
                     section_start_timestamp = phrase_start_time
                 
-                # Cache the timestamp of the absolute first phrase matching this subsection boundary
-                if sub_sec_num not in sub_section_timestamps:
-                    sub_section_timestamps[sub_sec_num] = phrase_start_time
+                # Cache via compound keys: (sentence, sub_sentence)
+                timestamp_key = (s_num, ss_num)
+                if timestamp_key not in sub_sentence_timestamps:
+                    sub_sentence_timestamps[timestamp_key] = phrase_start_time
                     
                 o1_words_str = ""
-                for item in matched_words_data:
-                    punc_match = re.match(r'^([^\w\s]+)(.*?)$|^([\s\w\W]*?)([.,·;:’\']+)$', item["text"])
+                for w_item in matched_words_data:
+                    punc_match = re.match(r'^([^\w\s]+)(.*?)$|^([\s\w\W]*?)([.,·;:’\']+)$', w_item["text"])
                     if punc_match:
-                        base_txt = re.sub(r'[.,·;:’\']', '', item["text"])
+                        base_txt = re.sub(r'[.,·;:’\']', '', w_item["text"])
                         punc_txt = "".join([g for g in punc_match.groups() if g and g != base_txt])
                         o1_words_str += f'<span class="word">{html.escape(base_txt)}</span><span class="punctuation">{html.escape(punc_txt)}</span> '
                     else:
-                        o1_words_str += f'<span class="word">{html.escape(item["text"])}</span> '
+                        o1_words_str += f'<span class="word">{html.escape(w_item["text"])}</span> '
                 
                 o2_words_str = ""
-                for item in matched_words_data:
-                    if item["is_punc"]:
-                        o2_words_str += f'<span class="punctuation">{html.escape(item["text"])}</span> '
+                for w_item in matched_words_data:
+                    if w_item["is_punc"]:
+                        o2_words_str += f'<span class="punctuation">{html.escape(w_item["text"])}</span> '
                     else:
-                        base_txt = re.sub(r'[.,·;:’\']', '', item["text"])
-                        punc_only = item["text"].replace(base_txt, "")
-                        word_span = f'<span class="word" data-word-start="{item["start"]:.2f}" data-word-end="{item["end"]:.2f}">{html.escape(base_txt)}</span>'
+                        base_txt = re.sub(r'[.,·;:’\']', '', w_item["text"])
+                        punc_only = w_item["text"].replace(base_txt, "")
+                        word_span = f'<span class="word" data-word-start="{w_item["start"]:.2f}" data-word-end="{w_item["end"]:.2f}">{html.escape(base_txt)}</span>'
                         if punc_only:
                             word_span += f'<span class="punctuation">{html.escape(punc_only)}</span>'
                         o2_words_str += word_span + " "
                 
-                data_sec_label = f"{sec}.{sub_sec_num}"
+                # New 3-Tier Label Configuration
+                data_sec_label = f"{sec}.{s_num}.{ss_num}"
                 if is_first_phrase:
                     o1_phrase = f"  [{sec}] <span data-start=\"{phrase_start_time:.2f}\" data-section=\"{data_sec_label}\" class=\"phrase\">{o1_words_str.strip()}</span>\n"
                     o2_phrase = f"  [{sec}] <span data-start=\"{phrase_start_time:.2f}\" data-section=\"{data_sec_label}\" class=\"phrase\">{o2_words_str.strip()}</span>\n"
@@ -867,20 +890,18 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
             
         # --- PROCESS ENGLISH PHRASES ---
         if sec in english_sections and english_sections[sec]:
-            english_phrases_count = len(english_sections[sec])
-            
-            # Lucky Symmetry Match Rule: english spans == total greek subsections
-            lucky_match = (total_subsections == english_phrases_count)
-            
             for i, eng_item in enumerate(english_sections[sec]):
                 eng_phrase_text = eng_item["text"]
+                e_s_num = eng_item["sentence_num"]
+                e_ss_num = eng_item["sub_sentence_num"]
+                
                 escaped_eng = html.escape(eng_phrase_text, quote=False)
                 
-                if lucky_match:
-                    # Snaps perfectly to the timestamp matching this exact subsection
-                    ts_val = f"{sub_section_timestamps.get(i + 1, section_start_timestamp):.2f}"
+                # Check symmetry match on specific structural keys
+                target_key = (e_s_num, e_ss_num)
+                if target_key in sub_sentence_timestamps:
+                    ts_val = f"{sub_sentence_timestamps[target_key]:.2f}"
                 else:
-                    # Fallback: only structural phrase 1 gets a timestamp, others remain blank
                     ts_val = f"{section_start_timestamp:.2f}" if i == 0 else ""
                 
                 if i == 0:
