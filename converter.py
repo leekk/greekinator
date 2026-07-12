@@ -726,7 +726,7 @@ def parse_source_text_with_sentences(raw_text):
     return sections_dict
 
 def align_and_generate_html(greek_text, english_text, textgrid_text):
-    """Run cross-source text matching with strict sub-phrase symmetry checks."""
+    """Run cross-source text matching with dynamic 3-tier indexing fallback."""
     greek_sections = parse_source_text_with_sentences(greek_text)
     english_sections = parse_source_text_with_sentences(english_text)
     tg_intervals = parse_textgrid_intervals(textgrid_text)
@@ -743,13 +743,10 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
         all_sections = sorted(list(greek_sections.keys()))
         
     for idx, sec in enumerate(all_sections):
-        # Fallback if section lengths don't match: treat section as un-subdivided raw blocks
         sec_sentences_grc = greek_sections.get(sec, [])
         sec_sentences_eng = english_sections.get(sec, [])
         
-        # Guard: If number of main sentences in this section doesn't match, fall back to simple indexing
         match_sentences = len(sec_sentences_grc) == len(sec_sentences_eng)
-        
         section_start_timestamp = None
         sub_phrase_timestamps = {}
         
@@ -758,19 +755,17 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
         for s_idx, grc_sentence in enumerate(sec_sentences_grc):
             s_num = s_idx + 1
             
-            # Look ahead to see if sub-phrases (commas) match the corresponding English sentence
             eng_sentence = sec_sentences_eng[s_idx] if (match_sentences and s_idx < len(sec_sentences_eng)) else ""
             
-            raw_sub_grc = [p.strip() for p in re.split(r'(?<=[,])\s+', grc_sentence) if p.strip()]
+            # Greek ALWAYS splits into subphrases on all structural punctuation/commas
+            raw_sub_grc = [p.strip() for p in re.split(r'(?<=[,.,·;:•!?\x27’])\s+', grc_sentence) if p.strip()]
+            # English splits on commas for symmetry calculation
             raw_sub_eng = [p.strip() for p in re.split(r'(?<=[,])\s+', eng_sentence) if p.strip()]
             
-            # Symmetry Check: Do both have the exact same number of comma subdivisions?
+            # Symmetry validation guard
             match_sub_phrases = match_sentences and (len(raw_sub_grc) == len(raw_sub_eng))
             
-            # If they don't match, we treat the whole sentence as 1 phrase block
-            phrases_to_process = raw_sub_grc if match_sub_phrases else [grc_sentence]
-            
-            for ss_idx, phrase in enumerate(phrases_to_process):
+            for ss_idx, phrase in enumerate(raw_sub_grc):
                 ss_num = ss_idx + 1
                 
                 words = phrase.split()
@@ -816,13 +811,18 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 if section_start_timestamp is None:
                     section_start_timestamp = phrase_start_time
                 
-                # Dynamic Labeling: X.Y.Z if symmetric sub-phrases exist, otherwise just X.Y
-                data_sec_label = f"{sec}.{s_num}.{ss_num}" if match_sub_phrases else f"{sec}.{s_num}"
+                # Dynamic Label Logic: If symmetric, use X.Y.Z. If mismatched, repeat X.Y
+                if match_sub_phrases:
+                    data_sec_label = f"{sec}.{s_num}.{ss_num}"
+                    # Cache under the precise sub-phrase index
+                    sub_phrase_timestamps[(s_num, ss_num)] = phrase_start_time
+                else:
+                    data_sec_label = f"{sec}.{s_num}"
+                    # Cache under a flat sentence index key if it's the first fragment of that sentence
+                    if s_num not in sub_phrase_timestamps:
+                        sub_phrase_timestamps[s_num] = phrase_start_time
                 
-                # Cache timestamps dynamically using the exact label string generated
-                sub_phrase_timestamps[(s_num, ss_num if match_sub_phrases else None)] = phrase_start_time
-                
-                # Construct HTML spans for Output 1 & Output 2
+                # Construct HTML outputs
                 o1_words_str = ""
                 for w_item in matched_words_data:
                     if w_item["is_punc"]:
@@ -862,22 +862,23 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
             s_num = s_idx + 1
             grc_sentence = sec_sentences_grc[s_idx] if (match_sentences and s_idx < len(sec_sentences_grc)) else ""
             
-            raw_sub_grc = [p.strip() for p in re.split(r'(?<=[,])\s+', grc_sentence) if p.strip()]
+            raw_sub_grc = [p.strip() for p in re.split(r'(?<=[,.,·;:•!?\x27’])\s+', grc_sentence) if p.strip()]
             raw_sub_eng = [p.strip() for p in re.split(r'(?<=[,])\s+', eng_sentence) if p.strip()]
             
             match_sub_phrases = match_sentences and (len(raw_sub_grc) == len(raw_sub_eng))
+            
+            # English splits IF symmetric, otherwise stays whole
             phrases_to_process = raw_sub_eng if match_sub_phrases else [eng_sentence]
             
             for ss_idx, eng_phrase_text in enumerate(phrases_to_process):
                 ss_num = ss_idx + 1
                 escaped_eng = html.escape(eng_phrase_text, quote=False)
                 
-                # Fetch matching cached start time safely
-                target_key = (s_num, ss_num if match_sub_phrases else None)
-                if target_key in sub_phrase_timestamps:
-                    ts_val = f"{sub_phrase_timestamps[target_key]:.2f}"
+                # Lookup timestamp depending on structural layout chosen
+                if match_sub_phrases:
+                    ts_val = f"{sub_phrase_timestamps.get((s_num, ss_num), section_start_timestamp):.2f}"
                 else:
-                    ts_val = f"{section_start_timestamp:.2f}" if (s_idx == 0 and ss_idx == 0) else ""
+                    ts_val = f"{sub_phrase_timestamps.get(s_num, section_start_timestamp):.2f}"
                 
                 prefix = f"  [{sec}] " if (s_idx == 0 and ss_idx == 0) else "  "
                 output_3_lines.append(f'{prefix}<span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
