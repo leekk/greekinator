@@ -850,16 +850,21 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 if timestamp_key not in sub_sentence_timestamps:
                     sub_sentence_timestamps[timestamp_key] = phrase_start_time
                     
+                # --- Build Output 1 (With Punctuation Separated, Word Timestamps Retained) ---
                 o1_words_str = ""
                 for w_item in matched_words_data:
-                    punc_match = re.match(r'^([^\w\s]+)(.*?)$|^([\s\w\W]*?)([.,·;:’\']+)$', w_item["text"])
-                    if punc_match:
-                        base_txt = re.sub(r'[.,·;:’\']', '', w_item["text"])
-                        punc_txt = "".join([g for g in punc_match.groups() if g and g != base_txt])
-                        o1_words_str += f'<span class="word">{html.escape(base_txt)}</span><span class="punctuation">{html.escape(punc_txt)}</span> '
+                    if w_item["is_punc"]:
+                        o1_words_str += f'<span class="punctuation">{html.escape(w_item["text"])}</span> '
                     else:
-                        o1_words_str += f'<span class="word">{html.escape(w_item["text"])}</span> '
+                        punc_match = re.match(r'^([^\w\s]+)(.*?)$|^([\s\w\W]*?)([.,·;:’\']+)$', w_item["text"])
+                        if punc_match:
+                            base_txt = re.sub(r'[.,·;:’\']', '', w_item["text"])
+                            punc_txt = "".join([g for g in punc_match.groups() if g and g != base_txt])
+                            o1_words_str += f'<span class="word" data-word-start="{w_item["start"]:.2f}" data-word-end="{w_item["end"]:.2f}">{html.escape(base_txt)}</span><span class="punctuation">{html.escape(punc_txt)}</span> '
+                        else:
+                            o1_words_str += f'<span class="word" data-word-start="{w_item["start"]:.2f}" data-word-end="{w_item["end"]:.2f}">{html.escape(w_item["text"])}</span> '
                 
+                # --- Build Output 2 (Standard Word Timestamps) ---
                 o2_words_str = ""
                 for w_item in matched_words_data:
                     if w_item["is_punc"]:
