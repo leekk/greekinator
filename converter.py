@@ -726,7 +726,7 @@ def parse_source_text_with_sentences(raw_text):
     return sections_dict
 
 def align_and_generate_html(greek_text, english_text, textgrid_text):
-    """Run cross-source text matching with dynamic 3-tier indexing fallback."""
+    """Run cross-source text matching with recursive strict symmetry checks (Section -> Sentence -> Sub-phrase)."""
     greek_sections = parse_source_text_with_sentences(greek_text)
     english_sections = parse_source_text_with_sentences(english_text)
     tg_intervals = parse_textgrid_intervals(textgrid_text)
@@ -746,23 +746,26 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
         sec_sentences_grc = greek_sections.get(sec, [])
         sec_sentences_eng = english_sections.get(sec, [])
         
+        # Guard 1: Do the two languages have the exact same number of main sentences in this section?
         match_sentences = len(sec_sentences_grc) == len(sec_sentences_eng)
+        
         section_start_timestamp = None
-        sub_phrase_timestamps = {}
+        coordinate_timestamps = {}
         
         # --- PROCESS GREEK ---
         is_first_phrase = True
         for s_idx, grc_sentence in enumerate(sec_sentences_grc):
             s_num = s_idx + 1
             
+            # Extract English equivalent only if structural counts align
             eng_sentence = sec_sentences_eng[s_idx] if (match_sentences and s_idx < len(sec_sentences_eng)) else ""
             
-            # Greek ALWAYS splits into subphrases on all structural punctuation/commas
+            # Greek ALWAYS splits into subphrases on all punctuation/commas
             raw_sub_grc = [p.strip() for p in re.split(r'(?<=[,.,·;:•!?\x27’])\s+', grc_sentence) if p.strip()]
-            # English splits on commas for symmetry calculation
+            # English splits on commas purely for sub-phrase symmetry checking
             raw_sub_eng = [p.strip() for p in re.split(r'(?<=[,])\s+', eng_sentence) if p.strip()]
             
-            # Symmetry validation guard
+            # Guard 2: If main sentences match, do they also have an identical number of comma subdivisions?
             match_sub_phrases = match_sentences and (len(raw_sub_grc) == len(raw_sub_eng))
             
             for ss_idx, phrase in enumerate(raw_sub_grc):
@@ -811,16 +814,17 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 if section_start_timestamp is None:
                     section_start_timestamp = phrase_start_time
                 
-                # Dynamic Label Logic: If symmetric, use X.Y.Z. If mismatched, repeat X.Y
+                # Dynamic Label Selection based on structural match tier status
                 if match_sub_phrases:
                     data_sec_label = f"{sec}.{s_num}.{ss_num}"
-                    # Cache under the precise sub-phrase index
-                    sub_phrase_timestamps[(s_num, ss_num)] = phrase_start_time
-                else:
+                    coordinate_timestamps[("sub", s_num, ss_num)] = phrase_start_time
+                elif match_sentences:
                     data_sec_label = f"{sec}.{s_num}"
-                    # Cache under a flat sentence index key if it's the first fragment of that sentence
-                    if s_num not in sub_phrase_timestamps:
-                        sub_phrase_timestamps[s_num] = phrase_start_time
+                    if ("sentence", s_num) not in coordinate_timestamps:
+                        coordinate_timestamps[("sentence", s_num)] = phrase_start_time
+                else:
+                    # Absolute Fallback: Sentence counts mismatch. Use only Section ID.
+                    data_sec_label = f"{sec}"
                 
                 # Construct HTML outputs
                 o1_words_str = ""
@@ -858,30 +862,34 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
             section_start_timestamp = tg_intervals[tg_idx-1]["start"] if tg_idx > 0 else 0.0
             
         # --- PROCESS ENGLISH ---
-        for s_idx, eng_sentence in enumerate(sec_sentences_eng):
-            s_num = s_idx + 1
-            grc_sentence = sec_sentences_grc[s_idx] if (match_sentences and s_idx < len(sec_sentences_grc)) else ""
-            
-            raw_sub_grc = [p.strip() for p in re.split(r'(?<=[,.,·;:•!?\x27’])\s+', grc_sentence) if p.strip()]
-            raw_sub_eng = [p.strip() for p in re.split(r'(?<=[,])\s+', eng_sentence) if p.strip()]
-            
-            match_sub_phrases = match_sentences and (len(raw_sub_grc) == len(raw_sub_eng))
-            
-            # English splits IF symmetric, otherwise stays whole
-            phrases_to_process = raw_sub_eng if match_sub_phrases else [eng_sentence]
-            
-            for ss_idx, eng_phrase_text in enumerate(phrases_to_process):
-                ss_num = ss_idx + 1
-                escaped_eng = html.escape(eng_phrase_text, quote=False)
+        if match_sentences:
+            for s_idx, eng_sentence in enumerate(sec_sentences_eng):
+                s_num = s_idx + 1
+                grc_sentence = sec_sentences_grc[s_idx]
                 
-                # Lookup timestamp depending on structural layout chosen
-                if match_sub_phrases:
-                    ts_val = f"{sub_phrase_timestamps.get((s_num, ss_num), section_start_timestamp):.2f}"
-                else:
-                    ts_val = f"{sub_phrase_timestamps.get(s_num, section_start_timestamp):.2f}"
+                raw_sub_grc = [p.strip() for p in re.split(r'(?<=[,.,·;:•!?\x27’])\s+', grc_sentence) if p.strip()]
+                raw_sub_eng = [p.strip() for p in re.split(r'(?<=[,])\s+', eng_sentence) if p.strip()]
                 
-                prefix = f"  [{sec}] " if (s_idx == 0 and ss_idx == 0) else "  "
-                output_3_lines.append(f'{prefix}<span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
+                match_sub_phrases = len(raw_sub_grc) == len(raw_sub_eng)
+                phrases_to_process = raw_sub_eng if match_sub_phrases else [eng_sentence]
+                
+                for ss_idx, eng_phrase_text in enumerate(phrases_to_process):
+                    ss_num = ss_idx + 1
+                    escaped_eng = html.escape(eng_phrase_text, quote=False)
+                    
+                    if match_sub_phrases:
+                        ts_val = f"{coordinate_timestamps.get(('sub', s_num, ss_num), section_start_timestamp):.2f}"
+                    else:
+                        ts_val = f"{coordinate_timestamps.get(('sentence', s_num), section_start_timestamp):.2f}"
+                    
+                    prefix = f"  [{sec}] " if (s_idx == 0 and ss_idx == 0) else "  "
+                    output_3_lines.append(f'{prefix}<span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
+        else:
+            # Absolute Mismatch Fallback: Render the entire English block under the flat section key
+            full_english_block = " ".join(sec_sentences_eng)
+            escaped_eng = html.escape(full_english_block, quote=False)
+            ts_val = f"{section_start_timestamp:.2f}"
+            output_3_lines.append(f'  [{sec}] <span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
             
         if idx < len(all_sections) - 1:
             output_1_lines.append("  <br><br>\n")
