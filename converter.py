@@ -687,8 +687,10 @@ def parse_textgrid_intervals(textgrid_content):
 
 def parse_source_text_with_sentences(raw_text):
     """
-    Parses raw text into sections, and then into main structural sentences
-    (separated by terminal punctuation: ., ;, ·, :, !, ?).
+    Parses raw text into sections, applying the universal custom alignment markup X{Y}.
+    Returns a dictionary of section numbers mapped to bundles of parallel string tracks:
+    - "struct": Modified text used for punctuation and layout boundary matching.
+    - "visual": Cleaned presentation text displayed on the webpage.
     """
     lines = raw_text.split('\n')
     sections_dict = {}
@@ -716,12 +718,31 @@ def parse_source_text_with_sentences(raw_text):
         if current_section not in sections_dict:
             sections_dict[current_section] = []
             
-        # Split purely into main structural sentences
-        sentences = re.split(r'(?<=[.·;:•!?])\s+', line)
-        for s in sentences:
-            s_str = s.strip()
-            if s_str:
-                sections_dict[current_section].append(s_str)
+        # --- UNIVERSAL ALIGNMENT MARKUP PARSER ---
+        def structural_replacer(match):
+            brace_content = match.group(2)
+            return brace_content  # If empty, deletes preceding character
+
+        # Track A: Structural logic (X turns to Y or drops)
+        structural_line = re.sub(r'(.)\{(.*?)\}', structural_replacer, line)
+        # Track B: Visual display logic (keeps X, completely deletes brace block)
+        visual_line = re.sub(r'(.)\{(.*?)\}', r'\1', line)
+            
+        # Map sentence split boundaries based exclusively on the structural track rules
+        sentence_ends = [m.end() for m in re.finditer(r'(?<=[.·;:•!?])\s+', structural_line)]
+        
+        start_pos = 0
+        for end_pos in sentence_ends:
+            s_struct = structural_line[start_pos:end_pos].strip()
+            s_visual = visual_line[start_pos:end_pos].strip()
+            if s_struct or s_visual:
+                sections_dict[current_section].append({"struct": s_struct, "visual": s_visual})
+            start_pos = end_pos
+            
+        s_struct_tail = structural_line[start_pos:].strip()
+        s_visual_tail = visual_line[start_pos:].strip()
+        if s_struct_tail or s_visual_tail:
+            sections_dict[current_section].append({"struct": s_struct_tail, "visual": s_visual_tail})
                 
     return sections_dict
 
@@ -754,24 +775,26 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
         
         # --- PROCESS GREEK ---
         is_first_phrase = True
-        for s_idx, grc_sentence in enumerate(sec_sentences_grc):
+        for s_idx, grc_item in enumerate(sec_sentences_grc):
             s_num = s_idx + 1
             
-            # Extract English equivalent only if structural counts align
-            eng_sentence = sec_sentences_eng[s_idx] if (match_sentences and s_idx < len(sec_sentences_eng)) else ""
+            # Extract English equivalent dictionary block safely
+            eng_item = sec_sentences_eng[s_idx] if (match_sentences and s_idx < len(sec_sentences_eng)) else {"struct": "", "visual": ""}
             
-            # Greek ALWAYS splits into subphrases on all punctuation/commas
-            raw_sub_grc = [p.strip() for p in re.split(r'(?<=[,.,·;:•!?\x27’])\s+', grc_sentence) if p.strip()]
-            # English splits on commas purely for sub-phrase symmetry checking
-            raw_sub_eng = [p.strip() for p in re.split(r'(?<=[,])\s+', eng_sentence) if p.strip()]
+            # Sub-phrase Slicing 1: Layout tracking engine splits using structural lines
+            raw_sub_grc_struct = [p.strip() for p in re.split(r'(?<=[,.,·;:•!?\x27’])\s+', grc_item["struct"]) if p.strip()]
+            raw_sub_eng_struct = [p.strip() for p in re.split(r'(?<=[,])\s+', eng_item["struct"]) if p.strip()]
             
-            # Guard 2: If main sentences match, do they also have an identical number of comma subdivisions?
-            match_sub_phrases = match_sentences and (len(raw_sub_grc) == len(raw_sub_eng))
+            # Sub-phrase Slicing 2: Content layout engine splits using pure visual strings
+            raw_sub_grc_visual = [p.strip() for p in re.split(r'(?<=[,.,·;:•!?\x27’])\s+', grc_item["visual"]) if p.strip()]
             
-            for ss_idx, phrase in enumerate(raw_sub_grc):
+            # Guard 2: Symmetry evaluation relies strictly on modified structural tokens
+            match_sub_phrases = match_sentences and (len(raw_sub_grc_struct) == len(raw_sub_eng_struct))
+            
+            for ss_idx, phrase_visual in enumerate(raw_sub_grc_visual):
                 ss_num = ss_idx + 1
                 
-                words = phrase.split()
+                words = phrase_visual.split()
                 matched_words_data = []
                 phrase_start_time = None
                 
@@ -814,7 +837,6 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                 if section_start_timestamp is None:
                     section_start_timestamp = phrase_start_time
                 
-                # Dynamic Label Selection based on structural match tier status
                 if match_sub_phrases:
                     data_sec_label = f"{sec}.{s_num}.{ss_num}"
                     coordinate_timestamps[("sub", s_num, ss_num)] = phrase_start_time
@@ -823,10 +845,9 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                     if ("sentence", s_num) not in coordinate_timestamps:
                         coordinate_timestamps[("sentence", s_num)] = phrase_start_time
                 else:
-                    # Absolute Fallback: Sentence counts mismatch. Use only Section ID.
                     data_sec_label = f"{sec}"
                 
-                # Construct HTML outputs
+                # Construct HTML outputs using visual items
                 o1_words_str = ""
                 for w_item in matched_words_data:
                     if w_item["is_punc"]:
@@ -863,15 +884,17 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
             
         # --- PROCESS ENGLISH ---
         if match_sentences:
-            for s_idx, eng_sentence in enumerate(sec_sentences_eng):
+            for s_idx, eng_item in enumerate(sec_sentences_eng):
                 s_num = s_idx + 1
-                grc_sentence = sec_sentences_grc[s_idx]
+                grc_item = sec_sentences_grc[s_idx]
                 
-                raw_sub_grc = [p.strip() for p in re.split(r'(?<=[,.,·;:•!?\x27’])\s+', grc_sentence) if p.strip()]
-                raw_sub_eng = [p.strip() for p in re.split(r'(?<=[,])\s+', eng_sentence) if p.strip()]
+                raw_sub_grc_struct = [p.strip() for p in re.split(r'(?<=[,.,·;:•!?\x27’])\s+', grc_item["struct"]) if p.strip()]
+                raw_sub_eng_struct = [p.strip() for p in re.split(r'(?<=[,])\s+', eng_item["struct"]) if p.strip()]
                 
-                match_sub_phrases = len(raw_sub_grc) == len(raw_sub_eng)
-                phrases_to_process = raw_sub_eng if match_sub_phrases else [eng_sentence]
+                raw_sub_eng_visual = [p.strip() for p in re.split(r'(?<=[,])\s+', eng_item["visual"]) if p.strip()]
+                
+                match_sub_phrases = len(raw_sub_grc_struct) == len(raw_sub_eng_struct)
+                phrases_to_process = raw_sub_eng_visual if match_sub_phrases else [eng_item["visual"]]
                 
                 for ss_idx, eng_phrase_text in enumerate(phrases_to_process):
                     ss_num = ss_idx + 1
@@ -885,8 +908,7 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
                     prefix = f"  [{sec}] " if (s_idx == 0 and ss_idx == 0) else "  "
                     output_3_lines.append(f'{prefix}<span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
         else:
-            # Absolute Mismatch Fallback: Render the entire English block under the flat section key
-            full_english_block = " ".join(sec_sentences_eng)
+            full_english_block = " ".join([item["visual"] for item in sec_sentences_eng])
             escaped_eng = html.escape(full_english_block, quote=False)
             ts_val = f"{section_start_timestamp:.2f}"
             output_3_lines.append(f'  [{sec}] <span data-start="{ts_val}" class="phrase_en">{escaped_eng}</span>\n')
@@ -905,10 +927,7 @@ def prepare_readalong_studio_text(raw_text):
     
     for line in lines:
         line = line.strip()
-        if not line:
-            continue
-            
-        if "Event Date:" in line:
+        if not line or "Event Date:" in line:
             continue
             
         if re.match(r'^Book\s+\d+,\s*Chapter\s+\d+,\s*Section\s+\d+\.?$', line, re.IGNORECASE):
