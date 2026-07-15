@@ -75,7 +75,13 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-tab1, tab2, tab3 = st.tabs(["Word Modifier", "Greekinator", "I_hate_Github"])
+# Updated to explicitly declare all 4 tabs
+tab1, tab2, tab3, tab4 = st.tabs([
+    "Word Modifier", 
+    "Greekinator", 
+    "I_hate_Github", 
+    "ReadAlong Studio Preparation"
+])
 
 if "outputs" not in st.session_state:
     st.session_state.outputs = []
@@ -1037,17 +1043,25 @@ with tab3:
 
 
 # --- STREAMLIT TAB 4: READALONG STUDIO CLEANER INTERFACE ---
-with tab4 if 'tab4' in locals() else st.tabs(["...","...","...","ReadAlong Studio Preparation"])[-1]:
+with tab4:
     st.subheader("Text Normalizer for Forced-Alignment Audio Sync")
     st.write("Paste raw text or upload files below to discard headers, metadata tags, and paragraph codes.")
 
+    # 1. Inputs: Both file uploader and direct copy-paste text area
     uploaded_ra = st.file_uploader("Upload Raw Text File (.txt)", type=["txt"], key="upload_ra")
     pasted_ra = st.text_area("OR Paste raw source text directly here:", height=200, key="paste_ra")
 
+    # 2. Resolve Data Source: Direct Copy-Paste overrides File Upload
     ra_content = pasted_ra.strip() if pasted_ra.strip() else (uploaded_ra.read().decode("utf-8") if uploaded_ra else None)
 
+    # 3. Process and display normalized text
     if ra_content:
         cleaned_studio_text = prepare_readalong_studio_text(ra_content)
         
         st.success("Text normalized and cleared of structural fluff!")
-        st.text_area("Cleaned output (Ready to copy directly into alignment tools):", value=cleaned_studio_text, height=300, key="readalong_clean_output")
+        st.text_area(
+            "Cleaned output (Ready to copy directly into alignment tools):", 
+            value=cleaned_studio_text, 
+            height=300, 
+            key="readalong_clean_output"
+        )
