@@ -1036,7 +1036,7 @@ with tab3:
             st.error(f"Error executing text processing alignment: {str(e)}")
 
 
- --- STREAMLIT TAB 4: READALONG STUDIO CLEANER INTERFACE ---
+# --- STREAMLIT TAB 4: READALONG STUDIO CLEANER INTERFACE ---
 with tab4 if 'tab4' in locals() else st.tabs(["...","...","...","ReadAlong Studio Preparation"])[-1]:
     st.subheader("Text Normalizer for Forced-Alignment Audio Sync")
     st.write("Paste raw text or upload files below to discard headers, metadata tags, and paragraph codes.")
