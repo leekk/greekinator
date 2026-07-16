@@ -691,6 +691,70 @@ def parse_textgrid_intervals(textgrid_content):
             })
     return intervals
 
+def get_anchor_words(sections_dict, n=4, position="start"):
+    """Extract the first or last n clean words from the parsed Greek sections."""
+    words = []
+    
+    # Gather all clean words in sequence
+    for sec in sorted(sections_dict.keys()):
+        for item in sections_dict[sec]:
+            phrase_words = item["visual"].split()
+            for w in phrase_words:
+                clean_w = clean_for_matching(w)
+                if clean_w:
+                    words.append(clean_w)
+                    
+    if position == "start":
+        return words[:n]
+    elif position == "end":
+        return words[-n:]
+    return []
+
+def anchor_textgrid(tg_intervals, start_anchor, end_anchor):
+    """Scan the TextGrid for both start and end boundaries and slice the intervals."""
+    if not start_anchor or not end_anchor:
+        return tg_intervals
+    
+    n_start = len(start_anchor)
+    n_end = len(end_anchor)
+    
+    start_idx = 0
+    end_idx = len(tg_intervals) # Default to the end if not found
+    
+    # 1. Find the start anchor (scan forward)
+    for i in range(len(tg_intervals) - n_start + 1):
+        match = True
+        for j in range(n_start):
+            tg_clean = tg_intervals[i+j]["clean"]
+            anchor_w = start_anchor[j]
+            
+            if tg_clean != anchor_w and anchor_w not in tg_clean and tg_clean not in anchor_w:
+                match = False
+                break
+                
+        if match:
+            start_idx = i
+            break
+            
+    # 2. Find the end anchor (scan backward to avoid inner false matches)
+    for i in range(len(tg_intervals) - n_end, start_idx - 1, -1):
+        match = True
+        for j in range(n_end):
+            tg_clean = tg_intervals[i+j]["clean"]
+            anchor_w = end_anchor[j]
+            
+            if tg_clean != anchor_w and anchor_w not in tg_clean and tg_clean not in anchor_w:
+                match = False
+                break
+                
+        if match:
+            # We want to include the end anchor words in our slice, so we add n_end
+            end_idx = i + n_end
+            break
+            
+    # 3. Slice the intervals to only include what is inside the bounding box
+    return tg_intervals[start_idx:end_idx]
+
 def parse_source_text_with_sentences(raw_text):
     """
     Parses raw text into sections, applying the universal custom alignment markup X{Y}.
@@ -757,6 +821,10 @@ def align_and_generate_html(greek_text, english_text, textgrid_text):
     greek_sections = parse_source_text_with_sentences(greek_text)
     english_sections = parse_source_text_with_sentences(english_text)
     tg_intervals = parse_textgrid_intervals(textgrid_text)
+
+    start_anchor = get_anchor_words(greek_sections, n=4, position="start")
+    end_anchor = get_anchor_words(greek_sections, n=4, position="end")
+    tg_intervals = anchor_textgrid(tg_intervals, start_anchor, end_anchor)
     
     tg_idx = 0
     num_intervals = len(tg_intervals)
